@@ -130,7 +130,6 @@ public class JavaTextArea extends PdeTextArea {
       case KeyEvent.VK_SPACE:
         if (suggestion != null) {
           if (suggestion.isVisible()) {
-            Messages.log("Space bar, hide completion list");
             suggestion.setInvisible();
           }
         }
@@ -210,6 +209,7 @@ public class JavaTextArea extends PdeTextArea {
 
   /** Kickstart auto-complete suggestions */
   private void prepareSuggestions(final KeyEvent evt) {
+
     // Provide completions only if it's enabled
     if (JavaMode.codeCompletionsEnabled &&
         (JavaMode.ccTriggerEnabled ||

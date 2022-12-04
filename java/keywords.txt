@@ -507,6 +507,7 @@ floor	FUNCTION1	floor_
 focused	KEYWORD4	focused
 frameCount	KEYWORD4	frameCount
 frameRate	KEYWORD4	frameRate
+delta	KEYWORD4	delta
 frameRate	FUNCTION1	frameRate_
 frustum	FUNCTION1	frustum_
 fullScreen	FUNCTION1	fullScreen_

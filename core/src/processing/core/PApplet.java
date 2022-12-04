@@ -251,6 +251,8 @@ public class PApplet implements PConstants {
    */
   public int height = DEFAULT_HEIGHT;
 
+  public float delta = 0;
+
   /**
    *
    * When <b>pixelDensity(2)</b> is used to make use of a high resolution
@@ -2080,6 +2082,8 @@ public class PApplet implements PConstants {
         // Convert frame time back to frames per second
         frameRate = (float) (1.0 / avgFrameTimeSecs);
       }
+
+      delta = 1f / frameRate;
 
       // post move and resize events to the sketch here
       dequeueWindowEvents();
