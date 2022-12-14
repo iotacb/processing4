@@ -75,9 +75,8 @@ public class PdeComboBoxUI extends BasicComboBoxUI {
               Container scrollPane = viewport.getParent();
               if (scrollPane instanceof JScrollPane) {
                 Container popup = scrollPane.getParent();
-                if (popup instanceof JComponent) {
+                if (popup instanceof JComponent c) {
                   // com.formdev.flatlaf.ui.FlatComboBoxUI$FlatComboPopup
-                  JComponent c = (JComponent) popup;
                   if (!(c.getBorder() instanceof EmptyBorder)) {  // just once
                     // remove the black outline from the popup
                     c.setBorder(new EmptyBorder(0, 0, 0, 0));

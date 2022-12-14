@@ -406,16 +406,14 @@ public class Sketch {
           // the Enter key event. Since the text field is the default component
           // in the dialog, OK doesn't consume Enter key event, by default.
           Container parent = field.getParent();
-          while (!(parent instanceof JOptionPane)) {
+          while (!(parent instanceof JOptionPane pane)) {
             parent = parent.getParent();
           }
-          JOptionPane pane = (JOptionPane) parent;
           final JPanel pnlBottom = (JPanel)
             pane.getComponent(pane.getComponentCount() - 1);
           for (int i = 0; i < pnlBottom.getComponents().length; i++) {
             Component component = pnlBottom.getComponents()[i];
-            if (component instanceof JButton) {
-              final JButton okButton = (JButton) component;
+            if (component instanceof final JButton okButton) {
               if (okButton.getText().equalsIgnoreCase("OK")) {
                 ActionListener[] actionListeners =
                   okButton.getActionListeners();

@@ -1,5 +1,3 @@
-/* -*- mode: java; c-basic-offset: 2; indent-tabs-mode: nil -*- */
-
 /*
   Part of the Processing project - http://processing.org
 
@@ -45,11 +43,11 @@ import processing.data.*;
 import processing.event.*;
 import processing.opengl.*;
 
-
 /**
  * Base class for all sketches that use processing.core.
  * <p/>
- * The <A HREF="https://github.com/processing/processing/wiki/Window-Size-and-Full-Screen">
+ * The <A HREF=
+ * "https://github.com/processing/processing/wiki/Window-Size-and-Full-Screen">
  * Window Size and Full Screen</A> page on the Wiki has useful information
  * about sizing, multiple displays, full screen, etc.
  * <p/>
@@ -81,12 +79,11 @@ import processing.opengl.*;
  * project of our (tiny) size, we should be focusing on the future, rather
  * than working around legacy Java code.
  */
-@SuppressWarnings({"unused", "FinalStaticMethod", "ManualMinMaxCalculation"})
+@SuppressWarnings({ "unused", "FinalStaticMethod", "ManualMinMaxCalculation" })
 public class PApplet implements PConstants {
-//public class PApplet extends PSketch {  // possible in the next alpha
+  // public class PApplet extends PSketch { // possible in the next alpha
   /** Full name of the Java version (i.e. 1.5.0_11). */
-  static public final String javaVersionName =
-    System.getProperty("java.version");
+  static public final String javaVersionName = System.getProperty("java.version");
 
   static public final int javaPlatform;
   static {
@@ -96,7 +93,7 @@ public class PApplet implements PConstants {
       javaPlatform = parseInt(version.substring(0, version.indexOf('.')));
     } else {
       // Remove -xxx and .yyy from java.version (@see JEP-223)
-      javaPlatform = parseInt(version.replaceAll("-.*","").replaceAll("\\..*",""));
+      javaPlatform = parseInt(version.replaceAll("-.*", "").replaceAll("\\..*", ""));
     }
   }
 
@@ -109,7 +106,8 @@ public class PApplet implements PConstants {
   public static final float javaVersion = 1 + javaPlatform / 10f;
 
   /**
-   * Current platform in use, one of the PConstants WINDOWS, MACOS, LINUX or OTHER.
+   * Current platform in use, one of the PConstants WINDOWS, MACOS, LINUX or
+   * OTHER.
    */
   static public int platform;
 
@@ -122,7 +120,7 @@ public class PApplet implements PConstants {
     } else if (name.contains("Windows")) {
       platform = WINDOWS;
 
-    } else if (name.equals("Linux")) {  // true for the ibm vm
+    } else if (name.equals("Linux")) { // true for the ibm vm
       platform = LINUX;
 
     } else {
@@ -173,6 +171,7 @@ public class PApplet implements PConstants {
   /**
    * Command line options passed in from main().
    * This does not include the arguments passed in to PApplet itself.
+   *
    * @see PApplet#main
    */
   public String[] args;
@@ -185,7 +184,7 @@ public class PApplet implements PConstants {
   private String sketchPath;
 
   static final boolean DEBUG = false;
-//  static final boolean DEBUG = true;
+  // static final boolean DEBUG = true;
 
   /** Default width and height for sketch when not specified */
   static public final int DEFAULT_WIDTH = 100;
@@ -200,8 +199,10 @@ public class PApplet implements PConstants {
    * set to higher than 1 with the <b>pixelDensity()</b> function, these values
    * will change. See the reference for <b>pixelWidth</b> or <b>pixelHeight</b>
    * for more information.
-   * <br /><br />
-   * Before accessing this array, the data must be loaded with the <b>loadPixels()</b>
+   * <br />
+   * <br />
+   * Before accessing this array, the data must be loaded with the
+   * <b>loadPixels()</b>
    * function. Failure to do so may result in a NullPointerException. Subsequent
    * changes to the display window will not be reflected in <b>pixels</b> until
    * <b>loadPixels()</b> is called again. After <b>pixels</b> has been modified,
@@ -209,7 +210,8 @@ public class PApplet implements PConstants {
    * display window.
    *
    * @webref image:pixels
-   * @webBrief Array containing the values for all the pixels in the display window
+   * @webBrief Array containing the values for all the pixels in the display
+   *           window
    * @see PApplet#loadPixels()
    * @see PApplet#updatePixels()
    * @see PApplet#get(int, int, int, int)
@@ -236,6 +238,8 @@ public class PApplet implements PConstants {
    */
   public int width = DEFAULT_WIDTH;
 
+  public int halfWidth = width / 2;
+
   /**
    *
    * System variable which stores the height of the display window. This
@@ -251,7 +255,11 @@ public class PApplet implements PConstants {
    */
   public int height = DEFAULT_HEIGHT;
 
+  public int halfHeight = height / 2;
+
   public float delta = 0;
+
+  public float time = 0;
 
   /**
    *
@@ -273,7 +281,6 @@ public class PApplet implements PConstants {
    * @see #displayDensity()
    */
   public int pixelWidth;
-
 
   /**
    * When <b>pixelDensity(2)</b> is used to make use of a high resolution
@@ -329,16 +336,18 @@ public class PApplet implements PConstants {
   /**
    * The system variable <b>mouseX</b> always contains the current horizontal
    * coordinate of the mouse.
-   * <br /><br />
+   * <br />
+   * <br />
    * Note that Processing can only track the mouse position when the pointer
    * is over the current window. The default value of <b>mouseX</b> is <b>0</b>,
    * so <b>0</b> will be returned until the mouse moves in front of the sketch
-   * window. (This typically happens when a sketch is first run.)  Once the
+   * window. (This typically happens when a sketch is first run.) Once the
    * mouse moves away from the window, <b>mouseX</b> will continue to report
    * its most recent position.
    *
    * @webref input:mouse
-   * @webBrief The system variable that always contains the current horizontal coordinate of the mouse
+   * @webBrief The system variable that always contains the current horizontal
+   *           coordinate of the mouse
    * @see PApplet#mouseY
    * @see PApplet#pmouseX
    * @see PApplet#pmouseY
@@ -356,16 +365,18 @@ public class PApplet implements PConstants {
   /**
    * The system variable <b>mouseY</b> always contains the current
    * vertical coordinate of the mouse.
-   * <br /><br />
+   * <br />
+   * <br />
    * Note that Processing can only track the mouse position when the pointer
    * is over the current window. The default value of <b>mouseY</b> is <b>0</b>,
    * so <b>0</b> will be returned until the mouse moves in front of the sketch
-   * window. (This typically happens when a sketch is first run.)  Once the
+   * window. (This typically happens when a sketch is first run.) Once the
    * mouse moves away from the window, <b>mouseY</b> will continue to report
    * its most recent position.
    *
    * @webref input:mouse
-   * @webBrief The system variable that always contains the current vertical coordinate of the mouse
+   * @webBrief The system variable that always contains the current vertical
+   *           coordinate of the mouse
    * @see PApplet#mouseX
    * @see PApplet#pmouseX
    * @see PApplet#pmouseY
@@ -393,17 +404,19 @@ public class PApplet implements PConstants {
    * time the event is called. If these values weren't updated immediately during
    * events, then the mouse position would be read only once per frame, resulting
    * in slight delays and choppy interaction. If the mouse variables were always
-   * updated multiple times per frame, then something like <b>line(pmouseX, pmouseY,
+   * updated multiple times per frame, then something like <b>line(pmouseX,
+   * pmouseY,
    * mouseX, mouseY)</b> inside <b>draw()</b> would have lots of gaps, because
    * <b>pmouseX</b> may have changed several times in between the calls to
-   * <b>line()</b>.<br /><br />
+   * <b>line()</b>.<br />
+   * <br />
    * If you want values relative to the previous frame, use <b>pmouseX</b> and
    * <b>pmouseY</b> inside <b>draw()</b>. If you want continuous response, use
    * <b>pmouseX</b> and <b>pmouseY</b> inside the mouse event functions.
    *
    * @webref input:mouse
    * @webBrief The system variable that always contains the horizontal
-   * position of the mouse in the frame previous to the current frame
+   *           position of the mouse in the frame previous to the current frame
    * @see PApplet#mouseX
    * @see PApplet#mouseY
    * @see PApplet#pmouseY
@@ -426,7 +439,7 @@ public class PApplet implements PConstants {
    *
    * @webref input:mouse
    * @webBrief The system variable that always contains the vertical position
-   * of the mouse in the frame previous to the current frame
+   *           of the mouse in the frame previous to the current frame
    * @see PApplet#mouseX
    * @see PApplet#mouseY
    * @see PApplet#pmouseX
@@ -464,9 +477,11 @@ public class PApplet implements PConstants {
    * Just using (frameCount == 0) won't work since mouseXxxxx()
    * may not be called until a couple frames into things.
    * <p>
+   *
    * @deprecated Please refrain from using this variable, it will be removed
-   * from future releases of Processing because it cannot be used consistently
-   * across platforms and input methods.
+   *             from future releases of Processing because it cannot be used
+   *             consistently
+   *             across platforms and input methods.
    */
   @Deprecated
   public boolean firstMouse = true;
@@ -484,6 +499,7 @@ public class PApplet implements PConstants {
    *
    * If running on macOS, a ctrl-click will be interpreted as the right-hand
    * mouse button (unlike Java, which reports it as the left mouse).
+   *
    * @webref input:mouse
    * @webBrief Shows which mouse button is pressed
    * @see PApplet#mouseX
@@ -501,10 +517,13 @@ public class PApplet implements PConstants {
   public int mouseButton;
 
   /**
-   * The <b>mousePressed</b> variable stores whether a mouse button has been pressed.
-   * The <b>mouseButton</b> variable (see the related reference entry) can be used to
+   * The <b>mousePressed</b> variable stores whether a mouse button has been
+   * pressed.
+   * The <b>mouseButton</b> variable (see the related reference entry) can be used
+   * to
    * determine which button has been pressed.
-   * <br /><br />
+   * <br />
+   * <br />
    * Mouse and keyboard events only work when a program has <b>draw()</b>.
    * Without <b>draw()</b>, the code is only run once and then stops
    * listening for events.
@@ -533,7 +552,6 @@ public class PApplet implements PConstants {
   // https://github.com/processing/processing/issues/5672
   private boolean macosCtrlClick;
 
-
   /** @deprecated Use a mouse event handler that passes an event instead. */
   @Deprecated
   public MouseEvent mouseEvent;
@@ -541,7 +559,8 @@ public class PApplet implements PConstants {
   /**
    * The system variable <b>key</b> always contains the value of the most
    * recent key on the keyboard that was used (either pressed or released).
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * For non-ASCII keys, use the <b>keyCode</b> variable. The keys included
    * in the ASCII specification (BACKSPACE, TAB, ENTER, RETURN, ESC, and
    * DELETE) do not require checking to see if they key is coded, and you
@@ -550,7 +569,8 @@ public class PApplet implements PConstants {
    * commonly used on PCs and Unix and the RETURN key is used instead on
    * Macintosh. Check for both ENTER and RETURN to make sure your program
    * will work for all platforms.
-   * <br /><br />
+   * <br />
+   * <br />
    * There are issues with how <b>keyCode</b> behaves across different
    * renderers and operating systems. Watch out for unexpected behavior as
    * you switch renderers and operating systems.
@@ -564,7 +584,8 @@ public class PApplet implements PConstants {
    *
    * @webref input:keyboard
    * @webBrief The system variable that always contains the value of the most
-   * recent key on the keyboard that was used (either pressed or released)
+   *           recent key on the keyboard that was used (either pressed or
+   *           released)
    * @see PApplet#keyCode
    * @see PApplet#keyPressed
    * @see PApplet#keyPressed()
@@ -575,32 +596,40 @@ public class PApplet implements PConstants {
   /**
    * The variable <b>keyCode</b> is used to detect special keys such as the
    * UP, DOWN, LEFT, RIGHT arrow keys and ALT, CONTROL, SHIFT.
-   * <br /><br />
+   * <br />
+   * <br />
    * When checking for these keys, it can be useful to first check if the key
    * is coded. This is done with the conditional <b>if (key == CODED)</b>, as
    * shown in the example above.
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * The keys included in the ASCII specification (BACKSPACE, TAB, ENTER,
    * RETURN, ESC, and DELETE) do not require checking to see if the key is
    * coded; for those keys, you should simply use the <b>key</b> variable
-   * directly (and not <b>keyCode</b>).  If you're making cross-platform
+   * directly (and not <b>keyCode</b>). If you're making cross-platform
    * projects, note that the ENTER key is commonly used on PCs and Unix,
    * while the RETURN key is used on Macs. Make sure your program will work
    * on all platforms by checking for both ENTER and RETURN.
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * For those familiar with Java, the values for UP and DOWN are simply
    * shorter versions of Java's <b>KeyEvent.VK_UP</b> and <b>KeyEvent.VK_DOWN</b>.
-   *  Other <b>keyCode</b> values can be found in the Java
-   * <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/event/KeyEvent.html">KeyEvent</a>
+   * Other <b>keyCode</b> values can be found in the Java
+   * <a href=
+   * "https://docs.oracle.com/javase/8/docs/api/java/awt/event/KeyEvent.html">KeyEvent</a>
    * reference.
-   * <br /><br />
+   * <br />
+   * <br />
    * There are issues with how <b>keyCode</b> behaves across different
    * renderers and operating systems. Watch out for unexpected behavior
    * as you switch renderers and operating systems, and also whenever
    * you are using keys not mentioned in this reference entry.
-   * <br /><br />
+   * <br />
+   * <br />
    * If you are using P2D or P3D as your renderer, use the
-   * <a href="https://jogamp.org/deployment/jogamp-next/javadoc/jogl/javadoc/com/jogamp/newt/event/KeyEvent.html">NEWT KeyEvent constants</a>.
+   * <a href=
+   * "https://jogamp.org/deployment/jogamp-next/javadoc/jogl/javadoc/com/jogamp/newt/event/KeyEvent.html">NEWT
+   * KeyEvent constants</a>.
    *
    * <h3>Advanced</h3>
    * When "key" is set to CODED, this will contain a Java key code.
@@ -610,7 +639,8 @@ public class PApplet implements PConstants {
    * can be obtained from java.awt.event.KeyEvent, from the VK_XXXX variables.
    *
    * @webref input:keyboard
-   * @webBrief Used to detect special keys such as the UP, DOWN, LEFT, RIGHT arrow keys and ALT, CONTROL, SHIFT
+   * @webBrief Used to detect special keys such as the UP, DOWN, LEFT, RIGHT arrow
+   *           keys and ALT, CONTROL, SHIFT
    * @see PApplet#key
    * @see PApplet#keyPressed
    * @see PApplet#keyPressed()
@@ -621,13 +651,14 @@ public class PApplet implements PConstants {
   /**
    * The boolean system variable <b>keyPressed</b> is <b>true</b>
    * if any key is pressed and <b>false</b> if no keys are pressed.
-   * <br /><br />
+   * <br />
+   * <br />
    * Note that there is a similarly named function called <b>keyPressed()</b>.
    * See its reference page for more information.
    *
    * @webref input:keyboard
    * @webBrief The boolean system variable that is <b>true</b> if any key
-   * is pressed and <b>false</b> if no keys are pressed
+   *           is pressed and <b>false</b> if no keys are pressed
    * @see PApplet#key
    * @see PApplet#keyCode
    * @see PApplet#keyPressed()
@@ -638,6 +669,7 @@ public class PApplet implements PConstants {
 
   /**
    * The last KeyEvent object passed into a mouse function.
+   *
    * @deprecated Use a key event handler that passes an event instead.
    */
   @Deprecated
@@ -670,7 +702,7 @@ public class PApplet implements PConstants {
    *
    * @webref environment
    * @webBrief The system variable that contains the approximate frame rate
-   * of the software as it executes
+   *           of the software as it executes
    * @see PApplet#frameRate(float)
    * @see PApplet#frameCount
    */
@@ -688,7 +720,7 @@ public class PApplet implements PConstants {
    *
    * @webref environment
    * @webBrief The system variable that contains the number of frames
-   * displayed since the program started
+   *           displayed since the program started
    * @see PApplet#frameRate(float)
    * @see PApplet#frameRate
    */
@@ -734,7 +766,7 @@ public class PApplet implements PConstants {
   /** Disable AWT so that LWJGL and others can run */
   static public final String ARGS_DISABLE_AWT = "--disable-awt";
 
-//  static public final String ARGS_SPAN_DISPLAYS = "--span";
+  // static public final String ARGS_SPAN_DISPLAYS = "--span";
 
   static public final String ARGS_BGCOLOR = "--bgcolor";
 
@@ -776,31 +808,25 @@ public class PApplet implements PConstants {
   /** true if this sketch is being run by the PDE */
   boolean external = false;
 
-  static final String ERROR_MIN_MAX =
-    "Cannot use min() or max() on an empty array.";
-
+  static final String ERROR_MIN_MAX = "Cannot use min() or max() on an empty array.";
 
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-
   protected PSurface surface;
-
 
   public PSurface getSurface() {
     return surface;
   }
 
-
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
 
   boolean insideSettings;
 
   String renderer = JAVA2D;
-  int smooth = 1;  // default smoothing (whatever that means for the renderer)
+  int smooth = 1; // default smoothing (whatever that means for the renderer)
 
   boolean fullScreen;
-  int display = -1;  // use default
+  int display = -1; // use default
   // Unlike the others above, needs to be public to support
   // the pixelWidth and pixelHeight fields.
   public int pixelDensity = 1;
@@ -816,10 +842,9 @@ public class PApplet implements PConstants {
   // https://github.com/processing/processing/issues/2297
   int windowColor = 0xffDDDDDD;
 
-
   /**
    * @param method "size" or "fullScreen"
-   * @param args parameters passed to the function to show the user
+   * @param args   parameters passed to the function to show the user
    * @return true if safely inside the settings() method
    */
   boolean insideSettings(String method, Object... args) {
@@ -827,7 +852,7 @@ public class PApplet implements PConstants {
       return true;
     }
     final String url = "https://processing.org/reference/" + method + "_.html";
-    if (!external) {  // post a warning for users of Eclipse and other IDEs
+    if (!external) { // post a warning for users of Eclipse and other IDEs
       StringList argList = new StringList(args);
       System.err.println("When not using the PDE, " + method + "() can only be used inside settings().");
       System.err.println("Remove the " + method + "() method from setup(), and add the following:");
@@ -837,7 +862,6 @@ public class PApplet implements PConstants {
     }
     throw new IllegalStateException(method + "() cannot be used here, see " + url);
   }
-
 
   void handleSettings() {
     insideSettings = true;
@@ -877,7 +901,8 @@ public class PApplet implements PConstants {
       int resultCode = -1;
       try {
         resultCode = p.waitFor();
-      } catch (InterruptedException ignored) { }
+      } catch (InterruptedException ignored) {
+      }
 
       if (resultCode == 1) {
         String msg = trim(stderr.toString());
@@ -905,7 +930,6 @@ public class PApplet implements PConstants {
     insideSettings = false;
   }
 
-
   /**
    * The <b>settings()</b> function is new with Processing 3.0.
    * It's not needed in most sketches. It's only useful when it's
@@ -916,7 +940,8 @@ public class PApplet implements PConstants {
    * using the Eclipse code editor, it's necessary to use
    * <b>settings()</b> to define the <b>size()</b> and
    * <b>smooth()</b> values for a sketch.</b>.
-   * <br /> <br />
+   * <br />
+   * <br />
    * The <b>settings()</b> method runs before the sketch has been
    * set up, so other Processing functions cannot be used at that
    * point. For instance, do not use loadImage() inside settings().
@@ -925,8 +950,9 @@ public class PApplet implements PConstants {
    * the Processing API.
    *
    * @webref environment
-   * @webBrief Used when absolutely necessary to define the parameters to <b>size()</b>
-   * with a variable
+   * @webBrief Used when absolutely necessary to define the parameters to
+   *           <b>size()</b>
+   *           with a variable
    * @see PApplet#fullScreen()
    * @see PApplet#setup()
    * @see PApplet#size(int,int)
@@ -934,76 +960,65 @@ public class PApplet implements PConstants {
    */
   public void settings() {
     // is this necessary? (doesn't appear to be, so removing)
-    //size(DEFAULT_WIDTH, DEFAULT_HEIGHT, JAVA2D);
+    // size(DEFAULT_WIDTH, DEFAULT_HEIGHT, JAVA2D);
   }
-
 
   final public int sketchWidth() {
     return width;
   }
 
-
   final public int sketchHeight() {
     return height;
   }
 
-
   final public String sketchRenderer() {
     return renderer;
   }
-
 
   // smoothing 1 is default.. 0 is none.. 2,4,8 depend on renderer
   final public int sketchSmooth() {
     return smooth;
   }
 
-
   final public boolean sketchFullScreen() {
     return fullScreen;
   }
-
 
   // Numbered from 1, SPAN (0) means all displays, -1 means the default display
   final public int sketchDisplay() {
     return display;
   }
 
-
   final public String sketchOutputPath() {
     return outputPath;
   }
-
 
   final public OutputStream sketchOutputStream() {
     return outputStream;
   }
 
-
   final public int sketchWindowColor() {
     return windowColor;
   }
-
 
   final public int sketchPixelDensity() {
     return pixelDensity;
   }
 
-
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
- /**
-  *
-  * This function returns the number "2" if the screen is a high-density
-  * screen (called a Retina display on OS X or high-dpi on Windows and Linux)
-  * and a "1" if not. This information is useful for a program to adapt to
-  * run at double the pixel density on a screen that supports it.
-  *
-  * @webref environment
-  * @webBrief Returns "2" if the screen is high-density and "1" if not
-  * @see PApplet#pixelDensity(int)
-  * @see PApplet#size(int,int)
-  */
+  /**
+   *
+   * This function returns the number "2" if the screen is a high-density
+   * screen (called a Retina display on OS X or high-dpi on Windows and Linux)
+   * and a "1" if not. This information is useful for a program to adapt to
+   * run at double the pixel density on a screen that supports it.
+   *
+   * @webref environment
+   * @webBrief Returns "2" if the screen is high-density and "1" if not
+   * @see PApplet#pixelDensity(int)
+   * @see PApplet#size(int,int)
+   */
   public int displayDensity() {
     if (display != SPAN && (fullScreen || present)) {
       return displayDensity(display);
@@ -1018,7 +1033,7 @@ public class PApplet implements PConstants {
     }
     // walk through all displays, use 2 if any display is 2
     for (int i = 0; i < displayCount; i++) {
-      if (displayDensity(i+1) == 2) {
+      if (displayDensity(i + 1) == 2) {
         return 2;
       }
     }
@@ -1026,64 +1041,62 @@ public class PApplet implements PConstants {
     return 1;
   }
 
-
- /**
-  * @param display the display number to check
-  * (1-indexed to match the Preferences dialog box)
-  */
+  /**
+   * @param display the display number to check
+   *                (1-indexed to match the Preferences dialog box)
+   */
   public int displayDensity(int display) {
     if (!disableAWT) {
       return ShimAWT.getDisplayDensity(display);
     }
     /*
-    if (display > 0 && display <= displayDevices.length) {
-      GraphicsConfiguration graphicsConfig =
-        displayDevices[display - 1].getDefaultConfiguration();
-      AffineTransform tx = graphicsConfig.getDefaultTransform();
-      return (int) Math.round(tx.getScaleX());
-    }
-
-    System.err.println("Display " + display + " does not exist, " +
-                       "returning 1 for displayDensity(" + display + ")");
-    */
+     * if (display > 0 && display <= displayDevices.length) {
+     * GraphicsConfiguration graphicsConfig =
+     * displayDevices[display - 1].getDefaultConfiguration();
+     * AffineTransform tx = graphicsConfig.getDefaultTransform();
+     * return (int) Math.round(tx.getScaleX());
+     * }
+     *
+     * System.err.println("Display " + display + " does not exist, " +
+     * "returning 1 for displayDensity(" + display + ")");
+     */
     // https://github.com/processing/processing4/issues/57
     System.err.println("displayDensity() unavailable because AWT is disabled");
-    return 1;  // not the end of the world, so don't throw a RuntimeException
+    return 1; // not the end of the world, so don't throw a RuntimeException
   }
 
-
- /**
-  * This function makes it possible to render using all the pixels
-  * on high resolutions screens like Apple Retina and Windows HiDPI.
-  * This function can only be run once within a program, and must
-  * be called right after <b>size()</b> in a program without a
-  * <b>setup()</b> function, or within <b>setup()</b> if present.
-  * <p/>
-  * <b>pixelDensity()</b> should only be used with hardcoded
-  * numbers (in almost all cases this number will be 2)
-  * or in combination with <b>displayDensity()</b> as in the
-  * third example above.
-  * <p/>
-  * When the pixel density is set to more than 1, it changes  the
-  * pixel operations including the way <b>get()</b>, <b>set()</b>,
-  * <b>blend()</b>, <b>copy()</b>, and <b>updatePixels()</b>
-  * all work. See the reference for <b>pixelWidth</b> and
-  * pixelHeight for more information.
-  * <p/>
-  * To use variables as the arguments to <b>pixelDensity()</b>
-  * function, place the <b>pixelDensity()</b> function within
-  * the <b>settings()</b> function. There is more information
-  * about this on the <b>settings()</b> reference page.
-  *
-  * @webref environment
-  * @webBrief It makes it possible for Processing to render using all the
-  * pixels on high resolutions screens
-  * @param density 1 or 2
-  * @see PApplet#pixelWidth
-  * @see PApplet#pixelHeight
-  */
+  /**
+   * This function makes it possible to render using all the pixels
+   * on high resolutions screens like Apple Retina and Windows HiDPI.
+   * This function can only be run once within a program, and must
+   * be called right after <b>size()</b> in a program without a
+   * <b>setup()</b> function, or within <b>setup()</b> if present.
+   * <p/>
+   * <b>pixelDensity()</b> should only be used with hardcoded
+   * numbers (in almost all cases this number will be 2)
+   * or in combination with <b>displayDensity()</b> as in the
+   * third example above.
+   * <p/>
+   * When the pixel density is set to more than 1, it changes the
+   * pixel operations including the way <b>get()</b>, <b>set()</b>,
+   * <b>blend()</b>, <b>copy()</b>, and <b>updatePixels()</b>
+   * all work. See the reference for <b>pixelWidth</b> and
+   * pixelHeight for more information.
+   * <p/>
+   * To use variables as the arguments to <b>pixelDensity()</b>
+   * function, place the <b>pixelDensity()</b> function within
+   * the <b>settings()</b> function. There is more information
+   * about this on the <b>settings()</b> reference page.
+   *
+   * @webref environment
+   * @webBrief It makes it possible for Processing to render using all the
+   *           pixels on high resolutions screens
+   * @param density 1 or 2
+   * @see PApplet#pixelWidth
+   * @see PApplet#pixelHeight
+   */
   public void pixelDensity(int density) {
-    //println(density + " " + this.pixelDensity);
+    // println(density + " " + this.pixelDensity);
     if (density != this.pixelDensity) {
       if (insideSettings("pixelDensity", density)) {
         if (density != 1 && density != 2) {
@@ -1106,7 +1119,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * Called by PSurface objects to set the width and height variables,
    * and update the pixelWidth and pixelHeight variables.
@@ -1114,13 +1126,13 @@ public class PApplet implements PConstants {
   public void setSize(int width, int height) {
     this.width = width;
     this.height = height;
+    this.halfWidth = width / 2;
+    this.halfHeight = height / 2;
     pixelWidth = width * pixelDensity;
     pixelHeight = height * pixelDensity;
   }
 
-
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
 
   /**
    * @nowebref
@@ -1191,8 +1203,8 @@ public class PApplet implements PConstants {
    *
    * @webref environment
    * @webBrief Draws all geometry and fonts with jagged (aliased)
-   * edges and images with hard edges between the pixels
-   * when enlarged rather than interpolating pixels
+   *           edges and images with hard edges between the pixels
+   *           when enlarged rather than interpolating pixels
    */
   public void noSmooth() {
     if (insideSettings) {
@@ -1203,30 +1215,26 @@ public class PApplet implements PConstants {
     }
   }
 
-
   private void smoothWarning(String method) {
     // When running from the PDE, say setup(), otherwise say settings()
     final String where = external ? "setup" : "settings";
     PGraphics.showWarning("%s() can only be used inside %s()", method, where);
     if (external) {
-      PGraphics.showWarning("When run from the PDE, %s() is automatically moved from setup() to settings()", method);
+      PGraphics.showWarning("When run from the PDE, %s() is automatically moved from setup() to settings()",
+              method);
     }
   }
 
-
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
 
   public PGraphics getGraphics() {
     return g;
   }
 
-
   // TODO should this join the sketchXxxx() functions specific to settings()?
   public void orientation(int which) {
     // ignore calls to the orientation command
   }
-
 
   /**
    * Called by the application context to start running (or resume) the sketch.
@@ -1236,7 +1244,6 @@ public class PApplet implements PConstants {
     handleMethods("resume");
     surface.resumeThread();
   }
-
 
   /**
    * Called by the application context to stop running (or pause) the sketch.
@@ -1249,29 +1256,26 @@ public class PApplet implements PConstants {
     surface.pauseThread();
   }
 
-
   /**
    * Sketch has been paused. Called when switching tabs in a browser or
    * swapping to a different application on Android. Also called just before
    * quitting. Use to safely disable things like serial, sound, or sensors.
    */
-  public void pause() { }
-
+  public void pause() {
+  }
 
   /**
    * Sketch has resumed. Called when switching tabs in a browser or
    * swapping to this application on Android. Also called on startup.
    * Use this to safely disable things like serial, sound, or sensors.
    */
-  public void resume() { }
-
+  public void resume() {
+  }
 
   //////////////////////////////////////////////////////////////
 
-
   /** Map of registered methods, stored by method name. */
   Map<String, RegisteredMethods> registerMap = new ConcurrentHashMap<>();
-
 
   class RegisteredMethods {
     /**
@@ -1291,7 +1295,7 @@ public class PApplet implements PConstants {
     Set<Object> removals = null;
 
     /** Create and store this once. */
-    final Object[] emptyArgs = new Object[] { };
+    final Object[] emptyArgs = new Object[] {};
 
     @SuppressWarnings("unused")
     void handle() {
@@ -1306,8 +1310,8 @@ public class PApplet implements PConstants {
 
       for (Object entry : entries) {
         try {
-          //methods[i].invoke(objects[i], args);
-          //entry.method.invoke(entry.object, args);
+          // methods[i].invoke(objects[i], args);
+          // entry.method.invoke(entry.object, args);
           methods.get(entry).invoke(entry, args);
         } catch (Exception e) {
           // check for wrapped exception, get root exception
@@ -1332,9 +1336,8 @@ public class PApplet implements PConstants {
         entries.remove(object);
         methods.remove(object);
       }
-      removals = null;  // clear this out
+      removals = null; // clear this out
     }
-
 
     void add(Object object, Method method) {
       if (!entries.contains(object)) {
@@ -1342,10 +1345,9 @@ public class PApplet implements PConstants {
         methods.put(object, method);
       } else {
         die(method.getName() + "() already added for this instance of " +
-            object.getClass().getName());
+                object.getClass().getName());
       }
     }
-
 
     /**
      * Removes first object/method pair matched (and only the first,
@@ -1364,7 +1366,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * Register a built-in event so that it can be fired for libraries, etc.
    * Supported events include:
@@ -1376,7 +1377,8 @@ public class PApplet implements PConstants {
    * <li>resume – called when the sketch is resumed
    * <li>dispose – when the sketch is shutting down (definitely not safe to draw)
    * <ul>
-   * In addition, the new (for 2.0) <tt>processing.event</tt> classes are passed to
+   * In addition, the new (for 2.0) <tt>processing.event</tt> classes are passed
+   * to
    * the following event types:
    * <ul>
    * <li>mouseEvent
@@ -1385,8 +1387,9 @@ public class PApplet implements PConstants {
    * </ul>
    * The older java.awt events are no longer supported.
    * See the Library Wiki page for more details.
+   *
    * @param methodName name of the method to be called
-   * @param target the target object that should receive the event
+   * @param target     the target object that should receive the event
    */
   public void registerMethod(String methodName, Object target) {
     switch (methodName) {
@@ -1396,7 +1399,6 @@ public class PApplet implements PConstants {
       default -> registerNoArgs(methodName, target);
     }
   }
-
 
   private void registerNoArgs(String name, Object o) {
     Class<?> c = o.getClass();
@@ -1410,13 +1412,12 @@ public class PApplet implements PConstants {
       meth.add(o, method);
     } catch (NoSuchMethodException nsme) {
       die("There is no public " + name + "() method in the class " +
-          o.getClass().getName());
+              o.getClass().getName());
 
     } catch (Exception e) {
       die("Could not register " + name + " + () for " + o, e);
     }
   }
-
 
   private void registerWithArgs(String name, Object o, Class<?>[] cargs) {
     Class<?> c = o.getClass();
@@ -1430,13 +1431,12 @@ public class PApplet implements PConstants {
       meth.add(o, method);
     } catch (NoSuchMethodException nsme) {
       die("There is no public " + name + "() method in the class " +
-          o.getClass().getName());
+              o.getClass().getName());
 
     } catch (Exception e) {
       die("Could not register " + name + " + () for " + o, e);
     }
   }
-
 
   public void unregisterMethod(String name, Object target) {
     RegisteredMethods meth = registerMap.get(name);
@@ -1452,21 +1452,20 @@ public class PApplet implements PConstants {
     }
   }
 
-  protected void handleMethods(String methodName, Object...args) {
+  protected void handleMethods(String methodName, Object... args) {
     RegisteredMethods meth = registerMap.get(methodName);
     if (meth != null) {
       meth.handle(args);
     }
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
-/**
+  /**
    *
    * The <b>setup()</b> function is run once, when the program starts. It's used
-   * to define initial environment properties such as screen size and to load media
+   * to define initial environment properties such as screen size and to load
+   * media
    * such as images and fonts as the program starts. There can only be one
    * <b>setup()</b> function for each program, and it shouldn't be called again
    * after its initial execution.<br />
@@ -1478,18 +1477,18 @@ public class PApplet implements PConstants {
    * Note: Variables declared within <b>setup()</b> are not accessible within
    * other functions, including <b>draw()</b>.
    *
- * @webref structure
- * @webBrief  The <b>setup()</b> function is called once when the program starts
- * @usage web_application
- * @see PApplet#size(int, int)
- * @see PApplet#loop()
- * @see PApplet#noLoop()
- * @see PApplet#draw()
- */
+   * @webref structure
+   * @webBrief The <b>setup()</b> function is called once when the program starts
+   * @usage web_application
+   * @see PApplet#size(int, int)
+   * @see PApplet#loop()
+   * @see PApplet#noLoop()
+   * @see PApplet#draw()
+   */
   public void setup() {
   }
 
-/**
+  /**
    *
    * Called directly after <b>setup()</b>, the <b>draw()</b> function continuously
    * executes the lines of code contained inside its block until the program is
@@ -1509,48 +1508,48 @@ public class PApplet implements PConstants {
    * <br />
    * It is common to call <b>background()</b> near the beginning of the
    * <b>draw()</b> loop to clear the contents of the window, as shown in the first
-   * example above.  Since pixels drawn to the window are cumulative, omitting
+   * example above. Since pixels drawn to the window are cumulative, omitting
    * <b>background()</b> may result in unintended results.<br />
    * <br />
-   * There can only be one <b>draw()</b> function for each sketch, and <b>draw()</b>
-   * must exist if you want the code to run continuously, or to process events such
+   * There can only be one <b>draw()</b> function for each sketch, and
+   * <b>draw()</b>
+   * must exist if you want the code to run continuously, or to process events
+   * such
    * as <b>mousePressed()</b>. Sometimes, you might have an empty call to
    * <b>draw()</b> in your program, as shown in the second example above.
    *
- * @webref structure
- * @webBrief Called directly after <b>setup()</b> and continuously executes the lines
- * of code contained inside its block until the program is stopped or
- * <b>noLoop()</b> is called
- * @usage web_application
- * @see PApplet#setup()
- * @see PApplet#loop()
- * @see PApplet#noLoop()
- * @see PApplet#redraw()
- * @see PApplet#frameRate(float)
- * @see PGraphics#background(float, float, float, float)
- */
+   * @webref structure
+   * @webBrief Called directly after <b>setup()</b> and continuously executes the
+   *           lines
+   *           of code contained inside its block until the program is stopped or
+   *           <b>noLoop()</b> is called
+   * @usage web_application
+   * @see PApplet#setup()
+   * @see PApplet#loop()
+   * @see PApplet#noLoop()
+   * @see PApplet#redraw()
+   * @see PApplet#frameRate(float)
+   * @see PGraphics#background(float, float, float, float)
+   */
   public void draw() {
     // if no draw method, then shut things down
-    //System.out.println("no draw method, goodbye");
+    // System.out.println("no draw method, goodbye");
     finished = true;
   }
 
-
   //////////////////////////////////////////////////////////////
 
-
   /*
-  protected void resizeRenderer(int newWidth, int newHeight) {
-    debug("resizeRenderer request for " + newWidth + " " + newHeight);
-    if (width != newWidth || height != newHeight) {
-      debug("  former size was " + width + " " + height);
-      g.setSize(newWidth, newHeight);
-      width = newWidth;
-      height = newHeight;
-    }
-  }
-  */
-
+   * protected void resizeRenderer(int newWidth, int newHeight) {
+   * debug("resizeRenderer request for " + newWidth + " " + newHeight);
+   * if (width != newWidth || height != newHeight) {
+   * debug("  former size was " + width + " " + height);
+   * g.setSize(newWidth, newHeight);
+   * width = newWidth;
+   * height = newHeight;
+   * }
+   * }
+   */
 
   /**
    * Create a full-screen sketch using the default renderer.
@@ -1563,7 +1562,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   public void fullScreen(int display) {
     if (!fullScreen || display != this.display) {
       if (insideSettings("fullScreen", display)) {
@@ -1573,36 +1571,35 @@ public class PApplet implements PConstants {
     }
   }
 
-
-/**
-  * This function is new for Processing 3.0. It opens a sketch using the full
-  * size of the computer's display. This function must be the first line in
-  * <b>setup()</b>. The <b>size()</b> and <b>fullScreen()</b> functions cannot
-  * both be used in the same program, just choose one.<br />
-  * <br />
-  * When <b>fullScreen()</b> is used without a parameter, it draws the sketch
-  * to the screen currently selected inside the Preferences window. When it is
-  * used with a single parameter, this number defines the screen to display to
-  * program on (e.g. 1, 2, 3...). When used with two parameters, the first
-  * defines the renderer to use (e.g. P2D) and the second defines the screen.
-  * The <b>SPAN</b> parameter can be used in place of a screen number to draw
-  * the sketch as a full-screen window across all the attached displays if
-  * there are more than one.<br />
-  * <br />
-  * Prior to Processing 3.0, a full-screen program was defined with
-  * <b>size(displayWidth, displayHeight)</b>.
-  *
-  * @webref environment
-  * @webBrief Opens a sketch using the full size of the computer's display
-  * @param renderer the renderer to use, e.g. P2D, P3D, JAVA2D (default)
-  * @see PApplet#settings()
-  * @see PApplet#setup()
-  * @see PApplet#size(int,int)
-  * @see PApplet#smooth()
-  */
+  /**
+   * This function is new for Processing 3.0. It opens a sketch using the full
+   * size of the computer's display. This function must be the first line in
+   * <b>setup()</b>. The <b>size()</b> and <b>fullScreen()</b> functions cannot
+   * both be used in the same program, just choose one.<br />
+   * <br />
+   * When <b>fullScreen()</b> is used without a parameter, it draws the sketch
+   * to the screen currently selected inside the Preferences window. When it is
+   * used with a single parameter, this number defines the screen to display to
+   * program on (e.g. 1, 2, 3...). When used with two parameters, the first
+   * defines the renderer to use (e.g. P2D) and the second defines the screen.
+   * The <b>SPAN</b> parameter can be used in place of a screen number to draw
+   * the sketch as a full-screen window across all the attached displays if
+   * there are more than one.<br />
+   * <br />
+   * Prior to Processing 3.0, a full-screen program was defined with
+   * <b>size(displayWidth, displayHeight)</b>.
+   *
+   * @webref environment
+   * @webBrief Opens a sketch using the full size of the computer's display
+   * @param renderer the renderer to use, e.g. P2D, P3D, JAVA2D (default)
+   * @see PApplet#settings()
+   * @see PApplet#setup()
+   * @see PApplet#size(int,int)
+   * @see PApplet#smooth()
+   */
   public void fullScreen(String renderer) {
     if (!fullScreen ||
-        !renderer.equals(this.renderer)) {
+            !renderer.equals(this.renderer)) {
       if (insideSettings("fullScreen", renderer)) {
         this.fullScreen = true;
         this.renderer = renderer;
@@ -1610,15 +1607,15 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
-   * @param display the screen to run the sketch on (1, 2, 3, etc. or on multiple screens using SPAN)
+   * @param display the screen to run the sketch on (1, 2, 3, etc. or on multiple
+   *                screens using SPAN)
    */
 
   public void fullScreen(String renderer, int display) {
     if (!fullScreen ||
-        !renderer.equals(this.renderer) ||
-        display != this.display) {
+            !renderer.equals(this.renderer) ||
+            display != this.display) {
       if (insideSettings("fullScreen", renderer, display)) {
         this.fullScreen = true;
         this.renderer = renderer;
@@ -1626,7 +1623,6 @@ public class PApplet implements PConstants {
       }
     }
   }
-
 
   /**
    * Defines the dimension of the display window width and height in units of
@@ -1700,9 +1696,9 @@ public class PApplet implements PConstants {
    * @webref environment
    * @webBrief Defines the dimension of the display window in units of pixels
    * @param width
-   *          width of the display window in units of pixels
+   *               width of the display window in units of pixels
    * @param height
-   *          height of the display window in units of pixels
+   *               height of the display window in units of pixels
    * @see PApplet#width
    * @see PApplet#height
    * @see PApplet#setup()
@@ -1715,28 +1711,30 @@ public class PApplet implements PConstants {
     // it sits in the code anyway when adding it to settings()). Only take
     // action if things have changed.
     if (width != this.width ||
-        height != this.height) {
+            height != this.height) {
       if (insideSettings("size", width, height)) {
         this.width = width;
         this.height = height;
+        this.halfWidth = width / 2;
+        this.halfHeight = height / 2;
       }
     }
   }
 
-
   public void size(int width, int height, String renderer) {
     if (width != this.width ||
-        height != this.height ||
-        !renderer.equals(this.renderer)) {
-      //println(width, height, renderer, this.width, this.height, this.renderer);
+            height != this.height ||
+            !renderer.equals(this.renderer)) {
+      // println(width, height, renderer, this.width, this.height, this.renderer);
       if (insideSettings("size", width, height, "\"" + renderer + "\"")) {
         this.width = width;
         this.height = height;
+        this.halfWidth = width / 2;
+        this.halfHeight = height / 2;
         this.renderer = renderer;
       }
     }
   }
-
 
   /**
    * @nowebref
@@ -1746,23 +1744,23 @@ public class PApplet implements PConstants {
     // so it would always trigger. But the alternative is comparing the
     // canonical file, which seems overboard.
     if (width != this.width ||
-        height != this.height ||
-        !renderer.equals(this.renderer)) {
+            height != this.height ||
+            !renderer.equals(this.renderer)) {
       if (insideSettings("size", width, height, "\"" + renderer + "\"",
-                         "\"" + path + "\"")) {
+              "\"" + path + "\"")) {
         this.width = width;
         this.height = height;
+        this.halfWidth = width / 2;
+        this.halfHeight = height / 2;
         this.renderer = renderer;
         this.outputPath = path;
       }
     }
   }
 
-
   public PGraphics createGraphics(int w, int h) {
     return createGraphics(w, h, JAVA2D);
   }
-
 
   /**
    *
@@ -1821,16 +1819,16 @@ public class PApplet implements PConstants {
    * PGraphics big;
    *
    * void setup() {
-   *   big = createGraphics(3000, 3000);
+   *     big = createGraphics(3000, 3000);
    *
-   *   big.beginDraw();
-   *   big.background(128);
-   *   big.line(20, 1800, 1800, 900);
-   *   // etc..
-   *   big.endDraw();
+   *     big.beginDraw();
+   *     big.background(128);
+   *     big.line(20, 1800, 1800, 900);
+   *     // etc..
+   *     big.endDraw();
    *
-   *   // make sure the file is written to the sketch folder
-   *   big.save("big.tif");
+   *     // make sure the file is written to the sketch folder
+   *     big.save("big.tif");
    * }
    *
    * </PRE>
@@ -1851,11 +1849,11 @@ public class PApplet implements PConstants {
    * @webBrief Creates and returns a new <b>PGraphics</b> object of the types
    *           P2D or P3D
    * @param w
-   *          width in pixels
+   *                 width in pixels
    * @param h
-   *          height in pixels
+   *                 height in pixels
    * @param renderer
-   *          Either P2D, P3D, or PDF
+   *                 Either P2D, P3D, or PDF
    * @see PGraphics#PGraphics
    *
    */
@@ -1863,10 +1861,10 @@ public class PApplet implements PConstants {
     return createGraphics(w, h, renderer, null);
   }
 
-
   /**
    * Create an offscreen graphics surface for drawing, in this case
    * for a renderer that writes to a file (such as PDF or DXF).
+   *
    * @param path the name of the file (can be an absolute or relative path)
    */
   public PGraphics createGraphics(int w, int h,
@@ -1874,10 +1872,11 @@ public class PApplet implements PConstants {
     return makeGraphics(w, h, renderer, path, false);
   }
 
-
   /**
    * Version of createGraphics() used internally.
-   * @param path A path (or null if none), can be absolute or relative ({@link PApplet#savePath} will be called)
+   *
+   * @param path A path (or null if none), can be absolute or relative
+   *             ({@link PApplet#savePath} will be called)
    */
   protected PGraphics makeGraphics(int w, int h,
                                    String renderer, String path,
@@ -1891,8 +1890,7 @@ public class PApplet implements PConstants {
     }
 
     try {
-      Class<?> rendererClass =
-        Thread.currentThread().getContextClassLoader().loadClass(renderer);
+      Class<?> rendererClass = Thread.currentThread().getContextClassLoader().loadClass(renderer);
 
       Constructor<?> constructor = rendererClass.getConstructor();
       PGraphics pg = (PGraphics) constructor.newInstance();
@@ -1902,10 +1900,10 @@ public class PApplet implements PConstants {
       if (path != null) {
         pg.setPath(savePath(path));
       }
-//      pg.setQuality(sketchQuality());
-//      if (!primary) {
-//        surface.initImage(pg, w, h);
-//      }
+      // pg.setQuality(sketchQuality());
+      // if (!primary) {
+      // surface.initImage(pg, w, h);
+      // }
       pg.setSize(w, h);
 
       // everything worked, return it
@@ -1914,20 +1912,20 @@ public class PApplet implements PConstants {
     } catch (InvocationTargetException ite) {
       String msg = ite.getTargetException().getMessage();
       if ((msg != null) &&
-          (msg.contains("no jogl in java.library.path"))) {
+              (msg.contains("no jogl in java.library.path"))) {
         // Is this true anymore, since the JARs contain the native libs?
         throw new RuntimeException("The jogl library folder needs to be " +
-          "specified with -Djava.library.path=/path/to/jogl");
+                "specified with -Djava.library.path=/path/to/jogl");
 
       } else {
         printStackTrace(ite.getTargetException());
         Throwable target = ite.getTargetException();
         /*
-        // removing for 3.2, we'll see
-        if (platform == MACOSX) {
-          target.printStackTrace(System.out);  // OS X bug (still true?)
-        }
-        */
+         * // removing for 3.2, we'll see
+         * if (platform == MACOSX) {
+         * target.printStackTrace(System.out); // OS X bug (still true?)
+         * }
+         */
         throw new RuntimeException(target.getMessage());
       }
 
@@ -1938,16 +1936,16 @@ public class PApplet implements PConstants {
       }
       if (external) {
         throw new RuntimeException("Please use Sketch \u2192 Import Library " +
-                                   "to add " + renderer + " to your sketch.");
+                "to add " + renderer + " to your sketch.");
       } else {
         throw new RuntimeException("The " + renderer +
-                                   " renderer is not in the class path.");
+                " renderer is not in the class path.");
       }
 
     } catch (Exception e) {
       if ((e instanceof IllegalArgumentException) ||
-          (e instanceof NoSuchMethodException) ||
-          (e instanceof IllegalAccessException)) {
+              (e instanceof NoSuchMethodException) ||
+              (e instanceof IllegalAccessException)) {
         if (e.getMessage().contains("cannot be <= 0")) {
           // IllegalArgumentException will be thrown if w/h is <= 0
           // https://github.com/processing/processing/issues/1021
@@ -1956,39 +1954,42 @@ public class PApplet implements PConstants {
         } else {
           printStackTrace(e);
           String msg = renderer + " needs to be updated " +
-            "for the current release of Processing.";
+                  "for the current release of Processing.";
           throw new RuntimeException(msg);
         }
       } else {
         /*
-        if (platform == MACOSX) {
-          e.printStackTrace(System.out);  // OS X bug (still true?)
-        }
-        */
+         * if (platform == MACOSX) {
+         * e.printStackTrace(System.out); // OS X bug (still true?)
+         * }
+         */
         printStackTrace(e);
         throw new RuntimeException(e.getMessage());
       }
     }
   }
 
-
-  /** Create default renderer, likely to be resized, but needed for surface init. */
+  /**
+   * Create default renderer, likely to be resized, but needed for surface init.
+   */
   protected PGraphics createPrimaryGraphics() {
     return makeGraphics(sketchWidth(), sketchHeight(),
-                        sketchRenderer(), sketchOutputPath(), true);
+            sketchRenderer(), sketchOutputPath(), true);
   }
-
 
   /**
    *
    * Creates a new PImage (the datatype for storing images). This provides a
    * fresh buffer of pixels to play with. Set the size of the buffer with the
    * <b>width</b> and <b>height</b> parameters. The <b>format</b> parameter
-   * defines how the pixels are stored. See the PImage reference for more information.
-   * <br/> <br/>
+   * defines how the pixels are stored. See the PImage reference for more
+   * information.
+   * <br/>
+   * <br/>
    * Be sure to include all three parameters, specifying only the width and
    * height (but no format) will produce a strange error.
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * Advanced users please note that createImage() should be used instead of
    * the syntax <tt>new PImage()</tt>.
    *
@@ -1999,31 +2000,30 @@ public class PApplet implements PConstants {
    *
    * @webref image
    * @webBrief Creates a new <b>PImage</b> (the datatype for storing images)
-   * @param w width in pixels
-   * @param h height in pixels
+   * @param w      width in pixels
+   * @param h      height in pixels
    * @param format Either RGB, ARGB, ALPHA (grayscale alpha channel)
    * @see PImage
    * @see PGraphics
    */
   public PImage createImage(int w, int h, int format) {
     PImage image = new PImage(w, h, format);
-    image.parent = this;  // make save() work
+    image.parent = this; // make save() work
     return image;
   }
 
-
   //////////////////////////////////////////////////////////////
-
 
   protected boolean insideDraw;
 
   /** Last time in nanoseconds that frameRate was checked */
   protected long frameRateLastNanos = 0;
 
-
   public void handleDraw() {
-    if (g == null) return;
-    if (!looping && !redraw) return;
+    if (g == null)
+      return;
+    if (!looping && !redraw)
+      return;
 
     if (insideDraw) {
       System.err.println("handleDraw() called before finishing");
@@ -2041,8 +2041,8 @@ public class PApplet implements PConstants {
       float aspectH = width / (float) rwidth;
       float aspectV = height / (float) rheight;
       ratioScale = min(aspectH, aspectV);
-      ratioTop = (height - ratioScale* rheight) / 2;
-      ratioLeft = (width - ratioScale* rwidth) / 2;
+      ratioTop = (height - ratioScale * rheight) / 2;
+      ratioLeft = (width - ratioScale * rwidth) / 2;
       translate(ratioLeft, ratioTop);
       scale(ratioScale);
     }
@@ -2052,7 +2052,7 @@ public class PApplet implements PConstants {
     if (frameCount == 0) {
       setup();
 
-    } else {  // frameCount > 0, meaning an actual draw()
+    } else { // frameCount > 0, meaning an actual draw()
       // update the current frameRate
 
       // Calculate frameRate through average frame times, not average fps, e.g.:
@@ -2084,6 +2084,7 @@ public class PApplet implements PConstants {
       }
 
       delta = 1f / frameRate;
+      time += delta;
 
       // post move and resize events to the sketch here
       dequeueWindowEvents();
@@ -2109,7 +2110,7 @@ public class PApplet implements PConstants {
 
       handleMethods("draw");
 
-      redraw = false;  // unset 'redraw' flag in case it was set
+      redraw = false; // unset 'redraw' flag in case it was set
       // (only do this once draw() has run, not just setup())
     }
     g.endDraw();
@@ -2127,85 +2128,83 @@ public class PApplet implements PConstants {
     frameCount++;
   }
 
-
-//  /** Not official API, not guaranteed to work in the future. */
-//  public boolean canDraw() {
-//    return g != null && (looping || redraw);
-//  }
-
+  // /** Not official API, not guaranteed to work in the future. */
+  // public boolean canDraw() {
+  // return g != null && (looping || redraw);
+  // }
 
   //////////////////////////////////////////////////////////////
 
-
-/**
- *
- * Executes the code within <b>draw()</b> one time. This functions allows the
- * program to update the display window only when necessary, for example when an
- * event registered by <b>mousePressed()</b> or <b>keyPressed()</b> occurs.
- * <br/>
- * <br/>
- * In structuring a program, it only makes sense to call redraw() within events
- * such as <b>mousePressed()</b>. This is because <b>redraw()</b> does not run
- * <b>draw()</b> immediately (it only sets a flag that indicates an update is
- * needed). <br/>
- * <br/>
- * The <b>redraw()</b> function does not work properly when called inside
- * <b>draw()</b>. To enable/disable animations, use <b>loop()</b> and
- * <b>noLoop()</b>.
- *
- * @webref structure
- * @webBrief Executes the code within <b>draw()</b> one time
- * @usage web_application
- * @see PApplet#draw()
- * @see PApplet#loop()
- * @see PApplet#noLoop()
- * @see PApplet#frameRate(float)
- */
+  /**
+   *
+   * Executes the code within <b>draw()</b> one time. This functions allows the
+   * program to update the display window only when necessary, for example when an
+   * event registered by <b>mousePressed()</b> or <b>keyPressed()</b> occurs.
+   * <br/>
+   * <br/>
+   * In structuring a program, it only makes sense to call redraw() within events
+   * such as <b>mousePressed()</b>. This is because <b>redraw()</b> does not run
+   * <b>draw()</b> immediately (it only sets a flag that indicates an update is
+   * needed). <br/>
+   * <br/>
+   * The <b>redraw()</b> function does not work properly when called inside
+   * <b>draw()</b>. To enable/disable animations, use <b>loop()</b> and
+   * <b>noLoop()</b>.
+   *
+   * @webref structure
+   * @webBrief Executes the code within <b>draw()</b> one time
+   * @usage web_application
+   * @see PApplet#draw()
+   * @see PApplet#loop()
+   * @see PApplet#noLoop()
+   * @see PApplet#frameRate(float)
+   */
   synchronized public void redraw() {
     if (!looping) {
       redraw = true;
-//      if (thread != null) {
-//        // wake from sleep (necessary otherwise it'll be
-//        // up to 10 seconds before update)
-//        if (CRUSTY_THREADS) {
-//          thread.interrupt();
-//        } else {
-//          synchronized (blocker) {
-//            blocker.notifyAll();
-//          }
-//        }
-//      }
+      // if (thread != null) {
+      // // wake from sleep (necessary otherwise it'll be
+      // // up to 10 seconds before update)
+      // if (CRUSTY_THREADS) {
+      // thread.interrupt();
+      // } else {
+      // synchronized (blocker) {
+      // blocker.notifyAll();
+      // }
+      // }
+      // }
     }
   }
 
-/**
- *
- * By default, Processing loops through <b>draw()</b> continuously, executing
- * the code within it. However, the <b>draw()</b> loop may be stopped by calling
- * <b>noLoop()</b>. In that case, the <b>draw()</b> loop can be resumed with
- * <b>loop()</b>.
- *
- * @webref structure
- * @webBrief Causes Processing to continuously execute the code within
- *           <b>draw()</b>
- * @usage web_application
- * @see PApplet#noLoop()
- * @see PApplet#redraw()
- * @see PApplet#draw()
- */
+  /**
+   *
+   * By default, Processing loops through <b>draw()</b> continuously, executing
+   * the code within it. However, the <b>draw()</b> loop may be stopped by calling
+   * <b>noLoop()</b>. In that case, the <b>draw()</b> loop can be resumed with
+   * <b>loop()</b>.
+   *
+   * @webref structure
+   * @webBrief Causes Processing to continuously execute the code within
+   *           <b>draw()</b>
+   * @usage web_application
+   * @see PApplet#noLoop()
+   * @see PApplet#redraw()
+   * @see PApplet#draw()
+   */
   synchronized public void loop() {
     if (!looping) {
       looping = true;
     }
   }
 
-/**
+  /**
    *
    * Stops Processing from continuously executing the code within
    * <b>draw()</b>. If <b>loop()</b> is called, the code in <b>draw()</b>
    * begin to run continuously again. If using <b>noLoop()</b> in
    * <b>setup()</b>, it should be the last line inside the block.
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * When <b>noLoop()</b> is used, it's not possible to manipulate or access
    * the screen inside event handling functions such as <b>mousePressed()</b>
    * or <b>keyPressed()</b>. Instead, use those functions to call
@@ -2213,36 +2212,35 @@ public class PApplet implements PConstants {
    * can update the screen properly. This means that when noLoop() has been
    * called, no drawing can happen, and functions like saveFrame() or
    * loadPixels() may not be used.
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * Note that if the sketch is resized, <b>redraw()</b> will be called to
    * update the sketch, even after <b>noLoop()</b> has been specified.
-   * Otherwise, the sketch would enter an odd state until <b>loop()</b> was called.
+   * Otherwise, the sketch would enter an odd state until <b>loop()</b> was
+   * called.
    *
- * @webref structure
- * @webBrief Stops Processing from continuously executing the code within <b>draw()</b>
- * @usage web_application
- * @see PApplet#loop()
- * @see PApplet#redraw()
- * @see PApplet#draw()
- */
+   * @webref structure
+   * @webBrief Stops Processing from continuously executing the code within
+   *           <b>draw()</b>
+   * @usage web_application
+   * @see PApplet#loop()
+   * @see PApplet#redraw()
+   * @see PApplet#draw()
+   */
   synchronized public void noLoop() {
     if (looping) {
       looping = false;
     }
   }
 
-
   public boolean isLooping() {
     return looping;
   }
 
-
   //////////////////////////////////////////////////////////////
-
 
   BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<>();
   private final Object eventQueueDequeueLock = new Object[0];
-
 
   /**
    * Add an event to the internal event queue, or process it immediately if
@@ -2256,7 +2254,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   protected void dequeueEvents() {
     synchronized (eventQueueDequeueLock) {
       while (!eventQueue.isEmpty()) {
@@ -2269,9 +2266,7 @@ public class PApplet implements PConstants {
     }
   }
 
-
   //////////////////////////////////////////////////////////////
-
 
   /**
    * Actually take action based on a mouse event.
@@ -2291,8 +2286,8 @@ public class PApplet implements PConstants {
     // if the sketch window gains focus on that PRESS.
     final int action = event.getAction();
     if (action == MouseEvent.DRAG ||
-        action == MouseEvent.MOVE ||
-        action == MouseEvent.PRESS) {
+            action == MouseEvent.MOVE ||
+            action == MouseEvent.PRESS) {
       pmouseX = emouseX;
       pmouseY = emouseY;
       if (windowRatio) {
@@ -2310,7 +2305,7 @@ public class PApplet implements PConstants {
     // for each Surface independently, since the code seems to be identical:
     // no native code backing Surface objects (AWT, JavaFX, JOGL) handle it.
     if (PApplet.platform == PConstants.MACOS &&
-        button == PConstants.LEFT) {
+            button == PConstants.LEFT) {
       if (action == MouseEvent.PRESS && event.isControlDown()) {
         // The ctrl key may only be down during the press, but we need to store
         // it so that the drag or release still is considered a right-click.
@@ -2322,9 +2317,9 @@ public class PApplet implements PConstants {
         // since it's not a ctrl-right-click, it's just a right click.
         int modifiers = event.getModifiers() & ~Event.CTRL;
         event = new MouseEvent(event.getNative(), event.getMillis(),
-                               event.getAction(), modifiers,
-                               event.getX(), event.getY(),
-                               button, event.getCount());
+                event.getAction(), modifiers,
+                event.getX(), event.getY(),
+                button, event.getCount());
       }
       if (action == MouseEvent.CLICK) {
         // Un-set the variable for the next time around.
@@ -2339,15 +2334,15 @@ public class PApplet implements PConstants {
     mouseButton = button;
 
     /*
-    // Compatibility for older code (these have AWT object params, not P5)
-    if (mouseEventMethods != null) {
-      // Probably also good to check this, in case anyone tries to call
-      // postEvent() with an artificial event they've created.
-      if (event.getNative() != null) {
-        mouseEventMethods.handle(new Object[] { event.getNative() });
-      }
-    }
-    */
+     * // Compatibility for older code (these have AWT object params, not P5)
+     * if (mouseEventMethods != null) {
+     * // Probably also good to check this, in case anyone tries to call
+     * // postEvent() with an artificial event they've created.
+     * if (event.getNative() != null) {
+     * mouseEventMethods.handle(new Object[] { event.getNative() });
+     * }
+     * }
+     */
 
     // this used to only be called on mouseMoved and mouseDragged
     // change it back if people run into trouble
@@ -2383,12 +2378,11 @@ public class PApplet implements PConstants {
     }
 
     if ((action == MouseEvent.DRAG) ||
-        (action == MouseEvent.MOVE)) {
+            (action == MouseEvent.MOVE)) {
       emouseX = mouseX;
       emouseY = mouseY;
     }
   }
-
 
   /**
    *
@@ -2422,13 +2416,12 @@ public class PApplet implements PConstants {
    * @see PApplet#mouseButton
    * @see PApplet#mouseWheel(MouseEvent)
    */
-  public void mousePressed() { }
-
+  public void mousePressed() {
+  }
 
   public void mousePressed(MouseEvent event) {
     mousePressed();
   }
-
 
   /**
    *
@@ -2453,13 +2446,12 @@ public class PApplet implements PConstants {
    * @see PApplet#mouseButton
    * @see PApplet#mouseWheel(MouseEvent)
    */
-  public void mouseReleased() { }
-
+  public void mouseReleased() {
+  }
 
   public void mouseReleased(MouseEvent event) {
     mouseReleased();
   }
-
 
   /**
    *
@@ -2489,13 +2481,12 @@ public class PApplet implements PConstants {
    * @see PApplet#mouseButton
    * @see PApplet#mouseWheel(MouseEvent)
    */
-  public void mouseClicked() { }
-
+  public void mouseClicked() {
+  }
 
   public void mouseClicked(MouseEvent event) {
     mouseClicked();
   }
-
 
   /**
    *
@@ -2522,13 +2513,12 @@ public class PApplet implements PConstants {
    * @see PApplet#mouseButton
    * @see PApplet#mouseWheel(MouseEvent)
    */
-  public void mouseDragged() { }
-
+  public void mouseDragged() {
+  }
 
   public void mouseDragged(MouseEvent event) {
     mouseDragged();
   }
-
 
   /**
    *
@@ -2555,24 +2545,22 @@ public class PApplet implements PConstants {
    * @see PApplet#mouseButton
    * @see PApplet#mouseWheel(MouseEvent)
    */
-  public void mouseMoved() { }
-
+  public void mouseMoved() {
+  }
 
   public void mouseMoved(MouseEvent event) {
     mouseMoved();
   }
 
-
-  public void mouseEntered() { }
-
+  public void mouseEntered() {
+  }
 
   public void mouseEntered(MouseEvent event) {
     mouseEntered();
   }
 
-
-  public void mouseExited() { }
-
+  public void mouseExited() {
+  }
 
   public void mouseExited(MouseEvent event) {
     mouseExited();
@@ -2581,7 +2569,8 @@ public class PApplet implements PConstants {
   /**
    * @nowebref
    */
-  public void mouseWheel() { }
+  public void mouseWheel() {
+  }
 
   /**
    * The code within the <b>mouseWheel()</b> event function
@@ -2593,14 +2582,15 @@ public class PApplet implements PConstants {
    * and negative values for the other direction (up or away
    * from the user). On OS X with "natural" scrolling enabled,
    * the values are opposite.
-   * <br /><br />
+   * <br />
+   * <br />
    * Mouse and keyboard events only work when a program has
    * <b>draw()</b>. Without <b>draw()</b>, the code is only
    * run once and then stops listening for events.
    *
    * @webref input:mouse
    * @webBrief The code within the <b>mouseWheel()</b> event function
-   * is run when the mouse wheel is moved
+   *           is run when the mouse wheel is moved
    * @param event the MouseEvent
    * @see PApplet#mouseX
    * @see PApplet#mouseY
@@ -2618,15 +2608,13 @@ public class PApplet implements PConstants {
     mouseWheel();
   }
 
-
-
   //////////////////////////////////////////////////////////////
-
 
   protected void handleKeyEvent(KeyEvent event) {
 
     // Get rid of auto-repeating keys if desired and supported
-    if (!keyRepeatEnabled && event.isAutoRepeat()) return;
+    if (!keyRepeatEnabled && event.isAutoRepeat())
+      return;
 
     keyEvent = event;
     key = event.getKey();
@@ -2635,7 +2623,8 @@ public class PApplet implements PConstants {
     switch (event.getAction()) {
       case KeyEvent.PRESS -> {
         Long hash = ((long) keyCode << Character.SIZE) | key;
-        if (!pressedKeys.contains(hash)) pressedKeys.add(hash);
+        if (!pressedKeys.contains(hash))
+          pressedKeys.add(hash);
         keyPressed = true;
         keyPressed(keyEvent);
       }
@@ -2648,17 +2637,17 @@ public class PApplet implements PConstants {
     }
 
     /*
-    if (keyEventMethods != null) {
-      keyEventMethods.handle(new Object[] { event.getNative() });
-    }
-    */
+     * if (keyEventMethods != null) {
+     * keyEventMethods.handle(new Object[] { event.getNative() });
+     * }
+     */
 
     handleMethods("keyEvent", event);
 
     // if someone else wants to intercept the key, they should
     // set key to zero (or something besides the ESC).
     if (event.getAction() == KeyEvent.PRESS) {
-      //if (key == java.awt.event.KeyEvent.VK_ESCAPE) {
+      // if (key == java.awt.event.KeyEvent.VK_ESCAPE) {
       if (key == ESC) {
         exit();
       }
@@ -2667,19 +2656,18 @@ public class PApplet implements PConstants {
       // running independently, because this sketch may be one component
       // embedded inside an application that has its own close behavior.
       if (external &&
-          event.getKeyCode() == 'W' &&
-          ((event.isMetaDown() && platform == MACOS) ||
-           (event.isControlDown() && platform != MACOS))) {
+              event.getKeyCode() == 'W' &&
+              ((event.isMetaDown() && platform == MACOS) ||
+                      (event.isControlDown() && platform != MACOS))) {
         // Can't use this native stuff b/c the native event might be NEWT
-//      if (external && event.getNative() instanceof java.awt.event.KeyEvent &&
-//          ((java.awt.event.KeyEvent) event.getNative()).getModifiers() ==
-//            Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() &&
-//          event.getKeyCode() == 'W') {
+        // if (external && event.getNative() instanceof java.awt.event.KeyEvent &&
+        // ((java.awt.event.KeyEvent) event.getNative()).getModifiers() ==
+        // Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() &&
+        // event.getKeyCode() == 'W') {
         exit();
       }
     }
   }
-
 
   /**
    *
@@ -2769,13 +2757,12 @@ public class PApplet implements PConstants {
    * @see PApplet#keyPressed
    * @see PApplet#keyReleased()
    */
-  public void keyPressed() { }
-
+  public void keyPressed() {
+  }
 
   public void keyPressed(KeyEvent event) {
     keyPressed();
   }
-
 
   /**
    *
@@ -2794,13 +2781,12 @@ public class PApplet implements PConstants {
    * @see PApplet#keyPressed
    * @see PApplet#keyPressed()
    */
-  public void keyReleased() { }
-
+  public void keyReleased() {
+  }
 
   public void keyReleased(KeyEvent event) {
     keyReleased();
   }
-
 
   /**
    *
@@ -2824,14 +2810,12 @@ public class PApplet implements PConstants {
    * @see PApplet#keyCode
    * @see PApplet#keyReleased()
    */
-  public void keyTyped() { }
-
+  public void keyTyped() {
+  }
 
   public void keyTyped(KeyEvent event) {
     keyTyped();
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
@@ -2839,21 +2823,17 @@ public class PApplet implements PConstants {
   // and I'm going all out. I circle the vultures in a van
   // and I run the block.
 
-
-  public void focusGained() { }
-
+  public void focusGained() {
+  }
 
   public void focusLost() {
     // TODO: if user overrides this without calling super it's not gonna work
     pressedKeys.clear();
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // getting the time
-
 
   /**
    *
@@ -2867,7 +2847,7 @@ public class PApplet implements PConstants {
    *
    * @webref input:time date
    * @webBrief Returns the number of milliseconds (thousandths of a second) since
-   * the sketch started.
+   *           the sketch started.
    * @see PApplet#second()
    * @see PApplet#minute()
    * @see PApplet#hour()
@@ -2893,7 +2873,7 @@ public class PApplet implements PConstants {
    * @see PApplet#day()
    * @see PApplet#month()
    * @see PApplet#year()
-   * */
+   */
   static public int second() {
     return Calendar.getInstance().get(Calendar.SECOND);
   }
@@ -2902,6 +2882,7 @@ public class PApplet implements PConstants {
    *
    * Processing communicates with the clock on your computer. The
    * <b>minute()</b> function returns the current minute as a value from 0 to 59.
+   *
    * @webref input:time date
    * @webBrief Returns the current minute as a value from 0 to 59
    * @see PApplet#millis()
@@ -2911,7 +2892,7 @@ public class PApplet implements PConstants {
    * @see PApplet#month()
    * @see PApplet#year()
    *
-   * */
+   */
   static public int minute() {
     return Calendar.getInstance().get(Calendar.MINUTE);
   }
@@ -2985,7 +2966,7 @@ public class PApplet implements PConstants {
    *
    * @webref input:time date
    * @webBrief Returns the current year as an integer (2003,
-   * 2004, 2005, etc)
+   *           2004, 2005, etc)
    * @see PApplet#millis()
    * @see PApplet#second()
    * @see PApplet#minute()
@@ -2997,11 +2978,9 @@ public class PApplet implements PConstants {
     return Calendar.getInstance().get(Calendar.YEAR);
   }
 
-
   //////////////////////////////////////////////////////////////
 
   // controlling time (playing god)
-
 
   /**
    *
@@ -3010,8 +2989,10 @@ public class PApplet implements PConstants {
    * running <b>delay(3000)</b> will stop the program for three seconds and
    * <b>delay(500)</b> will stop the program for a half-second.
    * <p/>
-   * The screen only updates when the end of <b>draw()</b> is reached, so <b>delay()</b>
-   * cannot be used to slow down drawing. For instance, you cannot use <b>delay()</b>
+   * The screen only updates when the end of <b>draw()</b> is reached, so
+   * <b>delay()</b>
+   * cannot be used to slow down drawing. For instance, you cannot use
+   * <b>delay()</b>
    * to control the timing of an animation.
    * <p/>
    * The <b>delay()</b> function should only be used for pausing scripts (i.e.
@@ -3020,21 +3001,22 @@ public class PApplet implements PConstants {
    * the serial port).
    *
    * @webref environment
-   * @webBrief The <b>delay()</b> function causes the program to halt for a specified time
+   * @webBrief The <b>delay()</b> function causes the program to halt for a
+   *           specified time
    * @param napTime milliseconds to pause before running draw() again
    * @see PApplet#frameRate
    * @see PApplet#draw()
    */
   public void delay(int napTime) {
-    //if (frameCount != 0) {
-    //if (napTime > 0) {
+    // if (frameCount != 0) {
+    // if (napTime > 0) {
     try {
       Thread.sleep(napTime);
-    } catch (InterruptedException ignored) { }
-    //}
-    //}
+    } catch (InterruptedException ignored) {
+    }
+    // }
+    // }
   }
-
 
   /**
    *
@@ -3047,7 +3029,7 @@ public class PApplet implements PConstants {
    * @webref environment
    * @webBrief Specifies the number of frames to be displayed every second
    * @param fps
-   *          number of desired frames per second
+   *            number of desired frames per second
    * @see PApplet#frameRate
    * @see PApplet#frameCount
    * @see PApplet#setup()
@@ -3060,9 +3042,7 @@ public class PApplet implements PConstants {
     surface.setFrameRate(fps);
   }
 
-
   //////////////////////////////////////////////////////////////
-
 
   /**
    * Links to a webpage either in the same window or in a new window. The
@@ -3077,9 +3057,7 @@ public class PApplet implements PConstants {
     }
   }
 
-
   static String openLauncher;
-
 
   /**
    *
@@ -3114,7 +3092,7 @@ public class PApplet implements PConstants {
    * @webBrief Attempts to open an application or file using your platform's
    *           launcher
    * @param args
-   *          arguments to the launcher, e.g. a filename.
+   *             arguments to the launcher, e.g. a filename.
    * @usage Application
    */
   static public Process launch(String... args) {
@@ -3135,24 +3113,26 @@ public class PApplet implements PConstants {
       // work on desktop Linux. Not risking it though.
       final String[] launchers = { "xdg-open", "gnome-open", "kde-open" };
       for (String launcher : launchers) {
-        if (openLauncher != null) break;
+        if (openLauncher != null)
+          break;
         try {
           Process p = Runtime.getRuntime().exec(new String[] { launcher });
-          /*int result =*/ p.waitFor();
+          /* int result = */ p.waitFor();
           // Not installed will throw an IOException (JDK 1.4.2, Ubuntu 7.04)
           openLauncher = launcher;
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
       }
       if (openLauncher == null) {
         System.err.println("Could not find xdg-open, gnome-open, or kde-open: " +
-                           "the open() command may not work.");
+                "the open() command may not work.");
       }
       if (openLauncher != null) {
         params = new String[] { openLauncher };
       }
-    //} else {  // give up and just pass it to Runtime.exec()
-      //open(new String[] { filename });
-      //params = new String[] { filename };
+      // } else { // give up and just pass it to Runtime.exec()
+      // open(new String[] { filename });
+      // params = new String[] { filename };
     }
     if (params != null) {
       // If the 'open', 'gnome-open' or 'cmd' are already included
@@ -3168,27 +3148,36 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * Pass a set of arguments directly to the command line. Uses Java's
-   * <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime.html#exec-java.lang.String:A-">Runtime.exec()</A>
-   * method. This is different from the <A HREF="https://processing.org/reference/launch_.html">launch()</A>
+   * <A HREF=
+   * "https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime.html#exec-java.lang.String:A-">Runtime.exec()</A>
+   * method. This is different from the
+   * <A HREF="https://processing.org/reference/launch_.html">launch()</A>
    * method, which uses the operating system's launcher to open the files.
    * It's always a good idea to use a full path to the executable here.
+   *
    * <pre>
    * exec("/usr/bin/say", "welcome to the command line");
    * </pre>
+   *
    * Or if you want to wait until it's completed, something like this:
+   *
    * <pre>
    * Process p = exec("/usr/bin/say", "waiting until done");
    * try {
-   *   int result = p.waitFor();
-   *   println("the process returned " + result);
-   * } catch (InterruptedException e) { }
+   *     int result = p.waitFor();
+   *     println("the process returned " + result);
+   * } catch (InterruptedException e) {
+   * }
    * </pre>
+   *
    * You can also get the system output and error streams from the Process
    * object, but that's more that we'd like to cover here.
-   * @return a <A HREF="https://docs.oracle.com/javase/8/docs/api/java/lang/Process.html">Process</A> object
+   *
+   * @return a <A HREF=
+   *         "https://docs.oracle.com/javase/8/docs/api/java/lang/Process.html">Process</A>
+   *         object
    */
   static public Process exec(String... args) {
     try {
@@ -3198,11 +3187,9 @@ public class PApplet implements PConstants {
     }
   }
 
-
   static class LineThread extends Thread {
     InputStream input;
     StringList output;
-
 
     LineThread(InputStream input, StringList output) {
       this.input = input;
@@ -3218,8 +3205,7 @@ public class PApplet implements PConstants {
       try {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         saveStream(baos, input);
-        BufferedReader reader =
-          createReader(new ByteArrayInputStream(baos.toByteArray()));
+        BufferedReader reader = createReader(new ByteArrayInputStream(baos.toByteArray()));
         String line;
         while ((line = reader.readLine()) != null) {
           output.append(line);
@@ -3229,7 +3215,6 @@ public class PApplet implements PConstants {
       }
     }
   }
-
 
   /**
    * Alternative version of exec() that retrieves stdout and stderr into the
@@ -3241,7 +3226,7 @@ public class PApplet implements PConstants {
    *
    * @param stdout a non-null StringList object to be filled with any output
    * @param stderr a non-null StringList object to be filled with error lines
-   * @param args each argument to be passed as a series of String objects
+   * @param args   each argument to be passed as a series of String objects
    * @return the result returned from the application, or -1 if an Exception
    *         occurs before the application is able to return a result.
    */
@@ -3251,40 +3236,42 @@ public class PApplet implements PConstants {
     Thread outThread = new LineThread(p.getInputStream(), stdout);
     Thread errThread = new LineThread(p.getErrorStream(), stderr);
     /*
-    final InputStream err = p.getErrorStream();
-    final InputStream out = p.getInputStream();
-    Thread outThread = new Thread(() ->  {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      String line;
-      try {
-        saveStream(baos, out);
-        BufferedReader err2 = createReader(new ByteArrayInputStream(baos.toByteArray()));
-        while ((line = err2.readLine()) != null) {
-          stdout.append(line);
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-        throw new RuntimeException(e);
-      }
-    });
-    outThread.start();
-
-    Thread errThread = new Thread(() ->  {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      String line;
-      try {
-        saveStream(baos, err);
-        BufferedReader err2 = createReader(new ByteArrayInputStream(baos.toByteArray()));
-        while ((line = err2.readLine()) != null) {
-          stderr.append(line);
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-        throw new RuntimeException(e);
-      }
-    });
-    errThread.start();
-    */
+     * final InputStream err = p.getErrorStream();
+     * final InputStream out = p.getInputStream();
+     * Thread outThread = new Thread(() -> {
+     * ByteArrayOutputStream baos = new ByteArrayOutputStream();
+     * String line;
+     * try {
+     * saveStream(baos, out);
+     * BufferedReader err2 = createReader(new
+     * ByteArrayInputStream(baos.toByteArray()));
+     * while ((line = err2.readLine()) != null) {
+     * stdout.append(line);
+     * }
+     * } catch (IOException e) {
+     * e.printStackTrace();
+     * throw new RuntimeException(e);
+     * }
+     * });
+     * outThread.start();
+     *
+     * Thread errThread = new Thread(() -> {
+     * ByteArrayOutputStream baos = new ByteArrayOutputStream();
+     * String line;
+     * try {
+     * saveStream(baos, err);
+     * BufferedReader err2 = createReader(new
+     * ByteArrayInputStream(baos.toByteArray()));
+     * while ((line = err2.readLine()) != null) {
+     * stderr.append(line);
+     * }
+     * } catch (IOException e) {
+     * e.printStackTrace();
+     * throw new RuntimeException(e);
+     * }
+     * });
+     * errThread.start();
+     */
 
     try {
       int result = p.waitFor();
@@ -3297,7 +3284,6 @@ public class PApplet implements PConstants {
       throw new RuntimeException(e);
     }
   }
-
 
   /**
    * Same as exec() above, but prefixes the call with a shell.
@@ -3313,10 +3299,12 @@ public class PApplet implements PConstants {
       shell = "/bin/sh";
       runCmd = "-c";
       // attempt to emulate the behavior of an interactive shell
-      // can't use -i or -l since the version of bash shipped with macOS does not support this together with -c
+      // can't use -i or -l since the version of bash shipped with macOS does not
+      // support this together with -c
       // also we want to make sure no motd or similar gets returned as stdout
       argList.append("if [ -f /etc/profile ]; then . /etc/profile >/dev/null 2>&1; fi;");
-      argList.append("if [ -f ~/.bash_profile ]; then . ~/.bash_profile >/dev/null 2>&1; elif [ -f ~/.bash_profile ]; then . ~/.bash_profile >/dev/null 2>&1; elif [ -f ~/.profile ]; then ~/.profile >/dev/null 2>&1; fi;");
+      argList.append(
+              "if [ -f ~/.bash_profile ]; then . ~/.bash_profile >/dev/null 2>&1; elif [ -f ~/.bash_profile ]; then . ~/.bash_profile >/dev/null 2>&1; elif [ -f ~/.profile ]; then ~/.profile >/dev/null 2>&1; fi;");
     }
     for (String arg : args) {
       argList.append(arg);
@@ -3324,32 +3312,29 @@ public class PApplet implements PConstants {
     return exec(stdout, stderr, shell, runCmd, argList.join(" "));
   }
 
-
   /*
-  static private final String shellQuoted(String arg) {
-    if (arg.indexOf(' ') != -1) {
-      // check to see if already quoted
-      if ((arg.charAt(0) != '\"' || arg.charAt(arg.length()-1) != '\"') &&
-          (arg.charAt(0) != '\'' || arg.charAt(arg.length()-1) != '\'')) {
-
-        // see which quotes we can use
-        if (arg.indexOf('\"') == -1) {
-          // if no double quotes, try those first
-          return "\"" + arg + "\"";
-
-        } else if (arg.indexOf('\'') == -1) {
-          // if no single quotes, let's use those
-          return "'" + arg + "'";
-        }
-      }
-    }
-    return arg;
-  }
-  */
-
+   * static private final String shellQuoted(String arg) {
+   * if (arg.indexOf(' ') != -1) {
+   * // check to see if already quoted
+   * if ((arg.charAt(0) != '\"' || arg.charAt(arg.length()-1) != '\"') &&
+   * (arg.charAt(0) != '\'' || arg.charAt(arg.length()-1) != '\'')) {
+   *
+   * // see which quotes we can use
+   * if (arg.indexOf('\"') == -1) {
+   * // if no double quotes, try those first
+   * return "\"" + arg + "\"";
+   *
+   * } else if (arg.indexOf('\'') == -1) {
+   * // if no single quotes, let's use those
+   * return "'" + arg + "'";
+   * }
+   * }
+   * }
+   * return arg;
+   * }
+   */
 
   //////////////////////////////////////////////////////////////
-
 
   /**
    * Better way of handling e.printStackTrace() calls so that they can be
@@ -3358,7 +3343,6 @@ public class PApplet implements PConstants {
   protected void printStackTrace(Throwable t) {
     t.printStackTrace();
   }
-
 
   /**
    * Function for an application to kill itself and display an error.
@@ -3369,15 +3353,14 @@ public class PApplet implements PConstants {
     throw new RuntimeException(what);
   }
 
-
   /**
    * Same as above but with an exception. Also needs work.
    */
   public void die(String what, Exception e) {
-    if (e != null) e.printStackTrace();
+    if (e != null)
+      e.printStackTrace();
     die(what);
   }
-
 
   /**
    *
@@ -3411,7 +3394,7 @@ public class PApplet implements PConstants {
       // once the next draw() has completed
       exitCalled = true;
 
-    } else {  // !looping
+    } else { // !looping
       // if not looping, shut down things explicitly,
       // because the main thread will be sleeping
       dispose();
@@ -3421,21 +3404,20 @@ public class PApplet implements PConstants {
     }
   }
 
-
   public boolean exitCalled() {
     return exitCalled;
   }
 
-
   /**
-   * Some subclasses (I'm looking at you, processing.py) might wish to do something
-   * other than actually terminate the JVM. This gives them a chance to do whatever
+   * Some subclasses (I'm looking at you, processing.py) might wish to do
+   * something
+   * other than actually terminate the JVM. This gives them a chance to do
+   * whatever
    * they have in mind when cleaning up.
    */
   public void exitActual() {
     System.exit(0);
   }
-
 
   /**
    * Called to dispose of resources and shut down the sketch.
@@ -3446,7 +3428,7 @@ public class PApplet implements PConstants {
    */
   public void dispose() {
     // moved here from stop()
-    finished = true;  // let the sketch know it is shut down time
+    finished = true; // let the sketch know it is shut down time
 
     // don't run the disposers twice
     if (surface.stopThread()) {
@@ -3471,10 +3453,7 @@ public class PApplet implements PConstants {
 
   }
 
-
-
   //////////////////////////////////////////////////////////////
-
 
   /**
    * Call a method in the current class based on its name.
@@ -3494,10 +3473,9 @@ public class PApplet implements PConstants {
       e.getTargetException().printStackTrace();
     } catch (NoSuchMethodException nsme) {
       System.err.println("There is no public " + name + "() method " +
-                         "in the class " + getClass().getName());
+              "in the class " + getClass().getName());
     }
   }
-
 
   /**
    * Processing sketches follow a specific sequence of steps: <b>setup()</b>
@@ -3537,7 +3515,7 @@ public class PApplet implements PConstants {
    *           thread
    * @usage Application
    * @param name
-   *          name of the function to be executed in a separate thread
+   *             name of the function to be executed in a separate thread
    * @see PApplet#setup()
    * @see PApplet#draw()
    * @see PApplet#loop()
@@ -3547,12 +3525,9 @@ public class PApplet implements PConstants {
     new Thread(() -> method(name)).start();
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // SCREEN GRABASS
-
 
   /**
    *
@@ -3572,7 +3547,7 @@ public class PApplet implements PConstants {
    * @webref output:image
    * @webBrief Saves an image from the display window
    * @param filename
-   *          any sequence of letters and numbers
+   *                 any sequence of letters and numbers
    * @see PApplet#saveFrame()
    * @see PApplet#createGraphics(int, int, String)
    */
@@ -3580,13 +3555,11 @@ public class PApplet implements PConstants {
     g.save(savePath(filename));
   }
 
-
   /**
    */
   public void saveFrame() {
     g.save(savePath("screen-" + nf(frameCount, 4) + ".tif"));
   }
-
 
   /**
    *
@@ -3620,13 +3593,13 @@ public class PApplet implements PConstants {
    * @see PApplet#createGraphics(int, int, String, String)
    * @see PApplet#frameCount
    * @param filename
-   *          any sequence of letters or numbers that ends with either ".tif",
-   *          ".tga", ".jpg", or ".png"
+   *                 any sequence of letters or numbers that ends with either
+   *                 ".tif",
+   *                 ".tga", ".jpg", or ".png"
    */
   public void saveFrame(String filename) {
     g.save(savePath(insertFrame(filename)));
   }
-
 
   /**
    * Check a string for #### signs to see if the frame number should be
@@ -3645,10 +3618,8 @@ public class PApplet implements PConstants {
       String suffix = what.substring(last + 1);
       return prefix + nf(frameCount, count) + suffix;
     }
-    return what;  // no change
+    return what; // no change
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
@@ -3656,24 +3627,22 @@ public class PApplet implements PConstants {
 
   //
 
-
   /**
    * Set the cursor type
+   *
    * @param kind either ARROW, CROSS, HAND, MOVE, TEXT, or WAIT
    */
   public void cursor(int kind) {
     surface.setCursor(kind);
   }
 
-
   /**
    * Replace the cursor with the specified PImage. The x- and y-
    * coordinate of the center will be the center of the image.
    */
   public void cursor(PImage img) {
-    cursor(img, img.width/2, img.height/2);
+    cursor(img, img.width / 2, img.height / 2);
   }
-
 
   /**
    *
@@ -3696,16 +3665,15 @@ public class PApplet implements PConstants {
    *           visible if already hidden
    * @see PApplet#noCursor()
    * @param img
-   *          any variable of type PImage
+   *            any variable of type PImage
    * @param x
-   *          the horizontal active spot of the cursor
+   *            the horizontal active spot of the cursor
    * @param y
-   *          the vertical active spot of the cursor
+   *            the vertical active spot of the cursor
    */
   public void cursor(PImage img, int x, int y) {
     surface.setCursor(img, x, y);
   }
-
 
   /**
    * Show the cursor after noCursor() was called.
@@ -3715,7 +3683,6 @@ public class PApplet implements PConstants {
     surface.showCursor();
   }
 
-
   /**
    *
    * Hides the cursor from view. Will not work when running the program in a
@@ -3724,6 +3691,7 @@ public class PApplet implements PConstants {
    * <h3>Advanced</h3>
    * Hide the cursor by creating a transparent image
    * and using it as a custom cursor.
+   *
    * @webref environment
    * @webBrief Hides the cursor from view
    * @see PApplet#cursor()
@@ -3733,40 +3701,39 @@ public class PApplet implements PConstants {
     surface.hideCursor();
   }
 
-
   //////////////////////////////////////////////////////////////
 
-/**
- *
- * The <b>print()</b> function writes to the console area, the black rectangle
- * at the bottom of the Processing environment. This function is often helpful
- * for looking at the data a program is producing. The companion function
- * <b>println()</b> works like <b>print()</b>, but creates a new line of text
- * for each call to the function. More than one parameter can be passed into the
- * function by separating them with commas. Alternatively, individual elements
- * can be separated with quotes ("") and joined with the addition operator
- * (+).<br />
- * <br />
- * Using <b>print()</b> on an object will output <b>null</b>, a memory location
- * that may look like "@10be08," or the result of the <b>toString()</b> method
- * from the object that's being printed. Advanced users who want more useful
- * output when calling <b>print()</b> on their own classes can add a
- * <b>toString()</b> method to the class that returns a String.<br />
- * <br />
- * Note that the console is relatively slow. It works well for occasional
- * messages, but does not support high-speed, real-time output (such as at 60
- * frames per second). It should also be noted, that a print() within a for loop
- * can sometimes lock up the program, and cause the sketch to freeze.
- *
- * @webref output:text area
- * @webBrief Writes to the console area of the Processing environment
- * @usage IDE
- * @param what
- *          data to print to console
- * @see PApplet#println()
- * @see PApplet#printArray(Object)
- * @see PApplet#join(String[], char)
- */
+  /**
+   *
+   * The <b>print()</b> function writes to the console area, the black rectangle
+   * at the bottom of the Processing environment. This function is often helpful
+   * for looking at the data a program is producing. The companion function
+   * <b>println()</b> works like <b>print()</b>, but creates a new line of text
+   * for each call to the function. More than one parameter can be passed into the
+   * function by separating them with commas. Alternatively, individual elements
+   * can be separated with quotes ("") and joined with the addition operator
+   * (+).<br />
+   * <br />
+   * Using <b>print()</b> on an object will output <b>null</b>, a memory location
+   * that may look like "@10be08," or the result of the <b>toString()</b> method
+   * from the object that's being printed. Advanced users who want more useful
+   * output when calling <b>print()</b> on their own classes can add a
+   * <b>toString()</b> method to the class that returns a String.<br />
+   * <br />
+   * Note that the console is relatively slow. It works well for occasional
+   * messages, but does not support high-speed, real-time output (such as at 60
+   * frames per second). It should also be noted, that a print() within a for loop
+   * can sometimes lock up the program, and cause the sketch to freeze.
+   *
+   * @webref output:text area
+   * @webBrief Writes to the console area of the Processing environment
+   * @usage IDE
+   * @param what
+   *             data to print to console
+   * @see PApplet#println()
+   * @see PApplet#printArray(Object)
+   * @see PApplet#join(String[], char)
+   */
   static public void print(byte what) {
     System.out.print(what);
     System.out.flush();
@@ -3825,7 +3792,6 @@ public class PApplet implements PConstants {
     System.out.print(sb);
   }
 
-
   /**
    *
    * The <b>println()</b> function writes to the console area, the black
@@ -3855,10 +3821,9 @@ public class PApplet implements PConstants {
     System.out.println();
   }
 
-
-/**
- * @param what data to print to console
- */
+  /**
+   * @param what data to print to console
+   */
   static public void println(byte what) {
     System.out.println(what);
     System.out.flush();
@@ -3903,26 +3868,24 @@ public class PApplet implements PConstants {
    * @param variables list of data, separated by commas
    */
   static public void println(Object... variables) {
-//    System.out.println("got " + variables.length + " variables");
+    // System.out.println("got " + variables.length + " variables");
     print(variables);
     println();
   }
 
-
   /*
-  // Breaking this out since the compiler doesn't know the difference between
-  // Object... and just Object (with an array passed in). This should take care
-  // of the confusion for at least the most common case (a String array).
-  // On second thought, we're going the printArray() route, since the other
-  // object types are also used frequently.
-  static public void println(String[] array) {
-    for (int i = 0; i < array.length; i++) {
-      System.out.println("[" + i + "] \"" + array[i] + "\"");
-    }
-    System.out.flush();
-  }
-  */
-
+   * // Breaking this out since the compiler doesn't know the difference between
+   * // Object... and just Object (with an array passed in). This should take care
+   * // of the confusion for at least the most common case (a String array).
+   * // On second thought, we're going the printArray() route, since the other
+   * // object types are also used frequently.
+   * static public void println(String[] array) {
+   * for (int i = 0; i < array.length; i++) {
+   * System.out.println("[" + i + "] \"" + array[i] + "\"");
+   * }
+   * System.out.flush();
+   * }
+   */
 
   /**
    * For arrays, use printArray() instead. This function causes a warning
@@ -3952,7 +3915,7 @@ public class PApplet implements PConstants {
    *
    * @webref output:text area
    * @webBrief Writes array data to the text
-   * area of the Processing environment's console.
+   *           area of the Processing environment's console.
    * @param what one-dimensional array
    * @usage IDE
    * @see PApplet#print(byte)
@@ -3970,7 +3933,7 @@ public class PApplet implements PConstants {
           case '[' ->
             // don't even mess with multi-dimensional arrays (case '[')
             // or anything else that's not int, float, boolean, char
-            System.out.println(what);
+                  System.out.println(what);
           case 'L' -> {
             // print a 1D array of objects as individual elements
             Object[] poo = (Object[]) what;
@@ -3982,43 +3945,43 @@ public class PApplet implements PConstants {
               }
             }
           }
-          case 'Z' -> {  // boolean
+          case 'Z' -> { // boolean
             boolean[] zz = (boolean[]) what;
             for (int i = 0; i < zz.length; i++) {
               System.out.println("[" + i + "] " + zz[i]);
             }
           }
-          case 'B' -> {  // byte
+          case 'B' -> { // byte
             byte[] bb = (byte[]) what;
             for (int i = 0; i < bb.length; i++) {
               System.out.println("[" + i + "] " + bb[i]);
             }
           }
-          case 'C' -> {  // char
+          case 'C' -> { // char
             char[] cc = (char[]) what;
             for (int i = 0; i < cc.length; i++) {
               System.out.println("[" + i + "] '" + cc[i] + "'");
             }
           }
-          case 'I' -> {  // int
+          case 'I' -> { // int
             int[] ii = (int[]) what;
             for (int i = 0; i < ii.length; i++) {
               System.out.println("[" + i + "] " + ii[i]);
             }
           }
-          case 'J' -> {  // int
+          case 'J' -> { // int
             long[] jj = (long[]) what;
             for (int i = 0; i < jj.length; i++) {
               System.out.println("[" + i + "] " + jj[i]);
             }
           }
-          case 'F' -> {  // float
+          case 'F' -> { // float
             float[] ff = (float[]) what;
             for (int i = 0; i < ff.length; i++) {
               System.out.println("[" + i + "] " + ff[i]);
             }
           }
-          case 'D' -> {  // double
+          case 'D' -> { // double
             double[] dd = (double[]) what;
             for (int i = 0; i < dd.length; i++) {
               System.out.println("[" + i + "] " + dd[i]);
@@ -4026,32 +3989,31 @@ public class PApplet implements PConstants {
           }
           default -> System.out.println(what);
         }
-      } else {  // not an array
+      } else { // not an array
         System.out.println(what);
       }
     }
     System.out.flush();
   }
 
-
   static public void debug(String msg) {
-    if (DEBUG) println(msg);
+    if (DEBUG)
+      println(msg);
   }
   //
 
   /*
-  // not very useful, because it only works for public (and protected?)
-  // fields of a class, not local variables to methods
-  public void printvar(String name) {
-    try {
-      Field field = getClass().getDeclaredField(name);
-      println(name + " = " + field.get(this));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-  */
-
+   * // not very useful, because it only works for public (and protected?)
+   * // fields of a class, not local variables to methods
+   * public void printvar(String name) {
+   * try {
+   * Field field = getClass().getDeclaredField(name);
+   * println(name + " = " + field.get(this));
+   * } catch (Exception e) {
+   * e.printStackTrace();
+   * }
+   * }
+   */
 
   //////////////////////////////////////////////////////////////
 
@@ -4061,7 +4023,7 @@ public class PApplet implements PConstants {
   // doubles are overkill for processing sketches, and casting
   // things all the time is annoying, thus the functions below.
 
-/**
+  /**
    *
    * Calculates the absolute value (magnitude) of a number. The absolute
    * value of a number is always positive.
@@ -4078,7 +4040,7 @@ public class PApplet implements PConstants {
     return (n < 0) ? -n : n;
   }
 
-/**
+  /**
    *
    * Squares a number (multiplies a number by itself). The result is always a
    * positive number, as multiplying two negative numbers always yields a
@@ -4090,10 +4052,10 @@ public class PApplet implements PConstants {
    * @see PApplet#sqrt(float)
    */
   static public final float sq(float n) {
-    return n*n;
+    return n * n;
   }
 
-/**
+  /**
    *
    * Calculates the square root of a number. The square root of a number is
    * always positive, even though there may be a valid negative root. The
@@ -4107,38 +4069,39 @@ public class PApplet implements PConstants {
    * @see PApplet#sq(float)
    */
   static public final float sqrt(float n) {
-    return (float)Math.sqrt(n);
+    return (float) Math.sqrt(n);
   }
 
-/**
+  /**
    *
    * Calculates the natural logarithm (the base-<i>e</i> logarithm) of a
    * number. This function expects the values greater than 0.0.
    *
    * @webref math:calculation
    * @webBrief Calculates the natural logarithm (the base-<i>e</i> logarithm) of a
-   * number
+   *           number
    * @param n number greater than 0.0
    */
   static public final float log(float n) {
-    return (float)Math.log(n);
+    return (float) Math.log(n);
   }
 
-/**
+  /**
    *
    * Returns Euler's number <i>e</i> (2.71828...) raised to the power of the
    * <b>value</b> parameter.
    *
    * @webref math:calculation
-   * @webBrief Returns Euler's number <i>e</i> (2.71828...) raised to the power of the
-   * <b>value</b> parameter
+   * @webBrief Returns Euler's number <i>e</i> (2.71828...) raised to the power of
+   *           the
+   *           <b>value</b> parameter
    * @param n exponent to raise
    */
   static public final float exp(float n) {
-    return (float)Math.exp(n);
+    return (float) Math.exp(n);
   }
 
-/**
+  /**
    *
    * Facilitates exponential expressions. The <b>pow()</b> function is an
    * efficient way of multiplying numbers by themselves (or their reciprocal)
@@ -4152,23 +4115,23 @@ public class PApplet implements PConstants {
    * @see PApplet#sqrt(float)
    */
   static public final float pow(float n, float e) {
-    return (float)Math.pow(n, e);
+    return (float) Math.pow(n, e);
   }
 
-/**
- *
- * Determines the largest value in a sequence of numbers, and then returns that
- * value. <b>max()</b> accepts either two or three <b>float</b> or <b>int</b>
- * values as parameters, or an array of any length.
- *
- * @webref math:calculation
- * @webBrief Determines the largest value in a sequence of numbers
- * @param a
- *          first number to compare
- * @param b
- *          second number to compare
- * @see PApplet#min(float, float, float)
- */
+  /**
+   *
+   * Determines the largest value in a sequence of numbers, and then returns that
+   * value. <b>max()</b> accepts either two or three <b>float</b> or <b>int</b>
+   * values as parameters, or an array of any length.
+   *
+   * @webref math:calculation
+   * @webBrief Determines the largest value in a sequence of numbers
+   * @param a
+   *          first number to compare
+   * @param b
+   *          second number to compare
+   * @see PApplet#min(float, float, float)
+   */
   static public final int max(int a, int b) {
     return (a > b) ? a : b;
   }
@@ -4178,23 +4141,21 @@ public class PApplet implements PConstants {
   }
 
   /*
-  static public final double max(double a, double b) {
-    return (a > b) ? a : b;
-  }
-  */
+   * static public final double max(double a, double b) {
+   * return (a > b) ? a : b;
+   * }
+   */
 
-/**
- * @param c third number to compare
- */
+  /**
+   * @param c third number to compare
+   */
   static public final int max(int a, int b, int c) {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
   }
 
-
   static public final float max(float a, float b, float c) {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
   }
-
 
   /**
    * @param list array of numbers to compare
@@ -4205,7 +4166,8 @@ public class PApplet implements PConstants {
     }
     int max = list[0];
     for (int i = 1; i < list.length; i++) {
-      if (list[i] > max) max = list[i];
+      if (list[i] > max)
+        max = list[i];
     }
     return max;
   }
@@ -4216,31 +4178,30 @@ public class PApplet implements PConstants {
     }
     float max = list[0];
     for (int i = 1; i < list.length; i++) {
-      if (list[i] > max) max = list[i];
+      if (list[i] > max)
+        max = list[i];
     }
     return max;
   }
 
-
-//  /**
-//   * Find the maximum value in an array.
-//   * Throws an ArrayIndexOutOfBoundsException if the array is length 0.
-//   * @param list the source array
-//   * @return The maximum value
-//   */
+  // /**
+  // * Find the maximum value in an array.
+  // * Throws an ArrayIndexOutOfBoundsException if the array is length 0.
+  // * @param list the source array
+  // * @return The maximum value
+  // */
   /*
-  static public final double max(double[] list) {
-    if (list.length == 0) {
-      throw new ArrayIndexOutOfBoundsException(ERROR_MIN_MAX);
-    }
-    double max = list[0];
-    for (int i = 1; i < list.length; i++) {
-      if (list[i] > max) max = list[i];
-    }
-    return max;
-  }
-  */
-
+   * static public final double max(double[] list) {
+   * if (list.length == 0) {
+   * throw new ArrayIndexOutOfBoundsException(ERROR_MIN_MAX);
+   * }
+   * double max = list[0];
+   * for (int i = 1; i < list.length; i++) {
+   * if (list[i] > max) max = list[i];
+   * }
+   * return max;
+   * }
+   */
 
   static public final int min(int a, int b) {
     return (a < b) ? a : b;
@@ -4251,42 +4212,40 @@ public class PApplet implements PConstants {
   }
 
   /*
-  static public final double min(double a, double b) {
-    return (a < b) ? a : b;
-  }
-  */
-
+   * static public final double min(double a, double b) {
+   * return (a < b) ? a : b;
+   * }
+   */
 
   static public final int min(int a, int b, int c) {
     return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
   }
 
-/**
- *
- * Determines the smallest value in a sequence of numbers, and then returns that
- * value. <b>min()</b> accepts either two or three <b>float</b> or <b>int</b>
- * values as parameters, or an array of any length.
- *
- * @webref math:calculation
- * @webBrief Determines the smallest value in a sequence of numbers
- * @param a
- *          first number
- * @param b
- *          second number
- * @param c
- *          third number
- * @see PApplet#max(float, float, float)
- */
+  /**
+   *
+   * Determines the smallest value in a sequence of numbers, and then returns that
+   * value. <b>min()</b> accepts either two or three <b>float</b> or <b>int</b>
+   * values as parameters, or an array of any length.
+   *
+   * @webref math:calculation
+   * @webBrief Determines the smallest value in a sequence of numbers
+   * @param a
+   *          first number
+   * @param b
+   *          second number
+   * @param c
+   *          third number
+   * @see PApplet#max(float, float, float)
+   */
   static public final float min(float a, float b, float c) {
     return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
   }
 
   /*
-  static public final double min(double a, double b, double c) {
-    return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
-  }
-  */
-
+   * static public final double min(double a, double b, double c) {
+   * return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
+   * }
+   */
 
   /**
    * @param list array of numbers to compare
@@ -4297,7 +4256,8 @@ public class PApplet implements PConstants {
     }
     int min = list[0];
     for (int i = 1; i < list.length; i++) {
-      if (list[i] < min) min = list[i];
+      if (list[i] < min)
+        min = list[i];
     }
     return min;
   }
@@ -4308,54 +4268,203 @@ public class PApplet implements PConstants {
     }
     float min = list[0];
     for (int i = 1; i < list.length; i++) {
-      if (list[i] < min) min = list[i];
+      if (list[i] < min)
+        min = list[i];
     }
     return min;
   }
-
 
   /*
    * Find the minimum value in an array.
    * Throws an ArrayIndexOutOfBoundsException if the array is length 0.
+   *
    * @param list the source array
+   *
    * @return The minimum value
    */
   /*
-  static public final double min(double[] list) {
-    if (list.length == 0) {
-      throw new ArrayIndexOutOfBoundsException(ERROR_MIN_MAX);
-    }
-    double min = list[0];
-    for (int i = 1; i < list.length; i++) {
-      if (list[i] < min) min = list[i];
-    }
-    return min;
-  }
-  */
-
+   * static public final double min(double[] list) {
+   * if (list.length == 0) {
+   * throw new ArrayIndexOutOfBoundsException(ERROR_MIN_MAX);
+   * }
+   * double min = list[0];
+   * for (int i = 1; i < list.length; i++) {
+   * if (list[i] < min) min = list[i];
+   * }
+   * return min;
+   * }
+   */
 
   static public final int constrain(int amt, int low, int high) {
     return (amt < low) ? low : ((amt > high) ? high : amt);
   }
 
-/**
+  /**
    *
    * Constrains a value to not exceed a maximum and minimum value.
    *
    * @webref math:calculation
    * @webBrief Constrains a value to not exceed a maximum and minimum value
-   * @param amt the value to constrain
-   * @param low minimum limit
+   * @param amt  the value to constrain
+   * @param low  minimum limit
    * @param high maximum limit
    * @see PApplet#max(float, float, float)
    * @see PApplet#min(float, float, float)
    */
-
   static public final float constrain(float amt, float low, float high) {
     return (amt < low) ? low : ((amt > high) ? high : amt);
   }
 
-/**
+  /**
+   *
+   * Constrains a value to not exceed a maximum and minimum value.
+   *
+   * @webref math:calculation
+   * @webBrief Constrains a value to not exceed a maximum and minimum value
+   * @param amt  the vector to constrain
+   * @param low  minimum limit
+   * @param high maximum limit
+   * @see PApplet#max(float, float, float)
+   * @see PApplet#min(float, float, float)
+   */
+  static public final PVector constrain (PVector amt, PVector low, PVector high) {
+    return new PVector(constrain(amt.x, low.x, high.x), constrain(amt.y, low.y, high.y), constrain(amt.z, low.z, high.z));
+  }
+
+  /**
+   *
+   * Constrains a value to not exceed a maximum and minimum value.
+   *
+   * @webref math:calculation
+   * @webBrief Constrains a value to not exceed a maximum and minimum value
+   * @param amt  the vector to constrain
+   * @param low  minimum limit
+   * @param high maximum limit
+   * @see PApplet#max(float, float, float)
+   * @see PApplet#min(float, float, float)
+   */
+  static public final PVector constrain (PVector amt, float low, float high) {
+    return new PVector(constrain(amt.x, low, high), constrain(amt.y, low, high), constrain(amt.z, low, high));
+  }
+
+  /**
+   *
+   * Constrains a value to not exceed a maximum and minimum value.
+   *
+   * @webref math:calculation
+   * @webBrief Constrains a value to not exceed a maximum and minimum value
+   * @param amt  the vector to constrain
+   * @param lowX  minimum x limit
+   * @param highX maximum x limit
+   * @param lowY  minimum y limit
+   * @param highY maximum y limit
+   * @param lowZ  minimum z limit
+   * @param highZ maximum z limit
+   * @see PApplet#max(float, float, float)
+   * @see PApplet#min(float, float, float)
+   */
+  static public final PVector constrain (PVector amt, float lowX, float highX, float lowY, float highY, float lowZ, float highZ) {
+      return new PVector(constrain(amt.x, lowX, highX), constrain(amt.y, lowY, highY), constrain(amt.z, lowZ, highZ));
+  }
+
+  /**
+   *
+   * Check if a value is still visible on the screen
+   *
+   * @webref math:calculation
+   * @webBrief Check if a value is still visible on the screen
+   * @param value the value to check
+   * @param size a size to consider
+   */
+  public final boolean offScreen(float value, float size) {
+    return (value < -size) || (value > width + size);
+  }
+
+  /**
+   *
+   * Check if a position is still visible on the screen
+   *
+   * @webref math:calculation
+   * @webBrief Check if a position is still visible on the screen
+   * @param x the x position to check
+   * @param y the y position to check
+   * @param size a size to consider
+   */
+  public final boolean offScreen(float x, float y, float size) {
+    return offScreen(x, size) || offScreen(y, size);
+  }
+
+  /**
+   *
+   * Check if a position is still visible on the screen
+   *
+   * @webref math:calculation
+   * @webBrief Check if a position is still visible on the screen
+   * @param x the x position to check
+   * @param y the y position to check
+   * @param sizeX the x size to consider
+   * @param sizeY the y size to consider
+   */
+  public final boolean offScreen(float x, float y, float sizeX, float sizeY) {
+    return offScreen(x, sizeX) || offScreen(y, sizeY);
+  }
+
+  /**
+   *
+   * Check if a vector is still visible on the screen
+   *
+   * @webref math:calculation
+   * @webBrief Check if a vector is still visible on the screen
+   * @param vector the vector to check
+   * @param size a size to consider
+   */
+  public final boolean offScreen(PVector vector, float size) {
+    return offScreen(vector.x, vector.y, size);
+  }
+
+  /**
+   *
+   * Check if a vector is still visible on the screen
+   *
+   * @webref math:calculation
+   * @webBrief Check if a vector is still visible on the screen
+   * @param vector the vector to check
+   * @param sizeX the x size to consider
+   * @param sizeY the y size to consider
+   */
+  public final boolean offScreen(PVector vector, float sizeX, float sizeY) {
+    return offScreen(vector.x, vector.y, sizeX, sizeY);
+  }
+
+  /**
+   *
+   * Check if a vector is still visible on the screen
+   *
+   * @webref math:calculation
+   * @webBrief Check if a vector is still visible on the screen
+   * @param vector the vector to check
+   * @param size the size to consider
+   */
+  public final boolean offScreen(PVector vector, PVector size) {
+    return offScreen(vector.x, vector.y, size.x, size.y);
+  }
+
+  /**
+   *
+   * Check if the mouse is hovering over a position
+   *
+   * @webref math:calculation
+   * @webBrief Check if the mouse is hovering over a position
+   * @param x the x position to check
+   * @param y the y position to check
+   * @param width the width to consider
+   * @param height the height to consider
+   */
+  public final boolean hovering(int x, int y, int width, int height) {
+    return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+  }
+
+  /**
    *
    * Calculates the sine of an angle. This function expects the values of the
    * <b>angle</b> parameter to be provided in radians (values from 0 to
@@ -4369,10 +4478,10 @@ public class PApplet implements PConstants {
    * @see PApplet#radians(float)
    */
   static public final float sin(float angle) {
-    return (float)Math.sin(angle);
+    return (float) Math.sin(angle);
   }
 
-/**
+  /**
    *
    * Calculates the cosine of an angle. This function expects the values of
    * the <b>angle</b> parameter to be provided in radians (values from 0 to
@@ -4386,10 +4495,10 @@ public class PApplet implements PConstants {
    * @see PApplet#radians(float)
    */
   static public final float cos(float angle) {
-    return (float)Math.cos(angle);
+    return (float) Math.cos(angle);
   }
 
-/**
+  /**
    *
    * Calculates the ratio of the sine and cosine of an angle. This function
    * expects the values of the <b>angle</b> parameter to be provided in
@@ -4404,10 +4513,10 @@ public class PApplet implements PConstants {
    * @see PApplet#radians(float)
    */
   static public final float tan(float angle) {
-    return (float)Math.tan(angle);
+    return (float) Math.tan(angle);
   }
 
-/**
+  /**
    *
    * The inverse of <b>sin()</b>, returns the arc sine of a value. This
    * function expects the values in the range of -1 to 1 and values are
@@ -4421,10 +4530,10 @@ public class PApplet implements PConstants {
    * @see PApplet#atan(float)
    */
   static public final float asin(float value) {
-    return (float)Math.asin(value);
+    return (float) Math.asin(value);
   }
 
-/**
+  /**
    *
    * The inverse of <b>cos()</b>, returns the arc cosine of a value. This
    * function expects the values in the range of -1 to 1 and values are
@@ -4438,14 +4547,15 @@ public class PApplet implements PConstants {
    * @see PApplet#atan(float)
    */
   static public final float acos(float value) {
-    return (float)Math.acos(value);
+    return (float) Math.acos(value);
   }
 
-/**
+  /**
    *
    * The inverse of <b>tan()</b>, returns the arc tangent of a value. This
    * function expects the values in the range of -Infinity to Infinity
-   * (exclusive) and values are returned in the range <b>-PI/2</b> to <b>PI/2 </b>.
+   * (exclusive) and values are returned in the range <b>-PI/2</b> to <b>PI/2
+   * </b>.
    *
    * @webref math:trigonometry
    * @webBrief The inverse of <b>tan()</b>, returns the arc tangent of a value
@@ -4455,31 +4565,31 @@ public class PApplet implements PConstants {
    * @see PApplet#acos(float)
    */
   static public final float atan(float value) {
-    return (float)Math.atan(value);
+    return (float) Math.atan(value);
   }
 
-/**
+  /**
    *
    * Calculates the angle (in radians) from a specified point to the
    * coordinate origin as measured from the positive x-axis. Values are
    * returned as a <b>float</b> in the range from <b>PI</b> to <b>-PI</b>.
    * The <b>atan2()</b> function is most often used for orienting geometry to
-   * the position of the cursor.  Note: The y-coordinate of the point is the
+   * the position of the cursor. Note: The y-coordinate of the point is the
    * first parameter and the x-coordinate is the second due the structure
    * of calculating the tangent.
    *
    * @webref math:trigonometry
    * @webBrief Calculates the angle (in radians) from a specified point to the
-   * coordinate origin as measured from the positive x-axis
+   *           coordinate origin as measured from the positive x-axis
    * @param y y-coordinate of the point
    * @param x x-coordinate of the point
    * @see PApplet#tan(float)
    */
   static public final float atan2(float y, float x) {
-    return (float)Math.atan2(y, x);
+    return (float) Math.atan2(y, x);
   }
 
-/**
+  /**
    *
    * Converts a radian measurement to its corresponding value in degrees.
    * Radians and degrees are two ways of measuring the same thing. There are
@@ -4496,7 +4606,7 @@ public class PApplet implements PConstants {
     return radians * RAD_TO_DEG;
   }
 
-/**
+  /**
    *
    * Converts a degree measurement to its corresponding value in radians.
    * Radians and degrees are two ways of measuring the same thing. There are
@@ -4513,14 +4623,15 @@ public class PApplet implements PConstants {
     return degrees * DEG_TO_RAD;
   }
 
-/**
+  /**
    *
    * Calculates the closest int value that is greater than or equal to the
    * value of the parameter. For example, <b>ceil(9.03)</b> returns the value 10.
    *
    * @webref math:calculation
-   * @webBrief Calculates the closest int value that is greater than or equal to the
-   * value of the parameter
+   * @webBrief Calculates the closest int value that is greater than or equal to
+   *           the
+   *           value of the parameter
    * @param n number to round up
    * @see PApplet#floor(float)
    * @see PApplet#round(float)
@@ -4529,14 +4640,15 @@ public class PApplet implements PConstants {
     return (int) Math.ceil(n);
   }
 
-/**
+  /**
    *
    * Calculates the closest int value that is less than or equal to the value
    * of the parameter.
    *
    * @webref math:calculation
-   * @webBrief Calculates the closest int value that is less than or equal to the value
-   * of the parameter
+   * @webBrief Calculates the closest int value that is less than or equal to the
+   *           value
+   *           of the parameter
    * @param n number to round down
    * @see PApplet#ceil(float)
    * @see PApplet#round(float)
@@ -4545,34 +4657,34 @@ public class PApplet implements PConstants {
     return (int) Math.floor(n);
   }
 
-/**
- *
- * Calculates the integer closest to the <b>n</b> parameter. For example,
- * <b>round(133.8)</b> returns the value 134.
- *
- * @webref math:calculation
- * @webBrief Calculates the integer closest to the <b>value</b> parameter
- * @param n
- *          number to round
- * @see PApplet#floor(float)
- * @see PApplet#ceil(float)
- */
+  /**
+   *
+   * Calculates the integer closest to the <b>n</b> parameter. For example,
+   * <b>round(133.8)</b> returns the value 134.
+   *
+   * @webref math:calculation
+   * @webBrief Calculates the integer closest to the <b>value</b> parameter
+   * @param n
+   *          number to round
+   * @see PApplet#floor(float)
+   * @see PApplet#ceil(float)
+   */
   static public final int round(float n) {
     return Math.round(n);
   }
 
-
   static public final float mag(float a, float b) {
-    return (float)Math.sqrt(a*a + b*b);
+    return (float) Math.sqrt(a * a + b * b);
   }
 
-/**
+  /**
    *
    * Calculates the magnitude (or length) of a vector. A vector is a
    * direction in space commonly used in computer graphics and linear
    * algebra. Because it has no "start" position, the magnitude of a vector
    * can be thought of as the distance from coordinate (0,0) to its (x,y)
-   * value. Therefore, <b>mag()</b> is a shortcut for writing <b>dist(0, 0, x, y)</b>.
+   * value. Therefore, <b>mag()</b> is a shortcut for writing <b>dist(0, 0, x,
+   * y)</b>.
    *
    * @webref math:calculation
    * @webBrief Calculates the magnitude (or length) of a vector
@@ -4582,15 +4694,14 @@ public class PApplet implements PConstants {
    * @see PApplet#dist(float, float, float, float)
    */
   static public final float mag(float a, float b, float c) {
-    return (float)Math.sqrt(a*a + b*b + c*c);
+    return (float) Math.sqrt(a * a + b * b + c * c);
   }
-
 
   static public final float dist(float x1, float y1, float x2, float y2) {
-    return sqrt(sq(x2-x1) + sq(y2-y1));
+    return sqrt(sq(x2 - x1) + sq(y2 - y1));
   }
 
-/**
+  /**
    *
    * Calculates the distance between two points.
    *
@@ -4605,10 +4716,10 @@ public class PApplet implements PConstants {
    */
   static public final float dist(float x1, float y1, float z1,
                                  float x2, float y2, float z2) {
-    return sqrt(sq(x2-x1) + sq(y2-y1) + sq(z2-z1));
+    return sqrt(sq(x2 - x1) + sq(y2 - y1) + sq(z2 - z1));
   }
 
-/**
+  /**
    *
    * Calculates a number between two numbers at a specific increment. The
    * <b>amt</b> parameter is the amount to interpolate between the two values
@@ -4619,15 +4730,15 @@ public class PApplet implements PConstants {
    * @webref math:calculation
    * @webBrief Calculates a number between two numbers at a specific increment
    * @param start first value
-   * @param stop second value
-   * @param amt float between 0.0 and 1.0
+   * @param stop  second value
+   * @param amt   float between 0.0 and 1.0
    * @see PGraphics#curvePoint(float, float, float, float, float)
    * @see PGraphics#bezierPoint(float, float, float, float, float)
    * @see PVector#lerp(PVector, float)
    * @see PGraphics#lerpColor(int, int, float)
    */
   static public final float lerp(float start, float stop, float amt) {
-    return start + (stop-start) * amt;
+    return start + (stop - start) * amt;
   }
 
   /**
@@ -4643,11 +4754,11 @@ public class PApplet implements PConstants {
    * @webBrief Normalizes a number from another range into a value between 0 and
    *           1
    * @param value
-   *          the incoming value to be converted
+   *              the incoming value to be converted
    * @param start
-   *          lower bound of the value's current range
+   *              lower bound of the value's current range
    * @param stop
-   *          upper bound of the value's current range
+   *              upper bound of the value's current range
    * @see PApplet#map(float, float, float, float, float)
    * @see PApplet#lerp(float, float, float)
    */
@@ -4670,56 +4781,50 @@ public class PApplet implements PConstants {
    * @webref math:calculation
    * @webBrief Re-maps a number from one range to another
    * @param value
-   *          the incoming value to be converted
+   *               the incoming value to be converted
    * @param start1
-   *          lower bound of the value's current range
+   *               lower bound of the value's current range
    * @param stop1
-   *          upper bound of the value's current range
+   *               upper bound of the value's current range
    * @param start2
-   *          lower bound of the value's target range
+   *               lower bound of the value's target range
    * @param stop2
-   *          upper bound of the value's target range
+   *               upper bound of the value's target range
    * @see PApplet#norm(float, float, float)
    * @see PApplet#lerp(float, float, float)
    */
   static public final float map(float value,
                                 float start1, float stop1,
                                 float start2, float stop2) {
-    float outgoing =
-      start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+    float outgoing = start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
     String badness = null;
     if (outgoing != outgoing) {
       badness = "NaN (not a number)";
 
     } else if (outgoing == Float.NEGATIVE_INFINITY ||
-               outgoing == Float.POSITIVE_INFINITY) {
+            outgoing == Float.POSITIVE_INFINITY) {
       badness = "infinity";
     }
     if (badness != null) {
-      final String msg =
-        String.format("map(%s, %s, %s, %s, %s) called, which returns %s",
-                      nf(value), nf(start1), nf(stop1),
-                      nf(start2), nf(stop2), badness);
+      final String msg = String.format("map(%s, %s, %s, %s, %s) called, which returns %s",
+              nf(value), nf(start1), nf(stop1),
+              nf(start2), nf(stop2), badness);
       PGraphics.showWarning(msg);
     }
     return outgoing;
   }
 
-
   /*
-  static public final double map(double value,
-                                 double istart, double istop,
-                                 double ostart, double ostop) {
-    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
-  }
-  */
-
-
+   * static public final double map(double value,
+   * double istart, double istop,
+   * double ostart, double ostop) {
+   * return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+   * }
+   */
 
   //////////////////////////////////////////////////////////////
 
   // RANDOM NUMBERS
-
 
   Random internalRandom;
 
@@ -4759,7 +4864,7 @@ public class PApplet implements PConstants {
    *
    * @webref math:random
    * @webBrief Returns a float from a random series of numbers having a mean of 0
-   * and standard deviation of 1
+   *           and standard deviation of 1
    * @see PApplet#random(float,float)
    * @see PApplet#noise(float, float, float)
    */
@@ -4769,7 +4874,6 @@ public class PApplet implements PConstants {
     }
     return (float) internalRandom.nextGaussian();
   }
-
 
   /**
    *
@@ -4788,14 +4892,15 @@ public class PApplet implements PConstants {
    * @webref math:random
    * @webBrief Generates random numbers
    * @param low
-   *          lower limit
+   *             lower limit
    * @param high
-   *          upper limit
+   *             upper limit
    * @see PApplet#randomSeed(long)
    * @see PApplet#noise(float, float, float)
    */
   public final float random(float low, float high) {
-    if (low >= high) return low;
+    if (low >= high)
+      return low;
     float diff = high - low;
     float value;
     // because of rounding error, can't just add low, otherwise it may hit high
@@ -4806,29 +4911,27 @@ public class PApplet implements PConstants {
     return value;
   }
 
-
- /**
-  *
-  * Sets the seed value for <b>random()</b>. By default, <b>random()</b>
-  * produces different results each time the program is run. Set the <b>seed</b>
-  * parameter to a constant to return the same pseudo-random numbers each time
-  * the software is run.
-  *
-  * @webref math:random
-  * @webBrief Sets the seed value for <b>random()</b>
-  * @param seed
-  *          seed value
-  * @see PApplet#random(float,float)
-  * @see PApplet#noise(float, float, float)
-  * @see PApplet#noiseSeed(long)
-  */
+  /**
+   *
+   * Sets the seed value for <b>random()</b>. By default, <b>random()</b>
+   * produces different results each time the program is run. Set the <b>seed</b>
+   * parameter to a constant to return the same pseudo-random numbers each time
+   * the software is run.
+   *
+   * @webref math:random
+   * @webBrief Sets the seed value for <b>random()</b>
+   * @param seed
+   *             seed value
+   * @see PApplet#random(float,float)
+   * @see PApplet#noise(float, float, float)
+   * @see PApplet#noiseSeed(long)
+   */
   public final void randomSeed(long seed) {
     if (internalRandom == null) {
       internalRandom = new Random();
     }
     internalRandom.setSeed(seed);
   }
-
 
   /**
    * Return a random integer from 0 up to (but not including)
@@ -4839,7 +4942,6 @@ public class PApplet implements PConstants {
     return (int) random(high);
   }
 
-
   /**
    * Return a random integer from “low” up to (but not including)
    * the specified value for “high”. This is the same as calling random()
@@ -4848,8 +4950,6 @@ public class PApplet implements PConstants {
   public final int choice(int low, int high) {
     return (int) random(low, high);
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
@@ -4867,9 +4967,9 @@ public class PApplet implements PConstants {
   // as used in their demo "art": http://www.farb-rausch.de/fr010src.zip
 
   static final int PERLIN_YWRAPB = 4;
-  static final int PERLIN_YWRAP = 1<<PERLIN_YWRAPB;
+  static final int PERLIN_YWRAP = 1 << PERLIN_YWRAPB;
   static final int PERLIN_ZWRAPB = 8;
-  static final int PERLIN_ZWRAP = 1<<PERLIN_ZWRAPB;
+  static final int PERLIN_ZWRAP = 1 << PERLIN_ZWRAPB;
   static final int PERLIN_SIZE = 4095;
 
   int perlin_octaves = 4; // default to medium smooth
@@ -4882,7 +4982,6 @@ public class PApplet implements PConstants {
   float[] perlin;
 
   Random perlinRandom;
-
 
   /**
    */
@@ -4952,7 +5051,7 @@ public class PApplet implements PConstants {
       }
       perlin = new float[PERLIN_SIZE + 1];
       for (int i = 0; i < PERLIN_SIZE + 1; i++) {
-        perlin[i] = perlinRandom.nextFloat(); //(float)Math.random();
+        perlin[i] = perlinRandom.nextFloat(); // (float)Math.random();
       }
       // [toxi 031112]
       // noise broke due to recent change of cos table in PGraphics
@@ -4962,51 +5061,66 @@ public class PApplet implements PConstants {
       perlin_PI >>= 1;
     }
 
-    if (x<0) x=-x;
-    if (y<0) y=-y;
-    if (z<0) z=-z;
+    if (x < 0)
+      x = -x;
+    if (y < 0)
+      y = -y;
+    if (z < 0)
+      z = -z;
 
-    int xi=(int)x, yi=(int)y, zi=(int)z;
+    int xi = (int) x, yi = (int) y, zi = (int) z;
     float xf = x - xi;
     float yf = y - yi;
     float zf = z - zi;
     float rxf, ryf;
 
-    float r=0;
-    float ampl=0.5f;
+    float r = 0;
+    float ampl = 0.5f;
 
-    float n1,n2,n3;
+    float n1, n2, n3;
 
-    for (int i=0; i<perlin_octaves; i++) {
-      int of=xi+(yi<<PERLIN_YWRAPB)+(zi<<PERLIN_ZWRAPB);
+    for (int i = 0; i < perlin_octaves; i++) {
+      int of = xi + (yi << PERLIN_YWRAPB) + (zi << PERLIN_ZWRAPB);
 
-      rxf=noise_fsc(xf);
-      ryf=noise_fsc(yf);
+      rxf = noise_fsc(xf);
+      ryf = noise_fsc(yf);
 
-      n1  = perlin[of&PERLIN_SIZE];
-      n1 += rxf*(perlin[(of+1)&PERLIN_SIZE]-n1);
-      n2  = perlin[(of+PERLIN_YWRAP)&PERLIN_SIZE];
-      n2 += rxf*(perlin[(of+PERLIN_YWRAP+1)&PERLIN_SIZE]-n2);
-      n1 += ryf*(n2-n1);
+      n1 = perlin[of & PERLIN_SIZE];
+      n1 += rxf * (perlin[(of + 1) & PERLIN_SIZE] - n1);
+      n2 = perlin[(of + PERLIN_YWRAP) & PERLIN_SIZE];
+      n2 += rxf * (perlin[(of + PERLIN_YWRAP + 1) & PERLIN_SIZE] - n2);
+      n1 += ryf * (n2 - n1);
 
       of += PERLIN_ZWRAP;
-      n2  = perlin[of&PERLIN_SIZE];
-      n2 += rxf*(perlin[(of+1)&PERLIN_SIZE]-n2);
-      n3  = perlin[(of+PERLIN_YWRAP)&PERLIN_SIZE];
-      n3 += rxf*(perlin[(of+PERLIN_YWRAP+1)&PERLIN_SIZE]-n3);
-      n2 += ryf*(n3-n2);
+      n2 = perlin[of & PERLIN_SIZE];
+      n2 += rxf * (perlin[(of + 1) & PERLIN_SIZE] - n2);
+      n3 = perlin[(of + PERLIN_YWRAP) & PERLIN_SIZE];
+      n3 += rxf * (perlin[(of + PERLIN_YWRAP + 1) & PERLIN_SIZE] - n3);
+      n2 += ryf * (n3 - n2);
 
-      n1 += noise_fsc(zf)*(n2-n1);
+      n1 += noise_fsc(zf) * (n2 - n1);
 
-      r += n1*ampl;
+      r += n1 * ampl;
       ampl *= perlin_amp_falloff;
-      xi<<=1; xf*=2;
-      yi<<=1; yf*=2;
-      zi<<=1; zf*=2;
+      xi <<= 1;
+      xf *= 2;
+      yi <<= 1;
+      yf *= 2;
+      zi <<= 1;
+      zf *= 2;
 
-      if (xf>=1.0f) { xi++; xf--; }
-      if (yf>=1.0f) { yi++; yf--; }
-      if (zf>=1.0f) { zi++; zf--; }
+      if (xf >= 1.0f) {
+        xi++;
+        xf--;
+      }
+      if (yf >= 1.0f) {
+        yi++;
+        yf--;
+      }
+      if (zf >= 1.0f) {
+        zi++;
+        zf--;
+      }
     }
     return r;
   }
@@ -5016,7 +5130,7 @@ public class PApplet implements PConstants {
   // the new variables, defined above
   private float noise_fsc(float i) {
     // using bagel's cosine table instead
-    return 0.5f*(1.0f-perlin_cosTable[(int)(i*perlin_PI)%perlin_TWOPI]);
+    return 0.5f * (1.0f - perlin_cosTable[(int) (i * perlin_PI) % perlin_TWOPI]);
   }
 
   // [toxi 040903]
@@ -5047,11 +5161,12 @@ public class PApplet implements PConstants {
    * @webBrief Adjusts the character and level of detail produced by the Perlin
    *           noise function
    * @param lod
-   *          number of octaves to be used by the noise
+   *            number of octaves to be used by the noise
    * @see PApplet#noise(float, float, float)
    */
   public void noiseDetail(int lod) {
-    if (lod>0) perlin_octaves=lod;
+    if (lod > 0)
+      perlin_octaves = lod;
   }
 
   /**
@@ -5059,8 +5174,10 @@ public class PApplet implements PConstants {
    * @param falloff falloff factor for each octave
    */
   public void noiseDetail(int lod, float falloff) {
-    if (lod>0) perlin_octaves=lod;
-    if (falloff>0) perlin_amp_falloff=falloff;
+    if (lod > 0)
+      perlin_octaves = lod;
+    if (falloff > 0)
+      perlin_amp_falloff = falloff;
   }
 
   /**
@@ -5079,16 +5196,14 @@ public class PApplet implements PConstants {
    * @see PApplet#randomSeed(long)
    */
   public void noiseSeed(long seed) {
-    if (perlinRandom == null) perlinRandom = new Random();
+    if (perlinRandom == null)
+      perlinRandom = new Random();
     perlinRandom.setSeed(seed);
     // force table reset after changing the random number seed [0122]
     perlin = null;
   }
 
-
-
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
 
   /**
    *
@@ -5129,8 +5244,9 @@ public class PApplet implements PConstants {
    * @webref image:loading & displaying
    * @webBrief Loads an image into a variable of type <b>PImage</b>
    * @param filename
-   *          name of file to load, can be .gif, .jpg, .tga, or a handful of
-   *          other image types depending on your platform
+   *                 name of file to load, can be .gif, .jpg, .tga, or a handful
+   *                 of
+   *                 other image types depending on your platform
    * @see PImage
    * @see PGraphics#image(PImage, float, float, float, float)
    * @see PGraphics#imageMode(int)
@@ -5139,7 +5255,6 @@ public class PApplet implements PConstants {
   public PImage loadImage(String filename) {
     return loadImage(filename, null);
   }
-
 
   /**
    * @param extension type of image to load, for example "png", "gif", "jpg"
@@ -5160,16 +5275,13 @@ public class PApplet implements PConstants {
     return surface.loadImage(filename, extension);
   }
 
-
   static private final String REQUEST_IMAGE_THREAD_PREFIX = "requestImage";
   // fixed-size thread pool used by requestImage()
   ExecutorService requestImagePool;
 
-
   public PImage requestImage(String filename) {
     return requestImage(filename, null);
   }
-
 
   /**
    *
@@ -5189,10 +5301,11 @@ public class PApplet implements PConstants {
    * @webBrief Loads images on a separate thread so that your sketch does not
    *           freeze while images load during <b>setup()</b>
    * @param filename
-   *          name of the file to load, can be .gif, .jpg, .tga, or a handful of
-   *          other image types depending on your platform
+   *                  name of the file to load, can be .gif, .jpg, .tga, or a
+   *                  handful of
+   *                  other image types depending on your platform
    * @param extension
-   *          the type of image to load, for example "png", "gif", "jpg"
+   *                  the type of image to load, for example "png", "gif", "jpg"
    * @see PImage
    * @see PApplet#loadImage(String, String)
    */
@@ -5231,24 +5344,25 @@ public class PApplet implements PConstants {
     return vessel;
   }
 
-
   //////////////////////////////////////////////////////////////
 
   // DATA I/O
-
 
   /**
    * Reads the contents of a file or URL and creates an XML
    * object with its values. If a file is specified, it must
    * be located in the sketch's "data" folder. The filename
-   * parameter can also be a URL to a file found online.<br /><br />
+   * parameter can also be a URL to a file found online.<br />
+   * <br />
    * All files loaded and saved by the Processing API use
    * UTF-8 encoding. If you need to load an XML file that's
-   * not in UTF-8 format, see the <a href="http://processing.github.io/processing-javadocs/core/processing/data/XML.html">
+   * not in UTF-8 format, see the <a href=
+   * "http://processing.github.io/processing-javadocs/core/processing/data/XML.html">
    * developer's reference</a> for the XML object.
+   *
    * @webref input:files
    * @webBrief Reads the contents of a file or URL and creates an <b>XML</b>
-   * object with its values
+   *           object with its values
    * @param filename name of a file in the data folder or a URL.
    * @see XML
    * @see PApplet#parseXML(String)
@@ -5260,7 +5374,6 @@ public class PApplet implements PConstants {
   public XML loadXML(String filename) {
     return loadXML(filename, null);
   }
-
 
   // version that uses 'options' though there are currently no supported options
   /**
@@ -5281,7 +5394,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * Takes a String, parses its contents, and returns an XML object. If the
    * String does not contain XML data or cannot be parsed, a <b>null</b> value is
@@ -5290,7 +5402,8 @@ public class PApplet implements PConstants {
    * <b>parseXML()</b> is most useful when pulling data dynamically, such as
    * from third-party APIs. Normally, API results would be saved to a String,
    * and then can be converted to a structured XML object using
-   * <b>parseXML()</b>. Be sure to check if <b>null</b> is returned before performing
+   * <b>parseXML()</b>. Be sure to check if <b>null</b> is returned before
+   * performing
    * operations on the new XML object, in case the String content could not be
    * parsed.<br />
    * <br />
@@ -5300,7 +5413,7 @@ public class PApplet implements PConstants {
    * @webref input:files
    * @webBrief Converts String content to an <b>XML</b> object
    * @param xmlString
-   *          the content to be parsed as XML
+   *                  the content to be parsed as XML
    * @return an XML object, or null
    * @see XML
    * @see PApplet#loadXML(String)
@@ -5310,7 +5423,6 @@ public class PApplet implements PConstants {
     return parseXML(xmlString, null);
   }
 
-
   public XML parseXML(String xmlString, String options) {
     try {
       return XML.parse(xmlString, options);
@@ -5319,7 +5431,6 @@ public class PApplet implements PConstants {
       throw new RuntimeException(e);
     }
   }
-
 
   /**
    * Writes the contents of an XML object to a file. By default, this file is
@@ -5335,9 +5446,9 @@ public class PApplet implements PConstants {
    * @webref output:files
    * @webBrief Writes the contents of an <b>XML</b> object to a file
    * @param xml
-   *          the XML object to save to disk
+   *                 the XML object to save to disk
    * @param filename
-   *          name of the file to write to
+   *                 name of the file to write to
    * @see XML
    * @see PApplet#loadXML(String)
    * @see PApplet#parseXML(String)
@@ -5372,7 +5483,7 @@ public class PApplet implements PConstants {
    * @webBrief Takes a <b>String</b>, parses its contents, and returns a
    *           <b>JSONObject</b>
    * @param input
-   *          String to parse as a JSONObject
+   *              String to parse as a JSONObject
    * @see PApplet#loadJSONObject(String)
    * @see PApplet#saveJSONObject(JSONObject, String)
    */
@@ -5385,7 +5496,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * Loads a JSON from the data folder or a URL, and returns a
    * <b>JSONObject</b>.<br />
@@ -5396,7 +5506,7 @@ public class PApplet implements PConstants {
    * @webBrief Loads a JSON from the data folder or a URL, and returns a
    *           <b>JSONObject</b>
    * @param filename
-   *          name of a file in the data folder or a URL
+   *                 name of a file in the data folder or a URL
    * @see JSONObject
    * @see JSONArray
    * @see PApplet#loadJSONArray(String)
@@ -5410,14 +5520,13 @@ public class PApplet implements PConstants {
       JSONObject outgoing = new JSONObject(reader);
       try {
         reader.close();
-      } catch (IOException e) {  // not sure what would cause this
+      } catch (IOException e) { // not sure what would cause this
         e.printStackTrace();
       }
       return outgoing;
     }
     return null;
   }
-
 
   /**
    * @nowebref
@@ -5428,12 +5537,11 @@ public class PApplet implements PConstants {
     JSONObject outgoing = new JSONObject(reader);
     try {
       reader.close();
-    } catch (IOException e) {  // not sure what would cause this
+    } catch (IOException e) { // not sure what would cause this
       e.printStackTrace();
     }
     return outgoing;
   }
-
 
   /**
    * Writes the contents of a <b>JSONObject</b> object to a file. By default,
@@ -5449,9 +5557,9 @@ public class PApplet implements PConstants {
    * @webref output:files
    * @webBrief Writes the contents of a <b>JSONObject</b> object to a file
    * @param json
-   *          the JSONObject to save
+   *                 the JSONObject to save
    * @param filename
-   *          the name of the file to save to
+   *                 the name of the file to save to
    * @see JSONObject
    * @see JSONArray
    * @see PApplet#loadJSONObject(String)
@@ -5462,7 +5570,6 @@ public class PApplet implements PConstants {
     return saveJSONObject(json, filename, null);
   }
 
-
   /**
    * @param options "compact" and "indent=N", replace N with the number of spaces
    */
@@ -5470,29 +5577,30 @@ public class PApplet implements PConstants {
     return json.save(saveFile(filename), options);
   }
 
-/**
- * Takes a <b>String</b>, parses its contents, and returns a <b>JSONArray</b>.
- * If the <b>String</b> does not contain <b>JSONArray</b> data or cannot be
- * parsed, a <b>null</b> value is returned.<br />
- * <br />
- * <b>parseJSONArray()</b> is most useful when pulling data dynamically, such as
- * from third-party APIs. Normally, API results would be saved to a
- * <b>String</b>, and then can be converted to a structured <b>JSONArray</b>
- * using <b>parseJSONArray()</b>. Be sure to check if <b>null</b> is returned
- * before performing operations on the new <b>JSONArray</b> in case the
- * <b>String</b> content could not be parsed.<br />
- * <br />
- * If your data already exists as a <b>JSON</b> file in the data folder, it is
- * simpler to use <b>loadJSONArray()</b>.
- *
- * @webref input:files
- * @webBrief Takes a <b>String</b>, parses its contents, and returns a <b>JSONArray</b>
- * @param input
- *          String to parse as a JSONArray
- * @see JSONObject
- * @see PApplet#loadJSONObject(String)
- * @see PApplet#saveJSONObject(JSONObject, String)
- */
+  /**
+   * Takes a <b>String</b>, parses its contents, and returns a <b>JSONArray</b>.
+   * If the <b>String</b> does not contain <b>JSONArray</b> data or cannot be
+   * parsed, a <b>null</b> value is returned.<br />
+   * <br />
+   * <b>parseJSONArray()</b> is most useful when pulling data dynamically, such as
+   * from third-party APIs. Normally, API results would be saved to a
+   * <b>String</b>, and then can be converted to a structured <b>JSONArray</b>
+   * using <b>parseJSONArray()</b>. Be sure to check if <b>null</b> is returned
+   * before performing operations on the new <b>JSONArray</b> in case the
+   * <b>String</b> content could not be parsed.<br />
+   * <br />
+   * If your data already exists as a <b>JSON</b> file in the data folder, it is
+   * simpler to use <b>loadJSONArray()</b>.
+   *
+   * @webref input:files
+   * @webBrief Takes a <b>String</b>, parses its contents, and returns a
+   *           <b>JSONArray</b>
+   * @param input
+   *              String to parse as a JSONArray
+   * @see JSONObject
+   * @see PApplet#loadJSONObject(String)
+   * @see PApplet#saveJSONObject(JSONObject, String)
+   */
   public JSONArray parseJSONArray(String input) {
     try {
       return new JSONArray(new StringReader(input));
@@ -5501,7 +5609,6 @@ public class PApplet implements PConstants {
       return null;
     }
   }
-
 
   /**
    * Loads an array of JSON objects from the data folder or a URL, and returns a
@@ -5515,7 +5622,7 @@ public class PApplet implements PConstants {
    * @webBrief Takes a <b>String</b>, parses its contents, and returns a
    *           <b>JSONArray</b>
    * @param filename
-   *          name of a file in the data folder or a URL
+   *                 name of a file in the data folder or a URL
    * @see JSONArray
    * @see PApplet#loadJSONObject(String)
    * @see PApplet#saveJSONObject(JSONObject, String)
@@ -5528,7 +5635,7 @@ public class PApplet implements PConstants {
       JSONArray outgoing = new JSONArray(reader);
       try {
         reader.close();
-      } catch (IOException e) {  // not sure what would cause this
+      } catch (IOException e) { // not sure what would cause this
         e.printStackTrace();
       }
       return outgoing;
@@ -5536,19 +5643,17 @@ public class PApplet implements PConstants {
     return null;
   }
 
-
   static public JSONArray loadJSONArray(File file) {
     // can't pass of createReader() to the constructor b/c of resource leak
     BufferedReader reader = createReader(file);
     JSONArray outgoing = new JSONArray(reader);
     try {
       reader.close();
-    } catch (IOException e) {  // not sure what would cause this
+    } catch (IOException e) { // not sure what would cause this
       e.printStackTrace();
     }
     return outgoing;
   }
-
 
   /**
    * Writes the contents of a <b>JSONArray</b> object to a file. By default,
@@ -5564,9 +5669,9 @@ public class PApplet implements PConstants {
    * @webref output:files
    * @webBrief Writes the contents of a <b>JSONArray</b> object to a file
    * @param json
-   *          the JSONArray to save
+   *                 the JSONArray to save
    * @param filename
-   *          the name of the file to save to
+   *                 the name of the file to save to
    * @see JSONObject
    * @see JSONArray
    * @see PApplet#loadJSONObject(String)
@@ -5583,7 +5688,6 @@ public class PApplet implements PConstants {
   public boolean saveJSONArray(JSONArray json, String filename, String options) {
     return json.save(saveFile(filename), options);
   }
-
 
   /**
    * Reads the contents of a file or URL and creates a Table object with its
@@ -5609,10 +5713,11 @@ public class PApplet implements PConstants {
    * All files loaded and saved by the Processing API use UTF-8 encoding.
    *
    * @webref input:files
-   * @webBrief Reads the contents of a file or URL and creates a <b>Table</b> object
+   * @webBrief Reads the contents of a file or URL and creates a <b>Table</b>
+   *           object
    *           with its values
    * @param filename
-   *          name of a file in the data folder or a URL.
+   *                 name of a file in the data folder or a URL.
    * @see Table
    * @see PApplet#saveTable(Table, String)
    * @see PApplet#loadBytes(String)
@@ -5622,7 +5727,6 @@ public class PApplet implements PConstants {
   public Table loadTable(String filename) {
     return loadTable(filename, null);
   }
-
 
   /**
    * Options may contain "header", "tsv", "csv", or "bin" separated by commas.
@@ -5634,7 +5738,8 @@ public class PApplet implements PConstants {
    * dictionary file can only be tab-separated values (.tsv) and its extension
    * will be ignored. This option was added in Processing 2.0.2.
    *
-   * @param options may contain "header", "tsv", "csv", or "bin" separated by commas
+   * @param options may contain "header", "tsv", "csv", or "bin" separated by
+   *                commas
    */
   public Table loadTable(String filename, String options) {
     try {
@@ -5660,7 +5765,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * Writes the contents of a Table object to a file. By default, this file is
    * saved to the sketch's folder. This folder is opened by selecting "Show
@@ -5675,9 +5779,9 @@ public class PApplet implements PConstants {
    * @webref output:files
    * @webBrief Writes the contents of a <b>Table</b> object to a file
    * @param table
-   *          the Table object to save to a file
+   *                 the Table object to save to a file
    * @param filename
-   *          the filename to which the Table should be saved
+   *                 the filename to which the Table should be saved
    * @see Table
    * @see PApplet#loadTable(String)
    */
@@ -5685,21 +5789,21 @@ public class PApplet implements PConstants {
     return saveTable(table, filename, null);
   }
 
-
   /**
    * @param options can be one of "tsv", "csv", "bin", or "html"
    */
   public boolean saveTable(Table table, String filename, String options) {
-//    String ext = checkExtension(filename);
-//    if (ext != null) {
-//      if (ext.equals("csv") || ext.equals("tsv") || ext.equals("bin") || ext.equals("html")) {
-//        if (options == null) {
-//          options = ext;
-//        } else {
-//          options = ext + "," + options;
-//        }
-//      }
-//    }
+    // String ext = checkExtension(filename);
+    // if (ext != null) {
+    // if (ext.equals("csv") || ext.equals("tsv") || ext.equals("bin") ||
+    // ext.equals("html")) {
+    // if (options == null) {
+    // options = ext;
+    // } else {
+    // options = ext + "," + options;
+    // }
+    // }
+    // }
 
     try {
       // Figure out location and make sure the target path exists
@@ -5712,8 +5816,6 @@ public class PApplet implements PConstants {
       return false;
     }
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
@@ -5758,7 +5860,7 @@ public class PApplet implements PConstants {
    * @webref typography:loading & displaying
    * @webBrief Loads a font into a variable of type <b>PFont</b>
    * @param filename
-   *          name of the font to load
+   *                 name of the font to load
    * @see PFont
    * @see PGraphics#textFont(PFont, float)
    * @see PApplet#createFont(String, float, boolean, char[])
@@ -5773,22 +5875,19 @@ public class PApplet implements PConstants {
 
     } catch (Exception e) {
       die("Could not load font " + filename + ". " +
-          "Make sure that the font has been copied " +
-          "to the data folder of your sketch.", e);
+              "Make sure that the font has been copied " +
+              "to the data folder of your sketch.", e);
     }
     return null;
   }
-
 
   public PFont createFont(String name, float size) {
     return createFont(name, size, true, null);
   }
 
-
   public PFont createFont(String name, float size, boolean smooth) {
     return createFont(name, size, smooth, null);
   }
-
 
   /**
    *
@@ -5823,13 +5922,13 @@ public class PApplet implements PConstants {
    * @webref typography:loading & displaying
    * @webBrief Dynamically converts a font to the format used by Processing
    * @param name
-   *          name of the font to load
+   *                name of the font to load
    * @param size
-   *          point size of the font
+   *                point size of the font
    * @param smooth
-   *          true for an anti-aliased font, false for aliased
+   *                true for an anti-aliased font, false for aliased
    * @param charset
-   *          array containing characters to be generated
+   *                array containing characters to be generated
    * @see PFont
    * @see PGraphics#textFont(PFont, float)
    * @see PGraphics#text(String, float, float, float, float)
@@ -5838,37 +5937,37 @@ public class PApplet implements PConstants {
   public PFont createFont(String name, float size,
                           boolean smooth, char[] charset) {
     if (g == null) {
-      throw new RuntimeException("createFont() can only be used inside setup() or after setup() has been called.");
+      throw new RuntimeException(
+              "createFont() can only be used inside setup() or after setup() has been called.");
     }
     return g.createFont(name, size, smooth, charset);
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
   // FILE/FOLDER SELECTION
 
-
   /**
    * Open a platform-specific file chooser dialog to select a file for input.
    * After the selection is made, the selected File will be passed to the
-   * 'callback' function. If the dialog is closed or canceled, <b>null</b> will be sent
+   * 'callback' function. If the dialog is closed or canceled, <b>null</b> will be
+   * sent
    * to the function, so that the program is not waiting for additional input.
    * The callback is necessary because of how threading works.
    *
    * <h3>Advanced</h3>
+   *
    * <pre>
    * void setup() {
-   *   selectInput("Select a file to process:", "fileSelected");
+   *     selectInput("Select a file to process:", "fileSelected");
    * }
    *
    * void fileSelected(File selection) {
-   *   if (selection == null) {
-   *     println("Window was closed or the user hit cancel.");
-   *   } else {
-   *     println("User selected " + fileSelected.getAbsolutePath());
-   *   }
+   *     if (selection == null) {
+   *         println("Window was closed or the user hit cancel.");
+   *     } else {
+   *         println("User selected " + fileSelected.getAbsolutePath());
+   *     }
    * }
    * </pre>
    *
@@ -5880,55 +5979,51 @@ public class PApplet implements PConstants {
    * @webBrief Open a platform-specific file chooser dialog to select a file for
    *           input
    * @param prompt
-   *          message to the user
+   *                 message to the user
    * @param callback
-   *          name of the method to be called when the selection is made
+   *                 name of the method to be called when the selection is made
    */
   public void selectInput(String prompt, String callback) {
     selectInput(prompt, callback, null);
   }
 
-
   public void selectInput(String prompt, String callback, File file) {
     selectInput(prompt, callback, file, this);
   }
 
-
   public void selectInput(String prompt, String callback,
                           File file, Object callbackObject) {
-    //selectInput(prompt, callback, file, callbackObject, null, this);
+    // selectInput(prompt, callback, file, callbackObject, null, this);
     surface.selectInput(prompt, callback, file, callbackObject);
   }
-
 
   /**
    * Opens a platform-specific file chooser dialog to select a file for output.
    * After the selection is made, the selected File will be passed to the
-   * 'callback' function. If the dialog is closed or canceled, <b>null</b> will be sent
+   * 'callback' function. If the dialog is closed or canceled, <b>null</b> will be
+   * sent
    * to the function, so that the program is not waiting for additional input.
    * The callback is necessary because of how threading works.
    *
    * @webref output:files
-   * @webBrief Opens a platform-specific file chooser dialog to select a file for output
-   * @param prompt message to the user
+   * @webBrief Opens a platform-specific file chooser dialog to select a file for
+   *           output
+   * @param prompt   message to the user
    * @param callback name of the method to be called when the selection is made
    */
   public void selectOutput(String prompt, String callback) {
     selectOutput(prompt, callback, null);
   }
 
-
   public void selectOutput(String prompt, String callback, File file) {
     selectOutput(prompt, callback, file, this);
   }
 
-
   public void selectOutput(String prompt, String callback,
                            File file, Object callbackObject) {
-    //selectOutput(prompt, callback, file, callbackObject, null, this);
+    // selectOutput(prompt, callback, file, callbackObject, null, this);
     surface.selectOutput(prompt, callback, file, callbackObject);
   }
-
 
   /**
    * Opens a platform-specific file chooser dialog to select a folder.
@@ -5940,33 +6035,29 @@ public class PApplet implements PConstants {
    *
    * @webref input:files
    * @webBrief Opens a platform-specific file chooser dialog to select a folder
-   * @param prompt message to the user
+   * @param prompt   message to the user
    * @param callback name of the method to be called when the selection is made
    */
   public void selectFolder(String prompt, String callback) {
     selectFolder(prompt, callback, null);
   }
 
-
   public void selectFolder(String prompt, String callback, File file) {
     selectFolder(prompt, callback, file, this);
   }
 
-
   public void selectFolder(String prompt, String callback,
                            File file, Object callbackObject) {
-    //selectFolder(prompt, callback, file, callbackObject, null, this);
+    // selectFolder(prompt, callback, file, callbackObject, null, this);
     surface.selectFolder(prompt, callback, file, callbackObject);
   }
-
 
   static public void selectCallback(File selectedFile,
                                     String callbackMethod,
                                     Object callbackObject) {
     try {
       Class<?> callbackClass = callbackObject.getClass();
-      Method selectMethod =
-        callbackClass.getMethod(callbackMethod, File.class);
+      Method selectMethod = callbackClass.getMethod(callbackMethod, File.class);
       selectMethod.invoke(callbackObject, selectedFile);
 
     } catch (IllegalAccessException iae) {
@@ -5980,11 +6071,9 @@ public class PApplet implements PConstants {
     }
   }
 
-
   //////////////////////////////////////////////////////////////
 
   // LISTING DIRECTORIES
-
 
   public String[] listPaths(String path, String... options) {
     File[] list = listFiles(path, options);
@@ -6007,7 +6096,6 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
   public File[] listFiles(String path, String... options) {
     File file = new File(path);
     // if not an absolute path, make it relative to the sketch folder
@@ -6016,7 +6104,6 @@ public class PApplet implements PConstants {
     }
     return listFiles(file, options);
   }
-
 
   // "relative" -> no effect with the Files version, but important for listPaths
   // "recursive"
@@ -6044,12 +6131,12 @@ public class PApplet implements PConstants {
         files = false;
       } else if (opt.equals("hidden")) {
         hidden = true;
-      } else //noinspection StatementWithEmptyBody
+      } else // noinspection StatementWithEmptyBody
         if (opt.equals("relative")) {
-        // ignored
-      } else {
-        throw new RuntimeException(opt + " is not a listFiles() option");
-      }
+          // ignored
+        } else {
+          throw new RuntimeException(opt + " is not a listFiles() option");
+        }
     }
 
     if (extensions != null) {
@@ -6073,7 +6160,6 @@ public class PApplet implements PConstants {
     return outgoing.toArray(new File[0]);
   }
 
-
   static private boolean listFilesExt(String name, String[] extensions) {
     for (String ext : extensions) {
       if (name.toLowerCase().endsWith(ext)) {
@@ -6082,7 +6168,6 @@ public class PApplet implements PConstants {
     }
     return false;
   }
-
 
   static void listFilesImpl(File folder, boolean recursive,
                             String[] extensions, boolean hidden,
@@ -6113,15 +6198,13 @@ public class PApplet implements PConstants {
     }
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // EXTENSIONS
 
-
   /**
    * Get the compression-free extension for this filename.
+   *
    * @param filename The filename to check
    * @return an extension, skipping past .gz if it's present
    */
@@ -6138,12 +6221,9 @@ public class PApplet implements PConstants {
     return null;
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // READERS AND WRITERS
-
 
   /**
    *
@@ -6163,7 +6243,7 @@ public class PApplet implements PConstants {
    * @webBrief Creates a <b>BufferedReader</b> object that can be used to read
    *           files line-by-line as individual <b>String</b> objects
    * @param filename
-   *          name of the file to be opened
+   *                 name of the file to be opened
    * @see BufferedReader
    * @see PApplet#createWriter(String)
    * @see PrintWriter
@@ -6172,14 +6252,13 @@ public class PApplet implements PConstants {
     InputStream is = createInput(filename);
     if (is == null) {
       System.err.println("The file \"" + filename + "\" " +
-                       "is missing or inaccessible, make sure " +
-                       "the URL is valid or that the file has been " +
-                       "added to your sketch and is readable.");
+              "is missing or inaccessible, make sure " +
+              "the URL is valid or that the file has been " +
+              "added to your sketch and is readable.");
       return null;
     }
     return createReader(is);
   }
-
 
   /**
    * @nowebref
@@ -6198,15 +6277,13 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * @nowebref
-   * I want to read lines from a stream. If I have to type the
-   * following lines anymore I'm gonna send Sun my medical bills.
+   *           I want to read lines from a stream. If I have to type the
+   *           following lines anymore I'm gonna send Sun my medical bills.
    */
   static public BufferedReader createReader(InputStream input) {
-    InputStreamReader isr =
-      new InputStreamReader(input, StandardCharsets.UTF_8);
+    InputStreamReader isr = new InputStreamReader(input, StandardCharsets.UTF_8);
 
     BufferedReader reader = new BufferedReader(isr);
     // consume the Unicode BOM (byte order marker) if present
@@ -6223,22 +6300,23 @@ public class PApplet implements PConstants {
     return reader;
   }
 
-
   /**
    *
    * Creates a new file in the sketch folder, and a <b>PrintWriter</b> object
    * to write to it. For the file to be made correctly, it should be flushed
    * and must be closed with its <b>flush()</b> and <b>close()</b> methods
    * (see above example).
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * Starting with Processing release 0134, all files loaded and saved by the
    * Processing API use UTF-8 encoding. In previous releases, the default
    * encoding for your platform was used, which causes problems when files
    * are moved to other platforms.
    *
    * @webref output:files
-   * @webBrief Creates a new file in the sketch folder, and a <b>PrintWriter</b> object
-   * to write to it
+   * @webBrief Creates a new file in the sketch folder, and a <b>PrintWriter</b>
+   *           object
+   *           to write to it
    * @param filename name of the file to be created
    * @see PrintWriter
    * @see PApplet#createReader
@@ -6248,18 +6326,17 @@ public class PApplet implements PConstants {
     return createWriter(saveFile(filename));
   }
 
-
   /**
    * @nowebref
-   * I want to print lines to a file. I have RSI from typing these
-   * eight lines of code so many times.
+   *           I want to print lines to a file. I have RSI from typing these
+   *           eight lines of code so many times.
    */
   static public PrintWriter createWriter(File file) {
     if (file == null) {
       throw new RuntimeException("File passed to createWriter() was null");
     }
     try {
-      createPath(file);  // make sure in-between folders exist
+      createPath(file); // make sure in-between folders exist
       OutputStream output = new FileOutputStream(file);
       if (file.getName().toLowerCase().endsWith(".gz")) {
         output = new GZIPOutputStream(output);
@@ -6268,28 +6345,24 @@ public class PApplet implements PConstants {
 
     } catch (Exception e) {
       throw new RuntimeException("Couldn't create a writer for " +
-                                 file.getAbsolutePath(), e);
+              file.getAbsolutePath(), e);
     }
   }
 
   /**
    * @nowebref
-   * I want to print lines to a file. Why am I always explaining myself?
-   * It's the JavaSoft API engineers who need to explain themselves.
+   *           I want to print lines to a file. Why am I always explaining myself?
+   *           It's the JavaSoft API engineers who need to explain themselves.
    */
   static public PrintWriter createWriter(OutputStream output) {
     BufferedOutputStream bos = new BufferedOutputStream(output, 8192);
-    OutputStreamWriter osw =
-      new OutputStreamWriter(bos, StandardCharsets.UTF_8);
+    OutputStreamWriter osw = new OutputStreamWriter(bos, StandardCharsets.UTF_8);
     return new PrintWriter(osw);
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
   // FILE INPUT
-
 
   /**
    *
@@ -6353,7 +6426,8 @@ public class PApplet implements PConstants {
    * </UL>
    *
    * @webref input:files
-   * @webBrief This is a function for advanced programmers to open a Java <b>InputStream</b>
+   * @webBrief This is a function for advanced programmers to open a Java
+   *           <b>InputStream</b>
    * @param filename the name of the file to use as input
    * @see PApplet#createOutput(String)
    * @see PApplet#selectOutput(String,String)
@@ -6380,12 +6454,12 @@ public class PApplet implements PConstants {
     return null;
   }
 
-
   /**
    * Call openStream() without automatic gzip decompression.
    */
   public InputStream createInputRaw(String filename) {
-    if (filename == null) return null;
+    if (filename == null)
+      return null;
 
     if (sketchPath == null) {
       System.err.println("The sketch path is not set.");
@@ -6394,12 +6468,12 @@ public class PApplet implements PConstants {
 
     if (filename.length() == 0) {
       // an error will be called by the parent function
-      //System.err.println("The filename passed to openStream() was empty.");
+      // System.err.println("The filename passed to openStream() was empty.");
       return null;
     }
 
     // First check whether this looks like a URL
-    if (filename.contains(":")) {  // at least smells like URL
+    if (filename.contains(":")) { // at least smells like URL
       try {
         URL url = new URL(filename);
         URLConnection conn = url.openConnection();
@@ -6428,9 +6502,9 @@ public class PApplet implements PConstants {
       } catch (IOException e) {
         // changed for 0117, shouldn't be throwing exception
         printStackTrace(e);
-        //System.err.println("Error downloading from URL " + filename);
+        // System.err.println("Error downloading from URL " + filename);
         return null;
-        //throw new RuntimeException("Error downloading from URL " + filename);
+        // throw new RuntimeException("Error downloading from URL " + filename);
       }
     }
 
@@ -6460,15 +6534,16 @@ public class PApplet implements PConstants {
           String filenameShort = new File(filename).getName();
           // if the actual filename is the same, but capitalized
           // differently, warn the user.
-          //if (filenameActual.equalsIgnoreCase(filenameShort) &&
-          //!filenameActual.equals(filenameShort)) {
+          // if (filenameActual.equalsIgnoreCase(filenameShort) &&
+          // !filenameActual.equals(filenameShort)) {
           if (!filenameActual.equals(filenameShort)) {
             throw new RuntimeException("This file is named " +
-                                       filenameActual + " not " +
-                                       filename + ". Rename the file " +
-                                       "or change your code.");
+                    filenameActual + " not " +
+                    filename + ". Rename the file " +
+                    "or change your code.");
           }
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+        }
       }
 
       // if this file is ok, may as well just load it
@@ -6476,7 +6551,8 @@ public class PApplet implements PConstants {
 
       // have to break these out because a general Exception might
       // catch the RuntimeException being thrown above
-    } catch (IOException | SecurityException ignored) { }
+    } catch (IOException | SecurityException ignored) {
+    }
 
     // Using getClassLoader() prevents java from converting dots
     // to slashes or requiring a slash at the beginning.
@@ -6511,20 +6587,24 @@ public class PApplet implements PConstants {
 
     try {
       // attempt to load from a local file
-      try {  // first try to catch any security exceptions
+      try { // first try to catch any security exceptions
         try {
           return new FileInputStream(dataPath(filename));
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+        }
 
         try {
           return new FileInputStream(sketchPath(filename));
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
 
         try {
           return new FileInputStream(filename);
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+        }
 
-      } catch (SecurityException ignored) { }  // online, whups
+      } catch (SecurityException ignored) {
+      } // online, whups
 
     } catch (Exception e) {
       printStackTrace(e);
@@ -6532,7 +6612,6 @@ public class PApplet implements PConstants {
 
     return null;
   }
-
 
   /**
    * @nowebref
@@ -6560,7 +6639,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    *
    * Reads the contents of a file and places it in a byte array. If the name of
@@ -6582,7 +6660,7 @@ public class PApplet implements PConstants {
    * @webBrief Reads the contents of a file or url and places it in a byte
    *           array
    * @param filename
-   *          name of a file in the data folder or a URL.
+   *                 name of a file in the data folder or a URL.
    * @see PApplet#loadStrings(String)
    * @see PApplet#saveStrings(String, String[])
    * @see PApplet#saveBytes(String, byte[])
@@ -6596,7 +6674,7 @@ public class PApplet implements PConstants {
     if (!lower.endsWith(".gz")) {
       // If this looks like a URL, try to load it that way. Use the fact that
       // URL connections may have a content length header to size the array.
-      if (filename.contains(":")) {  // at least smells like URL
+      if (filename.contains(":")) { // at least smells like URL
         InputStream input = null;
         try {
           URL url = new URL(filename);
@@ -6664,18 +6742,17 @@ public class PApplet implements PConstants {
       try {
         is.close();
       } catch (IOException e) {
-        printStackTrace(e);  // shouldn't happen
+        printStackTrace(e); // shouldn't happen
       }
       return outgoing;
     }
 
     System.err.println("The file \"" + filename + "\" " +
-                       "is missing or inaccessible, make sure " +
-                       "the URL is valid or that the file has been " +
-                       "added to your sketch and is readable.");
+            "is missing or inaccessible, make sure " +
+            "the URL is valid or that the file has been " +
+            "added to your sketch and is readable.");
     return null;
   }
-
 
   /**
    * @nowebref
@@ -6698,7 +6775,6 @@ public class PApplet implements PConstants {
     }
     return null;
   }
-
 
   /**
    * @nowebref
@@ -6753,7 +6829,6 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * @nowebref
    */
@@ -6775,7 +6850,6 @@ public class PApplet implements PConstants {
     }
     return null;
   }
-
 
   /**
    *
@@ -6811,10 +6885,11 @@ public class PApplet implements PConstants {
    * exceptions, use Java methods for I/O.
    *
    * @webref input:files
-   * @webBrief Reads the contents of a file or url and creates a <b>String</b> array of
+   * @webBrief Reads the contents of a file or url and creates a <b>String</b>
+   *           array of
    *           its individual lines
    * @param filename
-   *          name of the file or url to load
+   *                 name of the file or url to load
    * @see PApplet#loadBytes(String)
    * @see PApplet#saveStrings(String, String[])
    * @see PApplet#saveBytes(String, byte[])
@@ -6832,9 +6907,9 @@ public class PApplet implements PConstants {
     }
 
     System.err.println("The file \"" + filename + "\" " +
-                       "is missing or inaccessible, make sure " +
-                       "the URL is valid or that the file has been " +
-                       "added to your sketch and is readable.");
+            "is missing or inaccessible, make sure " +
+            "the URL is valid or that the file has been " +
+            "added to your sketch and is readable.");
     return null;
   }
 
@@ -6842,11 +6917,9 @@ public class PApplet implements PConstants {
    * @nowebref
    */
   static public String[] loadStrings(InputStream input) {
-    BufferedReader reader =
-      new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
     return loadStrings(reader);
   }
-
 
   static public String[] loadStrings(BufferedReader reader) {
     try {
@@ -6874,17 +6947,14 @@ public class PApplet implements PConstants {
 
     } catch (IOException e) {
       e.printStackTrace();
-      //throw new RuntimeException("Error inside loadStrings()");
+      // throw new RuntimeException("Error inside loadStrings()");
     }
     return null;
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // FILE OUTPUT
-
 
   /**
    *
@@ -6908,7 +6978,7 @@ public class PApplet implements PConstants {
    * @webBrief Similar to <b>createInput()</b>, this creates a Java
    *           <b>OutputStream</b> for a given filename or path
    * @param filename
-   *          name of the file to open
+   *                 name of the file to open
    * @see PApplet#createInput(String)
    * @see PApplet#selectOutput(String,String)
    */
@@ -6921,7 +6991,7 @@ public class PApplet implements PConstants {
    */
   static public OutputStream createOutput(File file) {
     try {
-      createPath(file);  // make sure the path exists
+      createPath(file); // make sure the path exists
       OutputStream output = new FileOutputStream(file);
       if (file.getName().toLowerCase().endsWith(".gz")) {
         return new BufferedOutputStream(new GZIPOutputStream(output));
@@ -6933,7 +7003,6 @@ public class PApplet implements PConstants {
     }
     return null;
   }
-
 
   /**
    *
@@ -6949,9 +7018,9 @@ public class PApplet implements PConstants {
    * @webref output:files
    * @webBrief Save the contents of a stream to a file in the sketch folder
    * @param target
-   *          name of the file to write to
+   *               name of the file to write to
    * @param source
-   *          location to read from (a filename, path, or URL)
+   *               location to read from (a filename, path, or URL)
    * @see PApplet#createOutput(String)
    */
   public boolean saveStream(String target, String source) {
@@ -7029,7 +7098,6 @@ public class PApplet implements PConstants {
     bos.flush();
   }
 
-
   /**
    *
    * As the opposite of <b>loadBytes()</b>, this function will write an entire
@@ -7043,9 +7111,9 @@ public class PApplet implements PConstants {
    * @webBrief Opposite of <b>loadBytes()</b>, will write an entire array of
    *           bytes to a file
    * @param filename
-   *          name of the file to write to
+   *                 name of the file to write to
    * @param data
-   *          array of bytes to be written
+   *                 array of bytes to be written
    * @see PApplet#loadStrings(String)
    * @see PApplet#loadBytes(String)
    * @see PApplet#saveStrings(String, String[])
@@ -7053,7 +7121,6 @@ public class PApplet implements PConstants {
   public void saveBytes(String filename, byte[] data) {
     saveBytes(saveFile(filename), data);
   }
-
 
   /**
    * Creates a temporary file based on the name/extension of another file
@@ -7087,10 +7154,9 @@ public class PApplet implements PConstants {
     return File.createTempFile(prefix, suffix, parentDir);
   }
 
-
   /**
    * @nowebref
-   * Saves bytes to a specific File location specified by the user.
+   *           Saves bytes to a specific File location specified by the user.
    */
   static public void saveBytes(File file, byte[] data) {
     File tempFile = null;
@@ -7126,10 +7192,9 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /**
    * @nowebref
-   * Spews a buffer of bytes to an OutputStream.
+   *           Spews a buffer of bytes to an OutputStream.
    */
   static public void saveBytes(OutputStream output, byte[] data) {
     try {
@@ -7140,7 +7205,6 @@ public class PApplet implements PConstants {
       e.printStackTrace();
     }
   }
-
 
   //
 
@@ -7162,9 +7226,9 @@ public class PApplet implements PConstants {
    * @webref output:files
    * @webBrief Writes an array of strings to a file, one line per string
    * @param filename
-   *          filename for output
+   *                 filename for output
    * @param data
-   *          string array to be written
+   *                 string array to be written
    * @see PApplet#loadStrings(String)
    * @see PApplet#loadBytes(String)
    * @see PApplet#saveBytes(String, byte[])
@@ -7173,14 +7237,12 @@ public class PApplet implements PConstants {
     saveStrings(saveFile(filename), data);
   }
 
-
   /**
    * @nowebref
    */
   static public void saveStrings(File file, String[] data) {
     saveStrings(createOutput(file), data);
   }
-
 
   /**
    * @nowebref
@@ -7194,9 +7256,7 @@ public class PApplet implements PConstants {
     writer.close();
   }
 
-
   //////////////////////////////////////////////////////////////
-
 
   static protected String calcSketchPath() {
     // try to get the user folder. if running under java web start,
@@ -7206,8 +7266,7 @@ public class PApplet implements PConstants {
     try {
       folder = System.getProperty("user.dir");
 
-      URL jarURL =
-          PApplet.class.getProtectionDomain().getCodeSource().getLocation();
+      URL jarURL = PApplet.class.getProtectionDomain().getCodeSource().getLocation();
       // Decode URL
       String jarPath = jarURL.toURI().getSchemeSpecificPart();
 
@@ -7233,14 +7292,12 @@ public class PApplet implements PConstants {
     return folder;
   }
 
-
   public String sketchPath() {
     if (sketchPath == null) {
       sketchPath = calcSketchPath();
     }
     return sketchPath;
   }
-
 
   /**
    * Prepend the sketch folder path to the filename (or path) that is
@@ -7269,11 +7326,9 @@ public class PApplet implements PConstants {
     return sketchPath() + File.separator + where;
   }
 
-
   public File sketchFile(String where) {
     return new File(sketchPath(where));
   }
-
 
   /**
    * Returns a path adjacent the application to save to. Like sketchPath(),
@@ -7289,12 +7344,12 @@ public class PApplet implements PConstants {
    * use <TT>saveXxxx("data/blah.dat")</TT>.
    */
   public String savePath(String where) {
-    if (where == null) return null;
+    if (where == null)
+      return null;
     String filename = sketchPath(where);
     createPath(filename);
     return filename;
   }
-
 
   /**
    * Identical to savePath(), but returns a File object.
@@ -7302,7 +7357,6 @@ public class PApplet implements PConstants {
   public File saveFile(String where) {
     return new File(savePath(where));
   }
-
 
   static File desktopFolder;
 
@@ -7321,11 +7375,9 @@ public class PApplet implements PConstants {
     return new File(desktopFolder, what);
   }
 
-
   static public String desktopPath(String what) {
     return desktopFile(what).getAbsolutePath();
   }
-
 
   /**
    * <b>This function almost certainly does not do the thing you want it to.</b>
@@ -7345,7 +7397,6 @@ public class PApplet implements PConstants {
     return dataFile(where).getAbsolutePath();
   }
 
-
   /**
    * Return a full path to an item in the data folder as a File object.
    * See the dataPath() method for more information.
@@ -7354,7 +7405,8 @@ public class PApplet implements PConstants {
     // isAbsolute() could throw an access exception, but so will writing
     // to the local disk using the sketch path, so this is safe here.
     File why = new File(where);
-    if (why.isAbsolute()) return why;
+    if (why.isAbsolute())
+      return why;
 
     URL jarURL = getClass().getProtectionDomain().getCodeSource().getLocation();
     // Decode URL
@@ -7374,7 +7426,6 @@ public class PApplet implements PConstants {
     return new File(sketchPath + File.separator + "data" + File.separator + where);
   }
 
-
   /**
    * Takes a path and creates any in-between folders if they don't
    * already exist. Useful when trying to save to a subfolder that
@@ -7383,7 +7434,6 @@ public class PApplet implements PConstants {
   static public void createPath(String path) {
     createPath(new File(path));
   }
-
 
   static public void createPath(File file) {
     try {
@@ -7399,10 +7449,9 @@ public class PApplet implements PConstants {
       }
     } catch (SecurityException se) {
       System.err.println("You don't have permissions to create " +
-                         file.getAbsolutePath());
+              file.getAbsolutePath());
     }
   }
-
 
   static public String getExtension(String filename) {
     String extension;
@@ -7410,7 +7459,7 @@ public class PApplet implements PConstants {
     String lower = filename.toLowerCase();
     int dot = filename.lastIndexOf('.');
     if (dot == -1) {
-      return "";  // no extension found
+      return ""; // no extension found
     }
     extension = lower.substring(dot + 1);
 
@@ -7424,16 +7473,13 @@ public class PApplet implements PConstants {
     return extension;
   }
 
-
   //////////////////////////////////////////////////////////////
 
   // URL ENCODING
 
-
   static public String urlEncode(String str) {
     return URLEncoder.encode(str, StandardCharsets.UTF_8);
   }
-
 
   // DO NOT use for file paths, URLDecoder can't handle RFC2396
   // "The recommended way to manage the encoding and decoding of
@@ -7444,12 +7490,9 @@ public class PApplet implements PConstants {
     return URLDecoder.decode(str, StandardCharsets.UTF_8);
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // SORT
-
 
   /**
    *
@@ -7465,7 +7508,7 @@ public class PApplet implements PConstants {
    * @webBrief Sorts an array of numbers from smallest to largest and puts an
    *           array of words in alphabetical order
    * @param list
-   *          array to sort
+   *             array to sort
    * @see PApplet#reverse(boolean[])
    */
   static public byte[] sort(byte[] list) {
@@ -7473,7 +7516,7 @@ public class PApplet implements PConstants {
   }
 
   /**
-        * @param count number of elements to sort, starting from 0
+   * @param count number of elements to sort, starting from 0
    */
   static public byte[] sort(byte[] list, int count) {
     byte[] outgoing = new byte[list.length];
@@ -7526,12 +7569,9 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // ARRAY UTILITIES
-
 
   /**
    *
@@ -7562,15 +7602,16 @@ public class PApplet implements PConstants {
    * @webref data:array functions
    * @webBrief Copies an array (or part of an array) to another array
    * @param src
-   *          the source array
+   *                    the source array
    * @param srcPosition
-   *          starting position in the source array
+   *                    starting position in the source array
    * @param dst
-   *          the destination array of the same data type as the source array
+   *                    the destination array of the same data type as the source
+   *                    array
    * @param dstPosition
-   *          starting position in the destination array
+   *                    starting position in the destination array
    * @param length
-   *          number of array elements to be copied
+   *                    number of array elements to be copied
    * @see PApplet#concat(boolean[], boolean[])
    */
   @SuppressWarnings("SuspiciousSystemArraycopy")
@@ -7628,7 +7669,6 @@ public class PApplet implements PConstants {
     System.arraycopy(src, 0, dst, 0, Array.getLength(src));
   }
 
-
   /**
    *
    * Increases the size of a one-dimensional array. By default, this function
@@ -7642,7 +7682,7 @@ public class PApplet implements PConstants {
    * @webref data:array functions
    * @webBrief Increases the size of an array
    * @param list
-   *          the array to expand
+   *             the array to expand
    * @see PApplet#shorten(boolean[])
    */
   static public boolean[] expand(boolean[] list) {
@@ -7729,9 +7769,9 @@ public class PApplet implements PConstants {
     return temp;
   }
 
- /**
-  * @nowebref
-  */
+  /**
+   * @nowebref
+   */
   static public Object expand(Object array) {
     int len = Array.getLength(array);
     return expand(array, len > 0 ? len << 1 : 1);
@@ -7742,7 +7782,7 @@ public class PApplet implements PConstants {
     Class<?> type = list.getClass().getComponentType();
     Object temp = Array.newInstance(type, newSize);
     System.arraycopy(list, 0, temp, 0,
-                     Math.min(Array.getLength(list), newSize));
+            Math.min(Array.getLength(list), newSize));
     return temp;
   }
 
@@ -7754,7 +7794,8 @@ public class PApplet implements PConstants {
    * Expands an array by one element and adds data to the new position. The
    * datatype of the <b>element</b> parameter must be the same as the
    * datatype of the array.
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * When using an array of objects, the data returned from the function must
    * be cast to the object array's data type. For example: <em>SomeClass[]
    * items = (SomeClass[]) append(originalArray, element)</em>.
@@ -7768,31 +7809,31 @@ public class PApplet implements PConstants {
    */
   static public byte[] append(byte[] array, byte value) {
     array = expand(array, array.length + 1);
-    array[array.length-1] = value;
+    array[array.length - 1] = value;
     return array;
   }
 
   static public char[] append(char[] array, char value) {
     array = expand(array, array.length + 1);
-    array[array.length-1] = value;
+    array[array.length - 1] = value;
     return array;
   }
 
   static public int[] append(int[] array, int value) {
     array = expand(array, array.length + 1);
-    array[array.length-1] = value;
+    array[array.length - 1] = value;
     return array;
   }
 
   static public float[] append(float[] array, float value) {
     array = expand(array, array.length + 1);
-    array[array.length-1] = value;
+    array[array.length - 1] = value;
     return array;
   }
 
   static public String[] append(String[] array, String value) {
     array = expand(array, array.length + 1);
-    array[array.length-1] = value;
+    array[array.length - 1] = value;
     return array;
   }
 
@@ -7803,11 +7844,11 @@ public class PApplet implements PConstants {
     return array;
   }
 
-
- /**
+  /**
    *
    * Decreases an array by one element and returns the shortened array.
-   * <br/> <br/>
+   * <br/>
+   * <br/>
    * When using an array of objects, the data returned from the function must
    * be cast to the object array's data type. For example: <em>SomeClass[]
    * items = (SomeClass[]) shorten(originalArray)</em>.
@@ -7819,34 +7860,33 @@ public class PApplet implements PConstants {
    * @see PApplet#expand(boolean[])
    */
   static public boolean[] shorten(boolean[] list) {
-    return subset(list, 0, list.length-1);
+    return subset(list, 0, list.length - 1);
   }
 
   static public byte[] shorten(byte[] list) {
-    return subset(list, 0, list.length-1);
+    return subset(list, 0, list.length - 1);
   }
 
   static public char[] shorten(char[] list) {
-    return subset(list, 0, list.length-1);
+    return subset(list, 0, list.length - 1);
   }
 
   static public int[] shorten(int[] list) {
-    return subset(list, 0, list.length-1);
+    return subset(list, 0, list.length - 1);
   }
 
   static public float[] shorten(float[] list) {
-    return subset(list, 0, list.length-1);
+    return subset(list, 0, list.length - 1);
   }
 
   static public String[] shorten(String[] list) {
-    return subset(list, 0, list.length-1);
+    return subset(list, 0, list.length - 1);
   }
 
   static public Object shorten(Object list) {
     int length = Array.getLength(list);
     return subset(list, 0, length - 1);
   }
-
 
   /**
    *
@@ -7865,11 +7905,11 @@ public class PApplet implements PConstants {
    * @webref data:array functions
    * @webBrief Inserts a value or array of values into an existing array
    * @param list
-   *          array to splice into
+   *              array to splice into
    * @param value
-   *          value to be spliced in
+   *              value to be spliced in
    * @param index
-   *          position in the array from which to insert data
+   *              position in the array from which to insert data
    * @see PApplet#concat(boolean[], boolean[])
    * @see PApplet#subset(boolean[], int, int)
    */
@@ -7879,7 +7919,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     outgoing[index] = value;
     System.arraycopy(list, index, outgoing, index + 1,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7889,7 +7929,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     System.arraycopy(value, 0, outgoing, index, value.length);
     System.arraycopy(list, index, outgoing, index + value.length,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7899,7 +7939,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     outgoing[index] = value;
     System.arraycopy(list, index, outgoing, index + 1,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7909,10 +7949,9 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     System.arraycopy(value, 0, outgoing, index, value.length);
     System.arraycopy(list, index, outgoing, index + value.length,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
-
 
   static final public char[] splice(char[] list,
                                     char value, int index) {
@@ -7920,7 +7959,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     outgoing[index] = value;
     System.arraycopy(list, index, outgoing, index + 1,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7930,7 +7969,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     System.arraycopy(value, 0, outgoing, index, value.length);
     System.arraycopy(list, index, outgoing, index + value.length,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7940,7 +7979,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     outgoing[index] = value;
     System.arraycopy(list, index, outgoing, index + 1,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7950,7 +7989,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     System.arraycopy(value, 0, outgoing, index, value.length);
     System.arraycopy(list, index, outgoing, index + value.length,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7960,7 +7999,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     outgoing[index] = value;
     System.arraycopy(list, index, outgoing, index + 1,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7970,7 +8009,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     System.arraycopy(value, 0, outgoing, index, value.length);
     System.arraycopy(list, index, outgoing, index + value.length,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7980,7 +8019,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     outgoing[index] = value;
     System.arraycopy(list, index, outgoing, index + 1,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -7990,7 +8029,7 @@ public class PApplet implements PConstants {
     System.arraycopy(list, 0, outgoing, 0, index);
     System.arraycopy(value, 0, outgoing, index, value.length);
     System.arraycopy(list, index, outgoing, index + value.length,
-                     list.length - index);
+            list.length - index);
     return outgoing;
   }
 
@@ -8017,47 +8056,43 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
   static public boolean[] subset(boolean[] list, int start) {
     return subset(list, start, list.length - start);
   }
 
-
- /**
-  *
-  * Extracts an array of elements from an existing array. The <b>list</b>
-  * parameter defines the array from which the elements will be copied, and the
-  * <b>start</b> and <b>count</b> parameters specify which elements to extract.
-  * If no <b>count</b> is given, elements will be extracted from the
-  * <b>start</b> to the end of the array. When specifying the <b>start</b>,
-  * remember that the first array element is 0. This function does not change
-  * the source array.<br />
-  * <br />
-  * When using an array of objects, the data returned from the function must be
-  * cast to the object array's data type. For example: <em>SomeClass[] items =
-  * (SomeClass[]) subset(originalArray, 0, 4)</em>
-  *
-  * @webref data:array functions
-  * @webBrief Extracts an array of elements from an existing array
-  * @param list
-  *          array to extract from
-  * @param start
-  *          position to begin
-  * @param count
-  *          number of values to extract
-  * @see PApplet#splice(boolean[], boolean, int)
-  */
+  /**
+   *
+   * Extracts an array of elements from an existing array. The <b>list</b>
+   * parameter defines the array from which the elements will be copied, and the
+   * <b>start</b> and <b>count</b> parameters specify which elements to extract.
+   * If no <b>count</b> is given, elements will be extracted from the
+   * <b>start</b> to the end of the array. When specifying the <b>start</b>,
+   * remember that the first array element is 0. This function does not change
+   * the source array.<br />
+   * <br />
+   * When using an array of objects, the data returned from the function must be
+   * cast to the object array's data type. For example: <em>SomeClass[] items =
+   * (SomeClass[]) subset(originalArray, 0, 4)</em>
+   *
+   * @webref data:array functions
+   * @webBrief Extracts an array of elements from an existing array
+   * @param list
+   *              array to extract from
+   * @param start
+   *              position to begin
+   * @param count
+   *              number of values to extract
+   * @see PApplet#splice(boolean[], boolean, int)
+   */
   static public boolean[] subset(boolean[] list, int start, int count) {
     boolean[] output = new boolean[count];
     System.arraycopy(list, start, output, 0, count);
     return output;
   }
 
-
   static public byte[] subset(byte[] list, int start) {
     return subset(list, start, list.length - start);
   }
-
 
   static public byte[] subset(byte[] list, int start, int count) {
     byte[] output = new byte[count];
@@ -8065,11 +8100,9 @@ public class PApplet implements PConstants {
     return output;
   }
 
-
   static public char[] subset(char[] list, int start) {
     return subset(list, start, list.length - start);
   }
-
 
   static public char[] subset(char[] list, int start, int count) {
     char[] output = new char[count];
@@ -8077,11 +8110,9 @@ public class PApplet implements PConstants {
     return output;
   }
 
-
   static public int[] subset(int[] list, int start) {
     return subset(list, start, list.length - start);
   }
-
 
   static public int[] subset(int[] list, int start, int count) {
     int[] output = new int[count];
@@ -8089,11 +8120,9 @@ public class PApplet implements PConstants {
     return output;
   }
 
-
   static public long[] subset(long[] list, int start) {
     return subset(list, start, list.length - start);
   }
-
 
   static public long[] subset(long[] list, int start, int count) {
     long[] output = new long[count];
@@ -8101,11 +8130,9 @@ public class PApplet implements PConstants {
     return output;
   }
 
-
   static public float[] subset(float[] list, int start) {
     return subset(list, start, list.length - start);
   }
-
 
   static public float[] subset(float[] list, int start, int count) {
     float[] output = new float[count];
@@ -8113,11 +8140,9 @@ public class PApplet implements PConstants {
     return output;
   }
 
-
   static public double[] subset(double[] list, int start) {
     return subset(list, start, list.length - start);
   }
-
 
   static public double[] subset(double[] list, int start, int count) {
     double[] output = new double[count];
@@ -8125,11 +8150,9 @@ public class PApplet implements PConstants {
     return output;
   }
 
-
   static public String[] subset(String[] list, int start) {
     return subset(list, start, list.length - start);
   }
-
 
   static public String[] subset(String[] list, int start, int count) {
     String[] output = new String[count];
@@ -8137,12 +8160,10 @@ public class PApplet implements PConstants {
     return output;
   }
 
-
   static public Object subset(Object list, int start) {
     int length = Array.getLength(list);
     return subset(list, start, length - start);
   }
-
 
   @SuppressWarnings("SuspiciousSystemArraycopy")
   static public Object subset(Object list, int start, int count) {
@@ -8152,26 +8173,25 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
- /**
-  *
-  * Concatenates two arrays. For example, concatenating the array { 1, 2, 3 }
-  * and the array { 4, 5, 6 } yields { 1, 2, 3, 4, 5, 6 }. Both parameters must
-  * be arrays of the same datatype. <br />
-  * <br />
-  * When using an array of objects, the data returned from the function must be
-  * cast to the object array's data type. For example: <em>SomeClass[] items =
-  * (SomeClass[]) concat(array1, array2)</em>.
-  *
-  * @webref data:array functions
-  * @webBrief Concatenates two arrays
-  * @param a
-  *          first array to concatenate
-  * @param b
-  *          second array to concatenate
-  * @see PApplet#splice(boolean[], boolean, int)
-  * @see PApplet#arrayCopy(Object, int, Object, int, int)
-  */
+  /**
+   *
+   * Concatenates two arrays. For example, concatenating the array { 1, 2, 3 }
+   * and the array { 4, 5, 6 } yields { 1, 2, 3, 4, 5, 6 }. Both parameters must
+   * be arrays of the same datatype. <br />
+   * <br />
+   * When using an array of objects, the data returned from the function must be
+   * cast to the object array's data type. For example: <em>SomeClass[] items =
+   * (SomeClass[]) concat(array1, array2)</em>.
+   *
+   * @webref data:array functions
+   * @webBrief Concatenates two arrays
+   * @param a
+   *          first array to concatenate
+   * @param b
+   *          second array to concatenate
+   * @see PApplet#splice(boolean[], boolean, int)
+   * @see PApplet#arrayCopy(Object, int, Object, int, int)
+   */
   static public boolean[] concat(boolean[] a, boolean[] b) {
     boolean[] c = new boolean[a.length + b.length];
     System.arraycopy(a, 0, c, 0, a.length);
@@ -8227,16 +8247,15 @@ public class PApplet implements PConstants {
 
   //
 
-
- /**
+  /**
    *
    * Reverses the order of an array.
    *
-  * @webref data:array functions
-  * @webBrief Reverses the order of an array
-  * @param list booleans[], bytes[], chars[], ints[], floats[], or Strings[]
-  * @see PApplet#sort(String[], int)
-  */
+   * @webref data:array functions
+   * @webBrief Reverses the order of an array
+   * @param list booleans[], bytes[], chars[], ints[], floats[], or Strings[]
+   * @see PApplet#sort(String[], int)
+   */
   static public boolean[] reverse(boolean[] list) {
     boolean[] outgoing = new boolean[list.length];
     int length1 = list.length - 1;
@@ -8301,12 +8320,9 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // STRINGS
-
 
   /**
    *
@@ -8316,7 +8332,8 @@ public class PApplet implements PConstants {
    * character and the zero width no-break space (U+FEFF) character.
    *
    * @webref data:string_functions
-   * @webBrief Removes whitespace characters from the beginning and end of a <b>String</b>
+   * @webBrief Removes whitespace characters from the beginning and end of a
+   *           <b>String</b>
    * @param str any string
    * @see PApplet#split(String, String)
    * @see PApplet#join(String[], char)
@@ -8329,10 +8346,9 @@ public class PApplet implements PConstants {
     return str.replace('\u00A0', ' ').replace('\uFEFF', ' ').trim();
   }
 
-
- /**
-  * @param array a String array
-  */
+  /**
+   * @param array a String array
+   */
   static public String[] trim(String[] array) {
     if (array == null) {
       return null;
@@ -8346,7 +8362,6 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
   /**
    *
    * Combines an array of Strings into one String, each separated by the
@@ -8355,9 +8370,10 @@ public class PApplet implements PConstants {
    * <b>nf()</b> or <b>nfs()</b>.
    *
    * @webref data:string_functions
-   * @webBrief Combines an array of <b>Strings</b> into one <b>String</b>, each separated by the
-   * character(s) used for the <b>separator</b> parameter
-   * @param list array of Strings
+   * @webBrief Combines an array of <b>Strings</b> into one <b>String</b>, each
+   *           separated by the
+   *           character(s) used for the <b>separator</b> parameter
+   * @param list      array of Strings
    * @param separator char or String to be placed between each item
    * @see PApplet#split(String, String)
    * @see PApplet#trim(String)
@@ -8368,25 +8384,24 @@ public class PApplet implements PConstants {
     return join(list, String.valueOf(separator));
   }
 
-
   static public String join(String[] list, String separator) {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < list.length; i++) {
-      if (i != 0) sb.append(separator);
+      if (i != 0)
+        sb.append(separator);
       sb.append(list[i]);
     }
     return sb.toString();
   }
 
-
   static public String[] splitTokens(String value) {
     return splitTokens(value, WHITESPACE);
   }
 
-
   /**
    *
-   * The <b>splitTokens()</b> function splits a <b>String</b> at one or many character
+   * The <b>splitTokens()</b> function splits a <b>String</b> at one or many
+   * character
    * delimiters or "tokens". The <b>delim</b> parameter specifies the character
    * or characters to be used as a boundary.<br />
    * <br />
@@ -8399,12 +8414,13 @@ public class PApplet implements PConstants {
    * conversion functions <b>int()</b> and <b>float()</b>.
    *
    * @webref data:string_functions
-   * @webBrief The <b>splitTokens()</b> function splits a <b>String</b> at one or many
+   * @webBrief The <b>splitTokens()</b> function splits a <b>String</b> at one or
+   *           many
    *           character "tokens"
    * @param value
-   *          the String to be split
+   *              the String to be split
    * @param delim
-   *          list of individual characters that will be used as separators
+   *              list of individual characters that will be used as separators
    * @see PApplet#split(String, String)
    * @see PApplet#join(String[], String)
    * @see PApplet#trim(String)
@@ -8419,7 +8435,6 @@ public class PApplet implements PConstants {
     }
     return pieces;
   }
-
 
   /**
    *
@@ -8452,50 +8467,49 @@ public class PApplet implements PConstants {
    *           character or string as the divider
    * @usage web_application
    * @param value
-   *          the String to be split
+   *              the String to be split
    * @param delim
-   *          the character or String used to separate the data
+   *              the character or String used to separate the data
    */
   static public String[] split(String value, char delim) {
     // do this so that the exception occurs inside the user's
     // program, rather than appearing to be a bug inside split()
-    if (value == null) return null;
-    //return split(what, String.valueOf(delim));  // huh
+    if (value == null)
+      return null;
+    // return split(what, String.valueOf(delim)); // huh
 
     char[] chars = value.toCharArray();
-    int splitCount = 0; //1;
+    int splitCount = 0; // 1;
     for (char ch : chars) {
-      if (ch == delim) splitCount++;
+      if (ch == delim)
+        splitCount++;
     }
     // make sure that there is something in the input string
-    //if (chars.length > 0) {
-      // if the last char is a delimiter, get rid of it..
-      //if (chars[chars.length-1] == delim) splitCount--;
-      // on second thought, i don't agree with this, will disable
-    //}
+    // if (chars.length > 0) {
+    // if the last char is a delimiter, get rid of it..
+    // if (chars[chars.length-1] == delim) splitCount--;
+    // on second thought, i don't agree with this, will disable
+    // }
     if (splitCount == 0) {
       String[] splits = new String[1];
       splits[0] = value;
       return splits;
     }
-    //int pieceCount = splitCount + 1;
+    // int pieceCount = splitCount + 1;
     String[] splits = new String[splitCount + 1];
     int splitIndex = 0;
     int startIndex = 0;
     for (int i = 0; i < chars.length; i++) {
       if (chars[i] == delim) {
-        splits[splitIndex++] =
-          new String(chars, startIndex, i-startIndex);
+        splits[splitIndex++] = new String(chars, startIndex, i - startIndex);
         startIndex = i + 1;
       }
     }
-    //if (startIndex != chars.length) {
-      splits[splitIndex] =
-        new String(chars, startIndex, chars.length-startIndex);
-    //}
+    // if (startIndex != chars.length) {
+    splits[splitIndex] = new String(chars, startIndex, chars.length - startIndex);
+    // }
     return splits;
   }
-
 
   static public String[] split(String value, String delim) {
     List<String> items = new ArrayList<>();
@@ -8510,7 +8524,6 @@ public class PApplet implements PConstants {
     items.toArray(outgoing);
     return outgoing;
   }
-
 
   static protected LinkedHashMap<String, Pattern> matchPatterns;
 
@@ -8534,12 +8547,12 @@ public class PApplet implements PConstants {
     return p;
   }
 
-
   /**
    *
    * This function is used to apply a regular expression to a piece of text, and
    * return matching groups (elements found inside parentheses) as a String
-   * array. If there are no matches, a <b>null</b> value will be returned. If no groups
+   * array. If there are no matches, a <b>null</b> value will be returned. If no
+   * groups
    * are specified in the regular expression, but the sequence matches, an array
    * of length 1 (with the matched text as the first element of the array) will
    * be returned.<br />
@@ -8565,9 +8578,9 @@ public class PApplet implements PConstants {
    *           piece of text, and return matching groups (elements found inside
    *           parentheses) as a <b>String</b> array
    * @param str
-   *          the String to be searched
+   *               the String to be searched
    * @param regexp
-   *          the regexp to be used for matching
+   *               the regexp to be used for matching
    * @see PApplet#matchAll(String, String)
    * @see PApplet#split(String, String)
    * @see PApplet#splitTokens(String, String)
@@ -8587,7 +8600,6 @@ public class PApplet implements PConstants {
     }
     return null;
   }
-
 
   /**
    *
@@ -8619,9 +8631,9 @@ public class PApplet implements PConstants {
    * @webBrief This function is used to apply a regular expression to a piece of
    *           text
    * @param str
-   *          the String to be searched
+   *               the String to be searched
    * @param regexp
-   *          the regexp to be used for matching
+   *               the regexp to be used for matching
    * @see PApplet#match(String, String)
    * @see PApplet#split(String, String)
    * @see PApplet#splitTokens(String, String)
@@ -8650,18 +8662,20 @@ public class PApplet implements PConstants {
     return matches;
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // CASTING FUNCTIONS, INSERTED BY PREPROC
 
-
   /**
-   * <p>Convert an integer to a boolean. Because of how Java handles upgrading
+   * <p>
+   * Convert an integer to a boolean. Because of how Java handles upgrading
    * numbers, this will also cover byte and char (as they will upgrade to
-   * an int without any sort of explicit cast).</p>
-   * <p>The preprocessor will convert boolean(what) to parseBoolean(what).</p>
+   * an int without any sort of explicit cast).
+   * </p>
+   * <p>
+   * The preprocessor will convert boolean(what) to parseBoolean(what).
+   * </p>
+   *
    * @return false if 0, true if any other number
    */
   static final public boolean parseBoolean(int what) {
@@ -8670,6 +8684,7 @@ public class PApplet implements PConstants {
 
   /**
    * Convert the string "true" or "false" to a boolean.
+   *
    * @return true if 'what' is "true" or "TRUE", false otherwise
    */
   static final public boolean parseBoolean(String what) {
@@ -8681,6 +8696,7 @@ public class PApplet implements PConstants {
   /**
    * Convert an int array to a boolean array. An int equal
    * to zero will return false, and any other value will return true.
+   *
    * @return array of boolean elements
    */
   static final public boolean[] parseBoolean(int[] what) {
@@ -8702,7 +8718,7 @@ public class PApplet implements PConstants {
   // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
   static final public byte parseByte(boolean what) {
-    return what ? (byte)1 : 0;
+    return what ? (byte) 1 : 0;
   }
 
   static final public byte parseByte(char what) {
@@ -8722,7 +8738,7 @@ public class PApplet implements PConstants {
   static final public byte[] parseByte(boolean[] what) {
     byte[] outgoing = new byte[what.length];
     for (int i = 0; i < what.length; i++) {
-      outgoing[i] = what[i] ? (byte)1 : 0;
+      outgoing[i] = what[i] ? (byte) 1 : 0;
     }
     return outgoing;
   }
@@ -8845,7 +8861,7 @@ public class PApplet implements PConstants {
     return list;
   }
 
-  static final public int[] parseInt(byte[] what) {  // note this un-signs
+  static final public int[] parseInt(byte[] what) { // note this un-signs
     int[] list = new int[what.length];
     for (int i = 0; i < what.length; i++) {
       list[i] = (what[i] & 0xff);
@@ -8864,7 +8880,7 @@ public class PApplet implements PConstants {
   static public int[] parseInt(float[] what) {
     int[] inties = new int[what.length];
     for (int i = 0; i < what.length; i++) {
-      inties[i] = (int)what[i];
+      inties[i] = (int) what[i];
     }
     return inties;
   }
@@ -8872,6 +8888,7 @@ public class PApplet implements PConstants {
   /**
    * Make an array of int elements from an array of String objects.
    * If the String can't be parsed as a number, it will be set to zero.
+   *
    * <pre>
    * String s[] = { "1", "300", "44" };
    * int numbers[] = parseInt(s);
@@ -8886,6 +8903,7 @@ public class PApplet implements PConstants {
    * Make an array of int elements from an array of String objects.
    * If the String can't be parsed as a number, its entry in the
    * array will be set to the value of the "missing" parameter.
+   *
    * <pre>
    * String s[] = { "1", "300", "apple", "44" };
    * int numbers[] = parseInt(s, 9999);
@@ -8910,7 +8928,7 @@ public class PApplet implements PConstants {
    * Convert an int to a float value. Also handles bytes because of
    * Java's rules for upgrading values.
    */
-  static final public float parseFloat(int what) {  // also handles byte
+  static final public float parseFloat(int what) { // also handles byte
     return what;
   }
 
@@ -8921,7 +8939,8 @@ public class PApplet implements PConstants {
   static final public float parseFloat(String what, float otherwise) {
     try {
       return Float.parseFloat(what);
-    } catch (NumberFormatException ignored) { }
+    } catch (NumberFormatException ignored) {
+    }
 
     return otherwise;
   }
@@ -8986,39 +9005,42 @@ public class PApplet implements PConstants {
 
   static final public String[] str(boolean[] values) {
     String[] s = new String[values.length];
-    for (int i = 0; i < values.length; i++) s[i] = String.valueOf(values[i]);
+    for (int i = 0; i < values.length; i++)
+      s[i] = String.valueOf(values[i]);
     return s;
   }
 
   static final public String[] str(byte[] values) {
     String[] s = new String[values.length];
-    for (int i = 0; i < values.length; i++) s[i] = String.valueOf(values[i]);
+    for (int i = 0; i < values.length; i++)
+      s[i] = String.valueOf(values[i]);
     return s;
   }
 
   static final public String[] str(char[] values) {
     String[] s = new String[values.length];
-    for (int i = 0; i < values.length; i++) s[i] = String.valueOf(values[i]);
+    for (int i = 0; i < values.length; i++)
+      s[i] = String.valueOf(values[i]);
     return s;
   }
 
   static final public String[] str(int[] values) {
     String[] s = new String[values.length];
-    for (int i = 0; i < values.length; i++) s[i] = String.valueOf(values[i]);
+    for (int i = 0; i < values.length; i++)
+      s[i] = String.valueOf(values[i]);
     return s;
   }
 
   static final public String[] str(float[] values) {
     String[] s = new String[values.length];
-    for (int i = 0; i < values.length; i++) s[i] = String.valueOf(values[i]);
+    for (int i = 0; i < values.length; i++)
+      s[i] = String.valueOf(values[i]);
     return s;
   }
-
 
   //////////////////////////////////////////////////////////////
 
   // INT NUMBER FORMATTING
-
 
   static public String nf(float num) {
     int inum = (int) num;
@@ -9028,7 +9050,6 @@ public class PApplet implements PConstants {
     return str(num);
   }
 
-
   static public String[] nf(float[] nums) {
     String[] outgoing = new String[nums.length];
     for (int i = 0; i < nums.length; i++) {
@@ -9037,14 +9058,12 @@ public class PApplet implements PConstants {
     return outgoing;
   }
 
-
   /**
    * Integer number formatter.
    */
   static private NumberFormat int_nf;
   static private int int_nf_digits;
   static private boolean int_nf_commas;
-
 
   /**
    * Utility function for formatting numbers into strings. There are two
@@ -9061,9 +9080,9 @@ public class PApplet implements PConstants {
    * @webref data:string_functions
    * @webBrief Utility function for formatting numbers into strings
    * @param nums
-   *          the numbers to format
+   *               the numbers to format
    * @param digits
-   *          number of digits to pad with zero
+   *               number of digits to pad with zero
    * @see PApplet#nfs(float, int, int)
    * @see PApplet#nfp(float, int, int)
    * @see PApplet#nfc(float, int)
@@ -9078,14 +9097,13 @@ public class PApplet implements PConstants {
     return formatted;
   }
 
-
   /**
    * @param num the number to format
    */
   static public String nf(int num, int digits) {
     if ((int_nf != null) &&
-        (int_nf_digits == digits) &&
-        !int_nf_commas) {
+            (int_nf_digits == digits) &&
+            !int_nf_commas) {
       return int_nf.format(num);
     }
 
@@ -9096,7 +9114,6 @@ public class PApplet implements PConstants {
     int_nf_digits = digits;
     return int_nf.format(num);
   }
-
 
   /**
    * Utility function for formatting numbers into strings and placing
@@ -9114,7 +9131,7 @@ public class PApplet implements PConstants {
    * @webBrief Utility function for formatting numbers into strings and placing
    *           appropriate commas to mark units of 1000
    * @param nums
-   *          the numbers to format
+   *             the numbers to format
    * @see PApplet#nf(float, int, int)
    * @see PApplet#nfp(float, int, int)
    * @see PApplet#nfs(float, int, int)
@@ -9127,14 +9144,13 @@ public class PApplet implements PConstants {
     return formatted;
   }
 
-
   /**
    * @param num the number to format
    */
   static public String nfc(int num) {
     if ((int_nf != null) &&
-        (int_nf_digits == 0) &&
-        int_nf_commas) {
+            (int_nf_digits == 0) &&
+            int_nf_commas) {
       return int_nf.format(num);
     }
 
@@ -9146,7 +9162,6 @@ public class PApplet implements PConstants {
     return int_nf.format(num);
   }
 
-
   /**
    * Utility function for formatting numbers into strings. Similar to
    * <b>nf()</b> but leaves a blank space in front of positive numbers, so
@@ -9157,7 +9172,7 @@ public class PApplet implements PConstants {
    *
    * @webref data:string_functions
    * @webBrief Utility function for formatting numbers into strings
-   * @param num the number to format
+   * @param num    the number to format
    * @param digits number of digits to pad with zeroes
    * @see PApplet#nf(float, int, int)
    * @see PApplet#nfp(float, int, int)
@@ -9166,7 +9181,6 @@ public class PApplet implements PConstants {
   static public String nfs(int num, int digits) {
     return (num < 0) ? nf(num, digits) : (' ' + nf(num, digits));
   }
-
 
   /**
    * @param nums the numbers to format
@@ -9179,28 +9193,26 @@ public class PApplet implements PConstants {
     return formatted;
   }
 
-
- /**
-  * Utility function for formatting numbers into strings. Similar to <b>nf()</b>
-  * but puts a "+" in front of positive numbers and a "-" in front of negative
-  * numbers. There are two versions: one for formatting floats, and one for
-  * formatting ints. The values for the <b>digits</b>, <b>left</b>, and
-  * <b>right</b> parameters should always be positive integers.
-  *
-  * @webref data:string_functions
-  * @webBrief Utility function for formatting numbers into strings
-  * @param num
-  *          the number to format
-  * @param digits
-  *          number of digits to pad with zeroes
-  * @see PApplet#nf(float, int, int)
-  * @see PApplet#nfs(float, int, int)
-  * @see PApplet#nfc(float, int)
-  */
+  /**
+   * Utility function for formatting numbers into strings. Similar to <b>nf()</b>
+   * but puts a "+" in front of positive numbers and a "-" in front of negative
+   * numbers. There are two versions: one for formatting floats, and one for
+   * formatting ints. The values for the <b>digits</b>, <b>left</b>, and
+   * <b>right</b> parameters should always be positive integers.
+   *
+   * @webref data:string_functions
+   * @webBrief Utility function for formatting numbers into strings
+   * @param num
+   *               the number to format
+   * @param digits
+   *               number of digits to pad with zeroes
+   * @see PApplet#nf(float, int, int)
+   * @see PApplet#nfs(float, int, int)
+   * @see PApplet#nfc(float, int)
+   */
   static public String nfp(int num, int digits) {
     return (num < 0) ? nf(num, digits) : ('+' + nf(num, digits));
   }
-
 
   /**
    * @param nums the numbers to format
@@ -9213,8 +9225,6 @@ public class PApplet implements PConstants {
     return formatted;
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
   // FLOAT NUMBER FORMATTING
@@ -9224,7 +9234,7 @@ public class PApplet implements PConstants {
   static private boolean float_nf_commas;
 
   /**
-   * @param left number of digits to the left of the decimal point
+   * @param left  number of digits to the left of the decimal point
    * @param right number of digits to the right of the decimal point
    */
   static public String[] nf(float[] nums, int left, int right) {
@@ -9237,9 +9247,9 @@ public class PApplet implements PConstants {
 
   static public String nf(float num, int left, int right) {
     if ((float_nf != null) &&
-        (float_nf_left == left) &&
-        (float_nf_right == right) &&
-        !float_nf_commas) {
+            (float_nf_left == left) &&
+            (float_nf_right == right) &&
+            !float_nf_commas) {
       return float_nf.format(num);
     }
 
@@ -9247,7 +9257,8 @@ public class PApplet implements PConstants {
     float_nf.setGroupingUsed(false);
     float_nf_commas = false;
 
-    if (left != 0) float_nf.setMinimumIntegerDigits(left);
+    if (left != 0)
+      float_nf.setMinimumIntegerDigits(left);
     if (right != 0) {
       float_nf.setMinimumFractionDigits(right);
       float_nf.setMaximumFractionDigits(right);
@@ -9259,7 +9270,7 @@ public class PApplet implements PConstants {
 
   /**
    * @param right number of digits to the right of the decimal point
-  */
+   */
   static public String[] nfc(float[] nums, int right) {
     String[] formatted = new String[nums.length];
     for (int i = 0; i < formatted.length; i++) {
@@ -9270,9 +9281,9 @@ public class PApplet implements PConstants {
 
   static public String nfc(float num, int right) {
     if ((float_nf != null) &&
-        (float_nf_left == 0) &&
-        (float_nf_right == right) &&
-        float_nf_commas) {
+            (float_nf_left == 0) &&
+            (float_nf_right == right) &&
+            float_nf_commas) {
       return float_nf.format(num);
     }
 
@@ -9289,11 +9300,10 @@ public class PApplet implements PConstants {
     return float_nf.format(num);
   }
 
-
- /**
-  * @param left the number of digits to the left of the decimal point
-  * @param right the number of digits to the right of the decimal point
-  */
+  /**
+   * @param left  the number of digits to the left of the decimal point
+   * @param right the number of digits to the right of the decimal point
+   */
   static public String[] nfs(float[] nums, int left, int right) {
     String[] formatted = new String[nums.length];
     for (int i = 0; i < formatted.length; i++) {
@@ -9303,13 +9313,13 @@ public class PApplet implements PConstants {
   }
 
   static public String nfs(float num, int left, int right) {
-    return (num < 0) ? nf(num, left, right) :  (' ' + nf(num, left, right));
+    return (num < 0) ? nf(num, left, right) : (' ' + nf(num, left, right));
   }
 
- /**
-  * @param left the number of digits to the left of the decimal point
-  * @param right the number of digits to the right of the decimal point
-  */
+  /**
+   * @param left  the number of digits to the left of the decimal point
+   * @param right the number of digits to the right of the decimal point
+   */
   static public String[] nfp(float[] nums, int left, int right) {
     String[] formatted = new String[nums.length];
     for (int i = 0; i < formatted.length; i++) {
@@ -9319,15 +9329,12 @@ public class PApplet implements PConstants {
   }
 
   static public String nfp(float num, int left, int right) {
-    return (num < 0) ? nf(num, left, right) :  ('+' + nf(num, left, right));
+    return (num < 0) ? nf(num, left, right) : ('+' + nf(num, left, right));
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
   // HEX/BINARY CONVERSION
-
 
   /**
    *
@@ -9342,10 +9349,11 @@ public class PApplet implements PConstants {
    * increase the length of the <b>String</b> further.
    *
    * @webref data:conversion
-   * @webBrief Converts a <b>byte</b>, <b>char</b>, <b>int</b>, or <b>color</b> to a <b>String</b> containing the
+   * @webBrief Converts a <b>byte</b>, <b>char</b>, <b>int</b>, or <b>color</b> to
+   *           a <b>String</b> containing the
    *           equivalent hexadecimal notation
    * @param value
-   *          the value to convert
+   *              the value to convert
    * @see PApplet#unhex(String)
    * @see PApplet#binary(byte)
    * @see PApplet#unbinary(String)
@@ -9361,9 +9369,10 @@ public class PApplet implements PConstants {
   static final public String hex(int value) {
     return hex(value, 8);
   }
-/**
- * @param digits the number of digits (maximum 8)
- */
+
+  /**
+   * @param digits the number of digits (maximum 8)
+   */
   static final public String hex(int value, int digits) {
     String stuff = Integer.toHexString(value).toUpperCase();
     if (digits > 8) {
@@ -9375,25 +9384,26 @@ public class PApplet implements PConstants {
       return stuff.substring(length - digits);
 
     } else if (length < digits) {
-      return "00000000".substring(8 - (digits-length)) + stuff;
+      return "00000000".substring(8 - (digits - length)) + stuff;
     }
     return stuff;
   }
 
- /**
-  *
-  * Converts a <b>String</b> representation of a hexadecimal number to its
-  * equivalent integer value.
-  *
-  * @webref data:conversion
-  * @webBrief Converts a <b>String</b> representation of a hexadecimal number to its
-  *           equivalent integer value
-  * @param value
-  *          String to convert to an integer
-  * @see PApplet#hex(int, int)
-  * @see PApplet#binary(byte)
-  * @see PApplet#unbinary(String)
-  */
+  /**
+   *
+   * Converts a <b>String</b> representation of a hexadecimal number to its
+   * equivalent integer value.
+   *
+   * @webref data:conversion
+   * @webBrief Converts a <b>String</b> representation of a hexadecimal number to
+   *           its
+   *           equivalent integer value
+   * @param value
+   *              String to convert to an integer
+   * @see PApplet#hex(int, int)
+   * @see PApplet#binary(byte)
+   * @see PApplet#unbinary(String)
+   */
   static final public int unhex(String value) {
     // has to parse as a Long so that it'll work for numbers bigger than 2^31
     return (int) (Long.parseLong(value, 16));
@@ -9432,29 +9442,30 @@ public class PApplet implements PConstants {
    * The digits parameter determines how many digits will be used.
    */
 
- /**
-  *
-  * Converts an <b>int</b>, <b>byte</b>, <b>char</b>, or <b>color</b> to a
-  * <b>String</b> containing the equivalent binary notation. For example, the
-  * <b>color</b> value produced by <b>color(0, 102, 153, 255)</b> will convert
-  * to the <b>String</b> value <b>"11111111000000000110011010011001"</b>. This
-  * function can help make your geeky debugging sessions much happier.<br />
-  * <br />
-  * Note that the maximum number of digits is 32, because an <b>int</b> value
-  * can only represent up to 32 bits. Specifying more than 32 digits will have
-  * no effect.
-  *
-  * @webref data:conversion
-  * @webBrief Converts an <b>int</b>, <b>byte</b>, <b>char</b>, or <b>color</b> to a
-  * <b>String</b> containing the equivalent binary notation
-  * @param value
-  *          value to convert
-  * @param digits
-  *          number of digits to return
-  * @see PApplet#unbinary(String)
-  * @see PApplet#hex(int,int)
-  * @see PApplet#unhex(String)
-  */
+  /**
+   *
+   * Converts an <b>int</b>, <b>byte</b>, <b>char</b>, or <b>color</b> to a
+   * <b>String</b> containing the equivalent binary notation. For example, the
+   * <b>color</b> value produced by <b>color(0, 102, 153, 255)</b> will convert
+   * to the <b>String</b> value <b>"11111111000000000110011010011001"</b>. This
+   * function can help make your geeky debugging sessions much happier.<br />
+   * <br />
+   * Note that the maximum number of digits is 32, because an <b>int</b> value
+   * can only represent up to 32 bits. Specifying more than 32 digits will have
+   * no effect.
+   *
+   * @webref data:conversion
+   * @webBrief Converts an <b>int</b>, <b>byte</b>, <b>char</b>, or <b>color</b>
+   *           to a
+   *           <b>String</b> containing the equivalent binary notation
+   * @param value
+   *               value to convert
+   * @param digits
+   *               number of digits to return
+   * @see PApplet#unbinary(String)
+   * @see PApplet#hex(int,int)
+   * @see PApplet#unhex(String)
+   */
   static final public String binary(int value, int digits) {
     String stuff = Integer.toBinaryString(value);
     if (digits > 32) {
@@ -9466,33 +9477,30 @@ public class PApplet implements PConstants {
       return stuff.substring(length - digits);
 
     } else if (length < digits) {
-      int offset = 32 - (digits-length);
+      int offset = 32 - (digits - length);
       return "00000000000000000000000000000000".substring(offset) + stuff;
     }
     return stuff;
   }
 
-
- /**
-  *
-  * Converts a <b>String</b> representation of a binary number to its equivalent
-  * integer value. For example, <b>unbinary("00001000")</b> will return
-  * <b>8</b>.
-  *
-  * @webref data:conversion
-  * @webBrief Converts a <b>String</b> representation of a binary number to its
-  *           equivalent <b>integer</b> value
-  * @param value
-  *          String to convert to an integer
-  * @see PApplet#binary(byte)
-  * @see PApplet#hex(int,int)
-  * @see PApplet#unhex(String)
-  */
+  /**
+   *
+   * Converts a <b>String</b> representation of a binary number to its equivalent
+   * integer value. For example, <b>unbinary("00001000")</b> will return
+   * <b>8</b>.
+   *
+   * @webref data:conversion
+   * @webBrief Converts a <b>String</b> representation of a binary number to its
+   *           equivalent <b>integer</b> value
+   * @param value
+   *              String to convert to an integer
+   * @see PApplet#binary(byte)
+   * @see PApplet#hex(int,int)
+   * @see PApplet#unhex(String)
+   */
   static final public int unbinary(String value) {
     return Integer.parseInt(value, 2);
   }
-
-
 
   //////////////////////////////////////////////////////////////
 
@@ -9500,7 +9508,6 @@ public class PApplet implements PConstants {
 
   // moved here so that they can work without
   // the graphics actually being instantiated (outside setup)
-
 
   /**
    *
@@ -9526,17 +9533,19 @@ public class PApplet implements PConstants {
    * @webBrief Creates colors for storing in variables of the <b>color</b>
    *           datatype
    * @param gray
-   *          number specifying value between white and black
+   *             number specifying value between white and black
    * @see PApplet#colorMode(int)
    */
   public final int color(int gray) {
     if (g == null) {
-      if (gray > 255) gray = 255; else if (gray < 0) gray = 0;
+      if (gray > 255)
+        gray = 255;
+      else if (gray < 0)
+        gray = 0;
       return 0xff000000 | (gray << 16) | (gray << 8) | gray;
     }
     return g.color(gray);
   }
-
 
   /**
    * @nowebref
@@ -9545,31 +9554,36 @@ public class PApplet implements PConstants {
   public final int color(float fgray) {
     if (g == null) {
       int gray = (int) fgray;
-      if (gray > 255) gray = 255; else if (gray < 0) gray = 0;
+      if (gray > 255)
+        gray = 255;
+      else if (gray < 0)
+        gray = 0;
       return 0xff000000 | (gray << 16) | (gray << 8) | gray;
     }
     return g.color(fgray);
   }
 
-
   /**
    * As of 0116 this also takes color(#FF8800, alpha)
+   *
    * @param alpha relative to current color range
    */
   public final int color(int gray, int alpha) {
     if (g == null) {
-      if (alpha > 255) alpha = 255; else if (alpha < 0) alpha = 0;
+      if (alpha > 255)
+        alpha = 255;
+      else if (alpha < 0)
+        alpha = 0;
       if (gray > 255) {
         // then assume this is actually a #FF8800
         return (alpha << 24) | (gray & 0xFFFFFF);
       } else {
-        //if (gray > 255) gray = 255; else if (gray < 0) gray = 0;
+        // if (gray > 255) gray = 255; else if (gray < 0) gray = 0;
         return (alpha << 24) | (gray << 16) | (gray << 8) | gray;
       }
     }
     return g.color(gray, alpha);
   }
-
 
   /**
    * @nowebref
@@ -9578,13 +9592,18 @@ public class PApplet implements PConstants {
     if (g == null) {
       int gray = (int) fgray;
       int alpha = (int) falpha;
-      if (gray > 255) gray = 255; else if (gray < 0) gray = 0;
-      if (alpha > 255) alpha = 255; else if (alpha < 0) alpha = 0;
+      if (gray > 255)
+        gray = 255;
+      else if (gray < 0)
+        gray = 0;
+      if (alpha > 255)
+        alpha = 255;
+      else if (alpha < 0)
+        alpha = 0;
       return (alpha << 24) | (gray << 16) | (gray << 8) | gray;
     }
     return g.color(fgray, falpha);
   }
-
 
   /**
    * @param v1 red or hue values relative to the current color range
@@ -9593,53 +9612,91 @@ public class PApplet implements PConstants {
    */
   public final int color(int v1, int v2, int v3) {
     if (g == null) {
-      if (v1 > 255) v1 = 255; else if (v1 < 0) v1 = 0;
-      if (v2 > 255) v2 = 255; else if (v2 < 0) v2 = 0;
-      if (v3 > 255) v3 = 255; else if (v3 < 0) v3 = 0;
+      if (v1 > 255)
+        v1 = 255;
+      else if (v1 < 0)
+        v1 = 0;
+      if (v2 > 255)
+        v2 = 255;
+      else if (v2 < 0)
+        v2 = 0;
+      if (v3 > 255)
+        v3 = 255;
+      else if (v3 < 0)
+        v3 = 0;
 
       return 0xff000000 | (v1 << 16) | (v2 << 8) | v3;
     }
     return g.color(v1, v2, v3);
   }
 
-
   public final int color(int v1, int v2, int v3, int alpha) {
     if (g == null) {
-      if (alpha > 255) alpha = 255; else if (alpha < 0) alpha = 0;
-      if (v1 > 255) v1 = 255; else if (v1 < 0) v1 = 0;
-      if (v2 > 255) v2 = 255; else if (v2 < 0) v2 = 0;
-      if (v3 > 255) v3 = 255; else if (v3 < 0) v3 = 0;
+      if (alpha > 255)
+        alpha = 255;
+      else if (alpha < 0)
+        alpha = 0;
+      if (v1 > 255)
+        v1 = 255;
+      else if (v1 < 0)
+        v1 = 0;
+      if (v2 > 255)
+        v2 = 255;
+      else if (v2 < 0)
+        v2 = 0;
+      if (v3 > 255)
+        v3 = 255;
+      else if (v3 < 0)
+        v3 = 0;
 
       return (alpha << 24) | (v1 << 16) | (v2 << 8) | v3;
     }
     return g.color(v1, v2, v3, alpha);
   }
 
-
   public final int color(float v1, float v2, float v3) {
     if (g == null) {
-      if (v1 > 255) v1 = 255; else if (v1 < 0) v1 = 0;
-      if (v2 > 255) v2 = 255; else if (v2 < 0) v2 = 0;
-      if (v3 > 255) v3 = 255; else if (v3 < 0) v3 = 0;
+      if (v1 > 255)
+        v1 = 255;
+      else if (v1 < 0)
+        v1 = 0;
+      if (v2 > 255)
+        v2 = 255;
+      else if (v2 < 0)
+        v2 = 0;
+      if (v3 > 255)
+        v3 = 255;
+      else if (v3 < 0)
+        v3 = 0;
 
-      return 0xff000000 | ((int)v1 << 16) | ((int)v2 << 8) | (int)v3;
+      return 0xff000000 | ((int) v1 << 16) | ((int) v2 << 8) | (int) v3;
     }
     return g.color(v1, v2, v3);
   }
 
-
   public final int color(float v1, float v2, float v3, float alpha) {
     if (g == null) {
-      if (alpha > 255) alpha = 255; else if (alpha < 0) alpha = 0;
-      if (v1 > 255) v1 = 255; else if (v1 < 0) v1 = 0;
-      if (v2 > 255) v2 = 255; else if (v2 < 0) v2 = 0;
-      if (v3 > 255) v3 = 255; else if (v3 < 0) v3 = 0;
+      if (alpha > 255)
+        alpha = 255;
+      else if (alpha < 0)
+        alpha = 0;
+      if (v1 > 255)
+        v1 = 255;
+      else if (v1 < 0)
+        v1 = 0;
+      if (v2 > 255)
+        v2 = 255;
+      else if (v2 < 0)
+        v2 = 0;
+      if (v3 > 255)
+        v3 = 255;
+      else if (v3 < 0)
+        v3 = 0;
 
-      return ((int)alpha << 24) | ((int)v1 << 16) | ((int)v2 << 8) | (int)v3;
+      return ((int) alpha << 24) | ((int) v1 << 16) | ((int) v2 << 8) | (int) v3;
     }
     return g.color(v1, v2, v3, alpha);
   }
-
 
   /**
    *
@@ -9648,20 +9705,22 @@ public class PApplet implements PConstants {
    * where 0.0 is equal to the first point, 0.1 is very near the first point,
    * 0.5 is halfway in between, etc. <br />
    * An amount below 0 will be treated as 0. Likewise, amounts above 1 will be
-   * capped at 1. This is different from the behavior of <b>lerp()</b>, but necessary
+   * capped at 1. This is different from the behavior of <b>lerp()</b>, but
+   * necessary
    * because otherwise numbers outside the range will produce strange and
    * unexpected colors.
    *
    * @webref color:creating & reading
-   * @webBrief Calculates a <b>color</b> or <b>colors</b> between two <b>colors</b> at a specific
+   * @webBrief Calculates a <b>color</b> or <b>colors</b> between two
+   *           <b>colors</b> at a specific
    *           increment
    * @usage web_application
    * @param c1
-   *          interpolate from this color
+   *            interpolate from this color
    * @param c2
-   *          interpolate to this color
+   *            interpolate to this color
    * @param amt
-   *          between 0.0 and 1.0
+   *            between 0.0 and 1.0
    * @see PImage#blendColor(int, int, int)
    * @see PGraphics#color(float, float, float, float)
    * @see PApplet#lerp(float, float, float)
@@ -9674,29 +9733,24 @@ public class PApplet implements PConstants {
     return PGraphics.lerpColor(c1, c2, amt, RGB);
   }
 
-
   static public int blendColor(int c1, int c2, int mode) {
     return PImage.blendColor(c1, c2, mode);
   }
 
-
-
   //////////////////////////////////////////////////////////////
 
-
   /*
-  public void frameMoved(int x, int y) {
-    if (!fullScreen) {
-      System.err.println(EXTERNAL_MOVE + " " + x + " " + y);
-      System.err.flush();  // doesn't seem to help or hurt
-    }
-  }
-
-
-  public void frameResized(int w, int h) {
-  }
-  */
-
+   * public void frameMoved(int x, int y) {
+   * if (!fullScreen) {
+   * System.err.println(EXTERNAL_MOVE + " " + x + " " + y);
+   * System.err.flush(); // doesn't seem to help or hurt
+   * }
+   * }
+   *
+   *
+   * public void frameResized(int w, int h) {
+   * }
+   */
 
   //////////////////////////////////////////////////////////////
 
@@ -9704,16 +9758,13 @@ public class PApplet implements PConstants {
 
   Map<String, Integer> windowEventQueue = new ConcurrentHashMap<>();
 
-
   public void windowTitle(String title) {
     surface.setTitle(title);
   }
 
-
   public void windowResize(int newWidth, int newHeight) {
     surface.setSize(newWidth, newHeight);
   }
-
 
   /**
    * Internal use only: called by Surface objects to queue a resize
@@ -9726,20 +9777,17 @@ public class PApplet implements PConstants {
     windowEventQueue.put("h", newHeight);
   }
 
-
   /** Called when window is resized. */
-  public void windowResized() {  }
-
+  public void windowResized() {
+  }
 
   public void windowResizable(boolean resizable) {
     surface.setResizable(resizable);
   }
 
-
   public void windowMove(int x, int y) {
     surface.setLocation(x, y);
   }
-
 
   /**
    * When running from the PDE, this saves the window position for
@@ -9748,9 +9796,8 @@ public class PApplet implements PConstants {
    */
   public void frameMoved(int newX, int newY) {
     System.err.println(EXTERNAL_MOVE + " " + newX + " " + newY);
-    System.err.flush();  // doesn't seem to help or hurt
+    System.err.flush(); // doesn't seem to help or hurt
   }
-
 
   /**
    * Internal use only: called by Surface objects to queue a position
@@ -9767,10 +9814,9 @@ public class PApplet implements PConstants {
     windowEventQueue.put("y", newY);
   }
 
-
   /** Called when the window is moved */
-  public void windowMoved() {  }
-
+  public void windowMoved() {
+  }
 
   private void dequeueWindowEvents() {
     if (windowEventQueue.containsKey("x")) {
@@ -9780,14 +9826,13 @@ public class PApplet implements PConstants {
     }
     if (windowEventQueue.containsKey("w")) {
       // these should already match width/height
-      //windowResized(windowEventQueue.remove("w"),
-      //              windowEventQueue.remove("h"));
+      // windowResized(windowEventQueue.remove("w"),
+      // windowEventQueue.remove("h"));
       windowEventQueue.remove("w");
       windowEventQueue.remove("h");
       windowResized();
     }
   }
-
 
   /**
    * Scale the sketch as if it fits this specific width and height.
@@ -9802,11 +9847,9 @@ public class PApplet implements PConstants {
     windowRatio = true;
   }
 
-
   //////////////////////////////////////////////////////////////
 
   // MAIN
-
 
   /**
    * main() method for running this class from the command line.
@@ -9823,11 +9866,16 @@ public class PApplet implements PConstants {
    * <p>
    * The simplest way to turn and sketch into an application is to
    * add the following code to your program:
-   * <PRE>static public void main(String args[]) {
-   *   PApplet.main("YourSketchName");
-   * }</PRE>
+   *
+   * <PRE>
+   * static public void main(String args[]) {
+   *     PApplet.main("YourSketchName");
+   * }
+   * </PRE>
+   *
    * That will properly launch your code from a double-clickable .jar
    * or from the command line.
+   *
    * <PRE>
    * Parameters useful for launching or also used by the PDE:
    *
@@ -9883,7 +9931,6 @@ public class PApplet implements PConstants {
     runSketch(args, null);
   }
 
-
   /**
    * Convenience method so that PApplet.main(YourSketch.class)
    * launches a sketch, rather than having to call getName() on it.
@@ -9892,25 +9939,26 @@ public class PApplet implements PConstants {
     main(mainClass.getName(), args);
   }
 
-
   /**
    * Convenience method so that PApplet.main("YourSketch") launches a sketch,
    * rather than having to wrap it into a single element String array.
+   *
    * @param mainClass name of the class to load (with package if any)
    */
   static public void main(final String mainClass) {
     main(mainClass, null);
   }
 
-
   /**
    * Convenience method so that PApplet.main("YourSketch", args) launches a
    * sketch, rather than having to wrap it into a String array, and appending
    * the 'args' array when not null.
-   * @param mainClass name of the class to load (with package if any)
+   *
+   * @param mainClass  name of the class to load (with package if any)
    * @param sketchArgs command line arguments to pass to the sketch's 'args'
-   *             array. Note that this is <i>not</i> the same as the args passed
-   *             to (and understood by) PApplet such as --display.
+   *                   array. Note that this is <i>not</i> the same as the args
+   *                   passed
+   *                   to (and understood by) PApplet such as --display.
    */
   static public void main(final String mainClass, final String[] sketchArgs) {
     String[] args = new String[] { mainClass };
@@ -9919,7 +9967,6 @@ public class PApplet implements PConstants {
     }
     runSketch(args, null);
   }
-
 
   // Moving this back off the EDT for 3.0 alpha 10. Not sure if we're helping
   // or hurting, but unless we do, errors inside settings() are never passed
@@ -9934,24 +9981,24 @@ public class PApplet implements PConstants {
 
     // This doesn't work, need to mess with Info.plist instead
     /*
-    // In an exported application, add the Contents/Java folder to the
-    // java.library.path, so that native libraries work properly.
-    // Without this, the library path is only set to Contents/MacOS
-    // where the launcher binary lives.
-    if (platform == MACOSX) {
-      URL coreJarURL =
-        PApplet.class.getProtectionDomain().getCodeSource().getLocation();
-      // The jarPath from above will/may be URL encoded (%20 for spaces)
-      String coreJarPath = urlDecode(coreJarURL.getPath());
-      if (coreJarPath.endsWith("/Contents/Java/core.jar")) {
-        // remove the /core.jar part from the end
-        String javaPath = coreJarPath.substring(0, coreJarPath.length() - 9);
-        String libraryPath = System.getProperty("java.library.path");
-        libraryPath += File.pathSeparator + javaPath;
-        System.setProperty("java.library.path", libraryPath);
-      }
-    }
-    */
+     * // In an exported application, add the Contents/Java folder to the
+     * // java.library.path, so that native libraries work properly.
+     * // Without this, the library path is only set to Contents/MacOS
+     * // where the launcher binary lives.
+     * if (platform == MACOSX) {
+     * URL coreJarURL =
+     * PApplet.class.getProtectionDomain().getCodeSource().getLocation();
+     * // The jarPath from above will/may be URL encoded (%20 for spaces)
+     * String coreJarPath = urlDecode(coreJarURL.getPath());
+     * if (coreJarPath.endsWith("/Contents/Java/core.jar")) {
+     * // remove the /core.jar part from the end
+     * String javaPath = coreJarPath.substring(0, coreJarPath.length() - 9);
+     * String libraryPath = System.getProperty("java.library.path");
+     * libraryPath += File.pathSeparator + javaPath;
+     * System.setProperty("java.library.path", libraryPath);
+     * }
+     * }
+     */
 
     // So that the system proxy setting are used by default
     System.setProperty("java.net.useSystemProxies", "true");
@@ -9971,7 +10018,7 @@ public class PApplet implements PConstants {
     int stopColor = 0xff808080;
     boolean hideStop = false;
 
-    int displayNum = -1;  // use default
+    int displayNum = -1; // use default
     boolean present = false;
     boolean fullScreen = false;
     float uiScale = 0;
@@ -9980,8 +10027,7 @@ public class PApplet implements PConstants {
     String folder = calcSketchPath();
 
     int argIndex = 0;
-    label:
-    while (argIndex < args.length) {
+    label: while (argIndex < args.length) {
       int equals = args[argIndex].indexOf('=');
       if (equals != -1) {
         param = args[argIndex].substring(0, equals);
@@ -9998,7 +10044,7 @@ public class PApplet implements PConstants {
             if (displayNum == -2) {
               // this means the display value couldn't be parsed properly
               System.err.println(value + " is not a valid choice for " + ARGS_DISPLAY);
-              displayNum = -1;  // use the default
+              displayNum = -1; // use the default
             }
             break;
 
@@ -10059,7 +10105,7 @@ public class PApplet implements PConstants {
 
           default:
             name = args[argIndex];
-            break label;  // because of break, argIndex won't increment again
+            break label; // because of break, argIndex won't increment again
         }
       }
       argIndex++;
@@ -10071,14 +10117,14 @@ public class PApplet implements PConstants {
       // Also applies to 300% since that is not even a thing.
 
       // no longer possible to set prop after this line initializes AWT
-      //int dpi = java.awt.Toolkit.getDefaultToolkit().getScreenResolution();
+      // int dpi = java.awt.Toolkit.getDefaultToolkit().getScreenResolution();
 
       // Attempt to get the resolution using a helper app. This code is
       // fairly conservative: if there is trouble, we go with the default.
       if (uiScale == 0) {
         int dpi = getWindowsDPI();
         if (dpi != 0) {
-          //uiScale = constrain(dpi / 96, 1, 2);
+          // uiScale = constrain(dpi / 96, 1, 2);
           // If larger than 150% set scale to 2. Using scale 1 at 175% feels
           // reeaally small. 150% is more of a tossup; it could also use 2.
           uiScale = (dpi > 144) ? 2 : 1;
@@ -10086,8 +10132,9 @@ public class PApplet implements PConstants {
       }
       if (uiScale != 0) {
         System.setProperty("sun.java2d.uiScale", String.valueOf(uiScale));
-      //} else {
-        //System.err.println("Could not identify Windows DPI, not setting sun.java2d.uiScale");
+        // } else {
+        // System.err.println("Could not identify Windows DPI, not setting
+        // sun.java2d.uiScale");
       }
     }
 
@@ -10100,8 +10147,7 @@ public class PApplet implements PConstants {
       sketch = constructedSketch;
     } else {
       try {
-        Class<?> c =
-          Thread.currentThread().getContextClassLoader().loadClass(name);
+        Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(name);
         sketch = (PApplet) c.getDeclaredConstructor().newInstance();
       } catch (RuntimeException re) {
         // Don't re-package runtime exceptions
@@ -10113,17 +10159,15 @@ public class PApplet implements PConstants {
     }
 
     // TODO When disabling AWT for LWJGL or others, we need to figure out
-    //      how to make Cmd-Q and the rest of this still work properly.
+    // how to make Cmd-Q and the rest of this still work properly.
     if (platform == MACOS && !disableAWT) {
       try {
         final String td = "processing.core.ThinkDifferent";
-        Class<?> thinkDifferent =
-          Thread.currentThread().getContextClassLoader().loadClass(td);
-        Method method =
-          thinkDifferent.getMethod("init", PApplet.class);
+        Class<?> thinkDifferent = Thread.currentThread().getContextClassLoader().loadClass(td);
+        Method method = thinkDifferent.getMethod("init", PApplet.class);
         method.invoke(null, sketch);
       } catch (Exception e) {
-        e.printStackTrace();  // That's unfortunate
+        e.printStackTrace(); // That's unfortunate
       }
     }
 
@@ -10159,7 +10203,7 @@ public class PApplet implements PConstants {
 
     if (present) {
       if (hideStop) {
-        stopColor = 0;  // they'll get the hint
+        stopColor = 0; // they'll get the hint
       }
       surface.placePresent(stopColor);
     } else {
@@ -10167,17 +10211,16 @@ public class PApplet implements PConstants {
     }
 
     /*
-    // not always running externally when in present mode
-    // moved above setVisible() in 3.0 alpha 11
-    if (sketch.external) {
-      surface.setupExternalMessages();
-    }
-    */
+     * // not always running externally when in present mode
+     * // moved above setVisible() in 3.0 alpha 11
+     * if (sketch.external) {
+     * surface.setupExternalMessages();
+     * }
+     */
 
     sketch.showSurface();
     sketch.startSurface();
   }
-
 
   /** Danger: available for advanced subclassing, but here be dragons. */
   protected void showSurface() {
@@ -10186,12 +10229,10 @@ public class PApplet implements PConstants {
     }
   }
 
-
   /** See warning in showSurface() */
   protected void startSurface() {
     surface.startThread();
   }
-
 
   protected PSurface initSurface() {
     g = createPrimaryGraphics();
@@ -10200,92 +10241,91 @@ public class PApplet implements PConstants {
     // Create fake Frame object to warn user about the changes
     if (g.displayable()) {
       /*
-      if (!disableAWT) {
-        frame = new Frame() {
-          @Override
-          public void setResizable(boolean resizable) {
-            deprecationWarning("setResizable");
-            surface.setResizable(resizable);
-          }
-
-          @Override
-          public void setVisible(boolean visible) {
-            deprecationWarning("setVisible");
-            surface.setVisible(visible);
-          }
-
-          @Override
-          public void setTitle(String title) {
-            deprecationWarning("setTitle");
-            surface.setTitle(title);
-          }
-
-          @Override
-          public void setUndecorated(boolean ignored) {
-            throw new RuntimeException("'frame' has been removed from Processing 3, " +
-              "use fullScreen() to get an undecorated full screen frame");
-          }
-          */
-          /*
-          // Can't override this one because it's called by Window's constructor
-          @Override
-          public void setLocation(int x, int y) {
-            deprecationWarning("setLocation");
-            surface.setLocation(x, y);
-          }
-          */
-          /*
-          @Override
-          public void setSize(int w, int h) {
-            deprecationWarning("setSize");
-            surface.setSize(w, h);
-          }
-
-          private void deprecationWarning(String method) {
-            PGraphics.showWarning("Use surface." + method + "() instead of " +
-                                  "frame." + method + " in Processing 3");
-            //new Exception(method).printStackTrace(System.out);
-          }
-        };
-      }
-      */
+       * if (!disableAWT) {
+       * frame = new Frame() {
+       *
+       * @Override
+       * public void setResizable(boolean resizable) {
+       * deprecationWarning("setResizable");
+       * surface.setResizable(resizable);
+       * }
+       *
+       * @Override
+       * public void setVisible(boolean visible) {
+       * deprecationWarning("setVisible");
+       * surface.setVisible(visible);
+       * }
+       *
+       * @Override
+       * public void setTitle(String title) {
+       * deprecationWarning("setTitle");
+       * surface.setTitle(title);
+       * }
+       *
+       * @Override
+       * public void setUndecorated(boolean ignored) {
+       * throw new RuntimeException("'frame' has been removed from Processing 3, " +
+       * "use fullScreen() to get an undecorated full screen frame");
+       * }
+       */
+      /*
+       * // Can't override this one because it's called by Window's constructor
+       *
+       * @Override
+       * public void setLocation(int x, int y) {
+       * deprecationWarning("setLocation");
+       * surface.setLocation(x, y);
+       * }
+       */
+      /*
+       * @Override
+       * public void setSize(int w, int h) {
+       * deprecationWarning("setSize");
+       * surface.setSize(w, h);
+       * }
+       *
+       * private void deprecationWarning(String method) {
+       * PGraphics.showWarning("Use surface." + method + "() instead of " +
+       * "frame." + method + " in Processing 3");
+       * //new Exception(method).printStackTrace(System.out);
+       * }
+       * };
+       * }
+       */
       surface.initFrame(this);
       surface.setTitle(getClass().getSimpleName());
 
     } else {
-      surface.initOffscreen(this);  // for PDF/PSurfaceNone and friends
+      surface.initOffscreen(this); // for PDF/PSurfaceNone and friends
     }
 
     return surface;
   }
 
+  // protected void createSurface() {
+  // surface = g.createSurface();
+  // if (surface == null) {
+  // System.err.println("This renderer needs to be updated for Processing 3");
+  // System.err.println("The createSurface() method returned null.");
+  // System.exit(1);
+  // }
+  // }
 
-//  protected void createSurface() {
-//    surface = g.createSurface();
-//    if (surface == null) {
-//      System.err.println("This renderer needs to be updated for Processing 3");
-//      System.err.println("The createSurface() method returned null.");
-//      System.exit(1);
-//    }
-//  }
-
-
-//  /**
-//   * Return a Canvas object that can be embedded into other Java GUIs.
-//   * This is necessary because PApplet no longer subclasses Component.
-//   *
-//   * <pre>
-//   * PApplet sketch = new EmbedSketch();
-//   * Canvas canvas = sketch.getCanvas();
-//   * // add the canvas object to your project and validate() it
-//   * sketch.init()  // start the animation thread
-//   */
-//  public Component getComponent() {
-//    g = createPrimaryGraphics();
-//    surface = g.createSurface();
-//    return surface.initComponent(this);
-//  }
-
+  // /**
+  // * Return a Canvas object that can be embedded into other Java GUIs.
+  // * This is necessary because PApplet no longer subclasses Component.
+  // *
+  // * <pre>
+  // * PApplet sketch = new EmbedSketch();
+  // * Canvas canvas = sketch.getCanvas();
+  // * // add the canvas object to your project and validate() it
+  // * sketch.init() // start the animation thread
+  // */
+  // public Component getComponent() {
+  // g = createPrimaryGraphics();
+  // surface = g.createSurface();
+  // return surface.initComponent(this);
+  // }
 
   /** Convenience method, should only be called by PSurface subclasses. */
   static public void hideMenuBar() {
@@ -10301,7 +10341,6 @@ public class PApplet implements PConstants {
       }
     }
   }
-
 
   /**
    * Find the location of fenster.exe by walking through java.library.path.
@@ -10324,7 +10363,6 @@ public class PApplet implements PConstants {
     return null;
   }
 
-
   /**
    * Get the display scaling for Windows by calling out to a helper app.
    * https://github.com/processing/processing4/tree/master/build/windows/fenster
@@ -10342,35 +10380,32 @@ public class PApplet implements PConstants {
     return 0;
   }
 
-
   /**
    * Convenience method for Python Mode to run an already-constructed sketch.
    * This makes it easy to launch a sketch in Jython:
    *
-   * <pre>class MySketch(PApplet):
+   * <pre>
+   * class MySketch(PApplet):
    *     pass
    *
-   *MySketch().runSketch();</pre>
+   *MySketch().runSketch();
+   * </pre>
    */
   protected void runSketch(final String[] args) {
     final String[] argsWithSketchName = new String[args.length + 1];
     System.arraycopy(args, 0, argsWithSketchName, 0, args.length);
     final String className = this.getClass().getSimpleName();
-    final String cleanedClass =
-      className.replaceAll("__[^_]+__\\$", "").replaceAll("\\$\\d+", "");
+    final String cleanedClass = className.replaceAll("__[^_]+__\\$", "").replaceAll("\\$\\d+", "");
     argsWithSketchName[args.length] = cleanedClass;
     runSketch(argsWithSketchName, this);
   }
-
 
   /** Convenience method for Python Mode */
   protected void runSketch() {
     runSketch(new String[0]);
   }
 
-
   //////////////////////////////////////////////////////////////
-
 
   /**
    *
@@ -10391,9 +10426,9 @@ public class PApplet implements PConstants {
    * @webBrief Opens a new file and all subsequent drawing functions are echoed
    *           to this file as well as the display window
    * @param renderer
-   *          PDF or SVG
+   *                 PDF or SVG
    * @param filename
-   *          filename for output
+   *                 filename for output
    * @see PApplet#endRecord()
    */
   public PGraphics beginRecord(String renderer, String filename) {
@@ -10403,27 +10438,27 @@ public class PApplet implements PConstants {
     return rec;
   }
 
-
   /**
    * @nowebref
-   * Begin recording (echoing) commands to the specified PGraphics object.
+   *           Begin recording (echoing) commands to the specified PGraphics
+   *           object.
    */
   public void beginRecord(PGraphics recorder) {
     this.recorder = recorder;
     recorder.beginDraw();
   }
 
-
- /**
+  /**
    *
    * Stops the recording process started by <b>beginRecord()</b> and closes
    * the file.
    *
-  * @webref output:files
-  * @webBrief Stops the recording process started by <b>beginRecord()</b> and closes
-   * the file
-  * @see PApplet#beginRecord(String, String)
-  */
+   * @webref output:files
+   * @webBrief Stops the recording process started by <b>beginRecord()</b> and
+   *           closes
+   *           the file
+   * @see PApplet#beginRecord(String, String)
+   */
   public void endRecord() {
     if (recorder != null) {
       recorder.endDraw();
@@ -10431,7 +10466,6 @@ public class PApplet implements PConstants {
       recorder = null;
     }
   }
-
 
   /**
    *
@@ -10443,27 +10477,31 @@ public class PApplet implements PConstants {
    * hundreds of triangles, rather than a single object. Or that a
    * multi-segment line shape (such as a curve) will be rendered as
    * individual segments.
-   * <br /><br />
+   * <br />
+   * <br />
    * When using <b>beginRaw()</b> and <b>endRaw()</b>, it's possible to write
    * to either a 2D or 3D renderer. For instance, <b>beginRaw()</b> with the
    * PDF library will write the geometry as flattened triangles and lines,
    * even if recording from the <b>P3D</b> renderer.
-   * <br /><br />
+   * <br />
+   * <br />
    * If you want a background to show up in your files, use <b>rect(0, 0,
    * width, height)</b> after setting the <b>fill()</b> to the background
    * color. Otherwise, the background will not be rendered to the file because
    * the background is not shape.
-   * <br /><br />
+   * <br />
+   * <br />
    * Using <b>hint(ENABLE_DEPTH_SORT)</b> can improve the appearance of 3D
    * geometry drawn to 2D file formats. See the <b>hint()</b> reference for
    * more details.
-   * <br /><br />
+   * <br />
+   * <br />
    * See examples in the reference for the <b>PDF</b> and <b>DXF</b>
    * libraries for more information.
    *
    * @webref output:files
    * @webBrief To create vectors from 3D data, use the <b>beginRaw()</b> and
-   * <b>endRaw()</b> commands
+   *           <b>endRaw()</b> commands
    * @param renderer for example, PDF or DXF
    * @param filename filename for output
    * @see PApplet#endRaw()
@@ -10476,22 +10514,21 @@ public class PApplet implements PConstants {
     return rec;
   }
 
-
-
   /**
    * @nowebref
-   * Begin recording raw shape data to the specified renderer.
-   * <p/>
-   * This simply echoes to g.beginRaw(), but since is placed here (rather than
-   * generated by preproc.pl) for clarity and so that it doesn't echo the
-   * command should beginRecord() be in use.
+   *           Begin recording raw shape data to the specified renderer.
+   *           <p/>
+   *           This simply echoes to g.beginRaw(), but since is placed here
+   *           (rather than
+   *           generated by preproc.pl) for clarity and so that it doesn't echo
+   *           the
+   *           command should beginRecord() be in use.
    *
    * @param rawGraphics PGraphics context that raw shapes will be written to
    */
   public void beginRaw(PGraphics rawGraphics) {
     g.beginRaw(rawGraphics);
   }
-
 
   /**
    *
@@ -10506,10 +10543,7 @@ public class PApplet implements PConstants {
     g.endRaw();
   }
 
-
-
   //////////////////////////////////////////////////////////////
-
 
   /**
    *
@@ -10533,19 +10567,19 @@ public class PApplet implements PConstants {
     pixels = g.pixels;
   }
 
- /**
-  *
-  * Updates the display window with the data in the <b>pixels[]</b> array. Use
-  * in conjunction with <b>loadPixels()</b>. If you're only reading pixels from
-  * the array, there's no need to call <b>updatePixels()</b> &mdash; updating is
-  * only necessary to apply changes.
-  *
-  * @webref image:pixels
-  * @webBrief Updates the display window with the data in the <b>pixels[]</b>
-  *           array
-  * @see PApplet#loadPixels()
-  * @see PApplet#pixels
-  */
+  /**
+   *
+   * Updates the display window with the data in the <b>pixels[]</b> array. Use
+   * in conjunction with <b>loadPixels()</b>. If you're only reading pixels from
+   * the array, there's no need to call <b>updatePixels()</b> &mdash; updating is
+   * only necessary to apply changes.
+   *
+   * @webref image:pixels
+   * @webBrief Updates the display window with the data in the <b>pixels[]</b>
+   *           array
+   * @see PApplet#loadPixels()
+   * @see PApplet#pixels
+   */
   public void updatePixels() {
     g.updatePixels();
   }
@@ -10560,7 +10594,6 @@ public class PApplet implements PConstants {
   public void updatePixels(int x1, int y1, int x2, int y2) {
     g.updatePixels(x1, y1, x2, y2);
   }
-
 
   //////////////////////////////////////////////////////////////
 

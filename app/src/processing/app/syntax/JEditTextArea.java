@@ -84,8 +84,8 @@ public class JEditTextArea extends JComponent
 
   private final Brackets bracketHelper = new Brackets();
 
-  private FontMetrics cachedPartialPixelWidthFont;
-  private float partialPixelWidth;
+  private final FontMetrics cachedPartialPixelWidthFont;
+  private final float partialPixelWidth;
 
 
   /**
@@ -2648,8 +2648,7 @@ public class JEditTextArea extends JComponent
     }
 
     public boolean addEdit(UndoableEdit edit) {
-      if (edit instanceof CaretUndo) {
-        CaretUndo cedit = (CaretUndo)edit;
+      if (edit instanceof CaretUndo cedit) {
         start = cedit.start;
         end = cedit.end;
         cedit.die();

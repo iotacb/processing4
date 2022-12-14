@@ -861,7 +861,7 @@ public class PImage implements PConstants, Cloneable {
         filter(BLUR, 1);
         break;
 
-      case GRAY:
+      case GRAYSCALE:
         if (format == ALPHA) {
           // for an alpha image, convert it to an opaque grayscale
           for (int i = 0; i < pixels.length; i++) {
@@ -993,7 +993,7 @@ public class PImage implements PConstants, Cloneable {
           blurRGB(param);
         break;
 
-      case GRAY:
+      case GRAYSCALE:
         throw new RuntimeException("Use filter(GRAY) instead of " +
                                    "filter(GRAY, param)");
 

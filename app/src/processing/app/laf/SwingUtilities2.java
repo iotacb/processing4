@@ -258,8 +258,7 @@ class SwingUtilities2 {
     */
 
     // If we get here we're not printing
-    if (g instanceof Graphics2D) {
-      Graphics2D g2 = (Graphics2D)g;
+    if (g instanceof Graphics2D g2) {
 
       boolean needsTextLayout = ((c != null) &&
         (c.getClientProperty(TextAttribute.NUMERIC_SHAPING) != null));

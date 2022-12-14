@@ -82,6 +82,7 @@ public class CompletionPanel {
   static private final Map<String, ImageIcon> iconCache = new HashMap<>();
 
   static Color selectionBgColor;
+  static Color selectionTextColor;
   static Color textColor;
 
 
@@ -179,8 +180,9 @@ public class CompletionPanel {
     localIcon = renderIcon(dir, "local");
     methodIcon = renderIcon(dir, "method");
 
-    selectionBgColor = new Color(0xffF0F0F0);
-    textColor = new Color(0xff222222);
+    selectionBgColor = new Color(0x3c3f41);
+    selectionTextColor = new Color(0xffffff);
+    textColor = new Color(0xffffff);
   }
 
 
@@ -395,6 +397,7 @@ public class CompletionPanel {
                                                                  cellHasFocus);
       if (isSelected) {
         label.setBackground(selectionBgColor);
+        label.setForeground(selectionTextColor);
       }
       label.setForeground(textColor);
 

@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 
 public class RunnerListenerEdtAdapter implements RunnerListener {
 
-  private RunnerListener wrapped;
+  private final RunnerListener wrapped;
 
   public RunnerListenerEdtAdapter(RunnerListener wrapped) {
     this.wrapped = wrapped;

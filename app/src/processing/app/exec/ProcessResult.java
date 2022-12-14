@@ -49,12 +49,12 @@ public class ProcessResult implements Iterable<String> {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder(cmd).append("\n");
-    sb.append("    status: ").append(result).append("\n");
-    sb.append("    ").append(time).append("ms").append("\n");
-    sb.append("    stdout:\n").append(output.trim()).append("\n");
-    sb.append("    stderr:\n").append(error.trim());
-    return sb.toString();
+      String sb = cmd + "\n" +
+              "    status: " + result + "\n" +
+              "    " + time + "ms" + "\n" +
+              "    stdout:\n" + output.trim() + "\n" +
+              "    stderr:\n" + error.trim();
+    return sb;
   }
 
 }

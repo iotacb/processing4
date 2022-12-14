@@ -243,7 +243,7 @@ public interface PConstants {
   // filter/convert types
 
   int BLUR      = 11;
-  int GRAY      = 12;
+  int GRAYSCALE      = 12;
   int INVERT    = 13;
   int OPAQUE    = 14;
   int POSTERIZE = 15;
@@ -324,9 +324,9 @@ public interface PConstants {
   int SPHERE          = 40;  // primitive
   int BOX             = 41;  // primitive
 
-//  static public final int POINT_SPRITES = 52;
-//  static public final int NON_STROKED_SHAPE = 60;
-//  static public final int STROKED_SHAPE     = 61;
+//  final int POINT_SPRITES = 52;
+//  final int NON_STROKED_SHAPE = 60;
+//  final int STROKED_SHAPE     = 61;
 
 
   // shape closing modes
@@ -525,4 +525,28 @@ public interface PConstants {
   int ENABLE_ASYNC_SAVEFRAME     = -12;
 
   int HINT_COUNT                 =  13;
+
+  int BLACK = -16777216;
+
+  int WHITE = -1;
+
+  int GRAY = -8355712;
+
+  int RED = -65536;
+
+  int GREEN = -16711936;
+
+  int BLUE = -16776961;
+
+  int ORANGE = -23296;
+
+  int YELLOW = -256;
+
+  int CYAN = -16711681;
+
+  int PURPLE = -8388480;
+
+  int MAGENTA = -65281;
+
+  int PINK = -16181;
 }

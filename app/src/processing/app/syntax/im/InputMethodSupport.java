@@ -51,7 +51,7 @@ public class InputMethodSupport implements InputMethodRequests, InputMethodListe
     TextAttribute.INPUT_METHOD_HIGHLIGHT,
   };
 
-  private JEditTextArea textArea;
+  private final JEditTextArea textArea;
 
   private int committedCount = 0;
   private AttributedString composedTextString;

@@ -90,7 +90,7 @@ EXCLUSION	LITERAL2	blend_
 EXIT LITERAL2
 FX2D	LITERAL2	size_
 GIF	LITERAL2
-GRAY	LITERAL2	filter_
+GRAYSCALE	LITERAL2	filter_
 GREEN_MASK	LITERAL2
 GROUP	LITERAL2
 HALF	LITERAL2
@@ -183,6 +183,18 @@ UP	LITERAL2	keyCode
 WAIT	LITERAL2	cursor_
 WHITESPACE	LITERAL2
 
+BLACK	LITERAL2
+WHITE	LITERAL2
+GRAY	LITERAL2
+RED	LITERAL2
+GREEN	LITERAL2
+BLUE	LITERAL2
+ORANGE	LITERAL2
+YELLOW	LITERAL2
+CYAN	LITERAL2
+PURPLE	LITERAL2
+MAGENTA	LITERAL2
+PINK	LITERAL2
 
 # Java keywords (void, import, , etc.)
 
@@ -259,6 +271,7 @@ var	KEYWORD5
 catch	KEYWORD3	catch
 do	KEYWORD3
 for	KEYWORD3	for
+forEach KEYWORD3	forEach
 if	KEYWORD3	if
 else	KEYWORD3	else
 switch	KEYWORD3	switch
@@ -269,6 +282,7 @@ try	KEYWORD3	try
 catch	FUNCTION3	catch
 do	FUNCTION3
 for	FUNCTION3	for
+forEach FUNCTION3	forEach
 if	FUNCTION3	if
 #else	FUNCTION3	else
 switch	FUNCTION3	switch
@@ -324,7 +338,6 @@ setLong	FUNCTION2
 
 length	KEYWORD2	String
 
-
 # Operators are without KEYWORDS
 
 +=		addassign
@@ -343,9 +356,9 @@ length	KEYWORD2	String
 /**		doccomment
 .		dot
 ==		equality
+++      increment
 >		greaterthan
 >=		greaterthanorequalto
-++		increment
 !=		inequality
 <<		leftshift
 <		lessthan
@@ -369,6 +382,8 @@ length	KEYWORD2	String
 
 width	KEYWORD4	width_
 height	KEYWORD4	height_
+halfWidth	KEYWORD4	halfWidth_
+halfHeight	KEYWORD4	halfHeight_
 
 ArrayList	FUNCTION1	ArrayList
 HashMap	FUNCTION1	HashMap
@@ -424,6 +439,9 @@ color	FUNCTION1	color_
 colorMode	FUNCTION1	colorMode_
 concat	FUNCTION1	concat_
 constrain	FUNCTION1	constrain_
+offScreen	FUNCTION1	offScreen_
+hovering	FUNCTION1	hovering_
+ease	FUNCTION1	ease_
 copy	FUNCTION1	copy_
 cos	FUNCTION1	cos_
 createFont	FUNCTION1	createFont_
@@ -508,6 +526,7 @@ focused	KEYWORD4	focused
 frameCount	KEYWORD4	frameCount
 frameRate	KEYWORD4	frameRate
 delta	KEYWORD4	delta
+time	KEYWORD4	time
 frameRate	FUNCTION1	frameRate_
 frustum	FUNCTION1	frustum_
 fullScreen	FUNCTION1	fullScreen_
@@ -672,6 +691,7 @@ beginDraw	FUNCTION2	PGraphics_beginDraw_
 endDraw	FUNCTION2	PGraphics_endDraw_
 PI	KEYWORD4	PI
 PImage	KEYWORD5	PImage
+PColor	KEYWORD5	PColor
 blend	FUNCTION2	PImage_blend_
 blendColor	FUNCTION2	PImage_blendColor_
 copy	FUNCTION2	PImage_copy_

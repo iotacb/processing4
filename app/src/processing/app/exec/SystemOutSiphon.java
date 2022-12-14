@@ -47,7 +47,7 @@ public class SystemOutSiphon implements Runnable {
   }
 
   public void run() {
-    byte boofer[] = new byte[256];
+    byte[] boofer = new byte[256];
 
     while (Thread.currentThread() == thread) {
       try {

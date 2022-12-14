@@ -25,7 +25,7 @@ import processing.app.syntax.JEditTextArea;
 public class CompositionTextPainter {
   private TextLayout composedTextLayout;
   private int composedBeginCaretPosition = 0;
-  private JEditTextArea textArea;
+  private final JEditTextArea textArea;
   private boolean caretColorFlag;
   private TextHitInfo caret;
 

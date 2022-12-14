@@ -128,7 +128,7 @@ public class InstallCommander implements Tool {
           " && /bin/mv " + sourcePath + " " + targetPath;
         String appleScript =
           "do shell script \"" + shellScript + "\" with administrator privileges";
-        PApplet.exec(new String[] { "osascript", "-e", appleScript });
+        PApplet.exec("osascript", "-e", appleScript);
 
       } else if (result == JOptionPane.NO_OPTION) {
         File targetFile = new File(System.getProperty("user.home"), "processing-java");
@@ -139,7 +139,7 @@ public class InstallCommander implements Tool {
                                targetPath + "\n" +
                                "Please remove it and try again.");
         } else {
-          PApplet.exec(new String[] { "mv", sourcePath, targetPath });
+          PApplet.exec("mv", sourcePath, targetPath);
         }
       }
       editor.statusNotice("Finished.");

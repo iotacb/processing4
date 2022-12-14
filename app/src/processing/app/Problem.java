@@ -22,14 +22,14 @@ package processing.app;
 
 
 public interface Problem {
-  public boolean isError();
-  public boolean isWarning();
+  boolean isError();
+  boolean isWarning();
 
-  public int getTabIndex();
-  public int getLineNumber();  // 0-indexed
-  public String getMessage();
+  int getTabIndex();
+  int getLineNumber();  // 0-indexed
+  String getMessage();
 
-  public int getStartOffset();
-  public int getStopOffset();
+  int getStartOffset();
+  int getStopOffset();
 }
 

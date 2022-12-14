@@ -27,11 +27,11 @@ public class KeywordMap {
 //  protected int mapLength;
 
   private boolean ignoreCase;
-  private Keyword[] literalMap;
-  private Keyword[] parenMap;
+  private final Keyword[] literalMap;
+  private final Keyword[] parenMap;
 
   // A value of 52 will give good performance for most maps.
-  static private int MAP_LENGTH = 52;
+  static private final int MAP_LENGTH = 52;
 
   /**
    * Creates a new <code>KeywordMap</code>.

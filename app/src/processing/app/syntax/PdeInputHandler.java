@@ -212,13 +212,11 @@ public class PdeInputHandler extends DefaultInputHandler {
     // Don't do this on OS X, because alt (the option key) is used for
     // non-ASCII chars, and there are no menu mnemonics to speak of
     if (!Platform.isMacOS()) {
-      if (event.isAltDown() && !event.isControlDown() &&
-          event.getKeyChar() != KeyEvent.VK_UNDEFINED) {
         // This is probably a menu mnemonic, don't pass it through.
         // If it's an alt-NNNN sequence, those only work on the keypad
         // and pass through UNDEFINED as the keyChar.
-        return true;
-      }
+        return event.isAltDown() && !event.isControlDown() &&
+                event.getKeyChar() != KeyEvent.VK_UNDEFINED;
     }
     return false;
   }

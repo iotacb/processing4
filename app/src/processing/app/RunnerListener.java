@@ -25,21 +25,21 @@ package processing.app;
 
 public interface RunnerListener {
   
-  public void statusError(String message);
+  void statusError(String message);
 
-  public void statusError(Exception exception);
+  void statusError(Exception exception);
   
-  public void statusNotice(String message);
-
-  //
-  
-  public void startIndeterminate();
-  
-  public void stopIndeterminate();
+  void statusNotice(String message);
 
   //
   
-  public void statusHalt();
+  void startIndeterminate();
   
-  public boolean isHalted();
+  void stopIndeterminate();
+
+  //
+  
+  void statusHalt();
+  
+  boolean isHalted();
 }

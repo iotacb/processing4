@@ -23,13 +23,15 @@
 
 package processing.app.platform;
 
-import java.awt.Desktop;
-import java.awt.Font;
+import java.awt.*;
 import java.io.File;
+import java.util.Collections;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.sun.jna.Library;
@@ -38,6 +40,7 @@ import com.sun.jna.Native;
 import processing.app.Base;
 import processing.app.Language;
 import processing.app.Preferences;
+import processing.app.ui.Theme;
 import processing.app.ui.Toolkit;
 import processing.awt.ShimAWT;
 import processing.core.PApplet;
@@ -120,10 +123,12 @@ public class DefaultPlatform {
     UIManager.put("defaultFont", defaultFont);
 
     // pull in FlatLaf.properties from the processing.app.laf folder
-    FlatLaf.registerCustomDefaultsSource("processing.app.laf");
+    //FlatLaf.registerCustomDefaultsSource("processing.app.laf");
+    FlatLaf laf = new FlatDarkLaf();
+    laf.setExtraDefaults(Collections.singletonMap("@accentColor", "#8c15ff"));
 
     // start with Light, but updateTheme() will be called soon
-    UIManager.setLookAndFeel(new FlatLightLaf());
+    UIManager.setLookAndFeel(laf);
 
     /*
     javax.swing.UIDefaults defaults = UIManager.getDefaults();

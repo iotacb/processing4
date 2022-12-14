@@ -1,6 +1,7 @@
 package processing.app.platform;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -25,9 +26,10 @@ import com.sun.jna.ptr.IntByReference;
  * syntax to make it less like a C program. [fry 130720]
  */
 public class WindowsRegistry {
-  static public enum REGISTRY_ROOT_KEY {
+  public enum REGISTRY_ROOT_KEY {
     CLASSES_ROOT, CURRENT_USER, LOCAL_MACHINE, USERS
-  };
+  }
+
   //private final static HashMap<REGISTRY_ROOT_KEY, Integer> rootKeyMap = new HashMap<REGISTRY_ROOT_KEY, Integer>();
   private final static HashMap<REGISTRY_ROOT_KEY, WinReg.HKEY> rootKeyMap =
     new HashMap<REGISTRY_ROOT_KEY, WinReg.HKEY>();
@@ -97,7 +99,7 @@ public class WindowsRegistry {
    * @return String
    */
   private static String convertBufferToString(byte[] buf) throws UnsupportedEncodingException {
-    return new String(buf, 0, buf.length - 2, "UTF-16LE");
+    return new String(buf, 0, buf.length - 2, StandardCharsets.UTF_16LE);
   }
 
 
@@ -229,7 +231,7 @@ public class WindowsRegistry {
     // appears to be Java 1.6 syntax, removing [fry]
     //data = Arrays.copyOf(value.getBytes("UTF-16LE"), value.length() * 2 + 2);
     byte[] data = new byte[value.length() * 2 + 2];
-    byte[] src = value.getBytes("UTF-16LE");
+    byte[] src = value.getBytes(StandardCharsets.UTF_16LE);
     System.arraycopy(src, 0, data, 0, src.length);
 
     Advapi32 advapi32 = Advapi32.INSTANCE;
@@ -304,12 +306,7 @@ public class WindowsRegistry {
     //if(handle != 0) {
     if (handle != null) {
       //if (advapi32.RegQueryValueEx(handle, name, null, pType, lpData, lpcbData) != WinError.ERROR_FILE_NOT_FOUND) {
-      if (advapi32.RegQueryValueEx(handle, name, 0, pType, lpData, lpcbData) != WinError.ERROR_FILE_NOT_FOUND) {
-        ret = true;
-
-      } else {
-        ret = false;
-      }
+      ret = advapi32.RegQueryValueEx(handle, name, 0, pType, lpData, lpcbData) != WinError.ERROR_FILE_NOT_FOUND;
       advapi32.RegCloseKey(handle);
     }
     return ret;
@@ -370,12 +367,7 @@ public class WindowsRegistry {
     boolean ret = false;
     //if(handle != 0) {
     if (handle != null) {
-      if (advapi32.RegDeleteKey(handle, name) == WinError.ERROR_SUCCESS) {
-        ret = true;
-
-      } else {
-        ret = false;
-      }
+      ret = advapi32.RegDeleteKey(handle, name) == WinError.ERROR_SUCCESS;
       advapi32.RegCloseKey(handle);
     }
     return ret;

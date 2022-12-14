@@ -138,7 +138,7 @@ public class Archiver implements Tool {
 
   private void buildZip(File dir, String sofar,
                        ZipOutputStream zos) throws IOException {
-    String files[] = dir.list();
+    String[] files = dir.list();
     for (int i = 0; i < files.length; i++) {
       if (files[i].equals(".") || //$NON-NLS-1$
           files[i].equals("..")) continue; //$NON-NLS-1$

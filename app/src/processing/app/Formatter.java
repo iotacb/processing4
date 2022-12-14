@@ -27,5 +27,5 @@ package processing.app;
  * it probably affects other code as well. But for now, we'll stick with this.
  */
 public interface Formatter {
-  public String format(String text);
+  String format(String text);
 }

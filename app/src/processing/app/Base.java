@@ -321,10 +321,10 @@ public class Base {
         Theme.get("laf.accent.color")));
       //System.out.println(laf.getExtraDefaults());
       //UIManager.setLookAndFeel(laf);
-      FlatLaf.setup(laf);
+      FlatLaf.setup(new FlatDarkLaf());
       // updateUI() will wipe out our custom components
       // even if we do a setUI() call and invalidate/revalidate/repaint
-//      FlatLaf.updateUI();
+      //FlatLaf.updateUI();
 //      System.out.println("FlatLaf.updateUI() should be done");
 //      FlatLaf.updateUILater();
 

@@ -31,14 +31,14 @@ import processing.app.Base;
  */
 public interface Tool extends Runnable {
 
-  public void init(Base base);
+  void init(Base base);
 
-  public void run();
+  void run();
 
   // Not doing shortcuts for now, no way to resolve between tools.
   // Also would need additional modifiers for shift and alt.
   //public char getShortcutKey();
 
-  public String getMenuTitle();
+  String getMenuTitle();
 }
 

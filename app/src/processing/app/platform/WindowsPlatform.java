@@ -618,7 +618,7 @@ public class WindowsPlatform extends DefaultPlatform {
   public interface WinLibC extends Library {
     //WinLibC INSTANCE = (WinLibC) Native.loadLibrary("msvcrt", WinLibC.class);
     //libc = Native.loadLibrary("msvcrt", WinLibC.class);
-    public int _putenv(String name);
+    int _putenv(String name);
   }
 
 

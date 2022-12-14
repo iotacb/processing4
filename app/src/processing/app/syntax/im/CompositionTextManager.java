@@ -35,7 +35,7 @@ import processing.app.syntax.TextAreaPainter;
  */
 
 public class CompositionTextManager {
-  private JEditTextArea textArea;
+  private final JEditTextArea textArea;
   private String prevComposeString;
   private int prevCommittedCount;
   private boolean isInputProcess;

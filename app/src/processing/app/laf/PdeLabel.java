@@ -42,14 +42,13 @@ public class PdeLabel extends JTextPane {
 
 
   private void rebuild() {
-    StringBuffer buffer = new StringBuffer("<html><head>");
-//    if (css != null) {
+    //    if (css != null) {
 //      buffer.append("<style type='text/css'>").append(css).append("</style>");
 //    }
-    buffer.append("</head><body>");
-    buffer.append(message);
+    String buffer = "<html><head>" + "</head><body>" +
+            message;
 //    System.out.println(buffer);
-    super.setText(buffer.toString());
+    super.setText(buffer);
     if (css != null) {
       ((HTMLDocument) getDocument()).getStyleSheet().addRule(css);
     }

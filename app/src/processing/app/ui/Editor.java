@@ -568,6 +568,7 @@ public abstract class Editor extends JFrame implements RunnerListener {
 
 
   public void updateTheme() {
+
     header.updateTheme();
     toolbar.updateTheme();
     textarea.updateTheme();
@@ -597,8 +598,7 @@ public abstract class Editor extends JFrame implements RunnerListener {
     popup.setBackground(Theme.getColor("mode.popup.enabled.bgcolor"));
 
     for (Component comp : modePopup.getMenuComponents()) {
-      if (comp instanceof JMenuItem) {
-        JMenuItem item = (JMenuItem) comp;
+      if (comp instanceof JMenuItem item) {
         if (item.getUI() instanceof PdeMenuItemUI) {
           ((PdeMenuItemUI) item.getUI()).updateTheme();
         } else {
@@ -2550,8 +2550,7 @@ public abstract class Editor extends JFrame implements RunnerListener {
 //      return;
 //    }
 
-    if (e instanceof SketchException) {
-      SketchException re = (SketchException) e;
+    if (e instanceof SketchException re) {
 
       // Make sure something is printed into the console
       // Status bar is volatile

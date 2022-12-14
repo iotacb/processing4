@@ -299,7 +299,7 @@ public class FindReplace extends JFrame {
         nextIndex = text.indexOf(searchTerm, selectionEnd);
         if (nextIndex == -1 && wrap && !allTabs) {
           // if wrapping, a second chance is ok, start from beginning
-          nextIndex = text.indexOf(searchTerm, 0);
+          nextIndex = text.indexOf(searchTerm);
 
         } else if (nextIndex == -1 && allTabs) {
           // For searching in all tabs, wrapping always happens.
@@ -329,7 +329,7 @@ public class FindReplace extends JFrame {
             if (ignoreCase) {
               text = text.toLowerCase();
             }
-            nextIndex = text.indexOf(searchTerm, 0);
+            nextIndex = text.indexOf(searchTerm);
 
             if (nextIndex != -1  || tabIndex == tempIndex) {
               break;

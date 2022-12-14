@@ -43,12 +43,9 @@ public class ExamplesContribution extends LocalContribution {
     String currentIdentifier = mode.getIdentifier();
     StringList compatibleList = parseModeList(props);
     if (compatibleList.size() == 0) {
-      if (mode.requireExampleCompatibility()) {
         // for p5js (and maybe Python), examples must specify that they work
-        return false;
-      }
+        return !mode.requireExampleCompatibility();
       // if no Mode specified, assume compatible everywhere
-      return true;
     }
     return compatibleList.hasValue(currentIdentifier);
   }
